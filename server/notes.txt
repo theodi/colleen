@@ -1,0 +1,7 @@
+install node
+in server directory 
+> npm install
+which looks at package.json and installs dependencies
+> node server &
+to run app on port 3000
+
