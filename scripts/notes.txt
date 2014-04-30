@@ -1,0 +1,4 @@
+deletefield.py now unnessary thanks to discovery of the jq tool.
+
+to strip 'user' field from json use:
+cat withuser.json | jq '[.[] | {id, location, project, subject, timestamp, user_id }]' > userstripped.json
