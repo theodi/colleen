@@ -7,5 +7,8 @@ to run app on port 3000
 install mongodb (install Homebrew if necessary)
 > mongod --config /usr/local/etc/mongod.conf
 to run mongod
+move into data directory
+> cd ../data
+and load some json into mongodb
 > mongoimport -d classificationdb -c classifications --file zooniverselive201404161612-50-anon.json --jsonArray
 example of loading a json file into mongo
