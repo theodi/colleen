@@ -8,11 +8,8 @@ app.configure(function () {
 	app.use(express.bodyParser());
     });
 
-app.get('/classifications', classifications.findAll);
-app.get('/classifications/:id', classifications.findById);
-app.post('/classifications', classifications.addClassification);
-app.put('/classifications/:id', classifications.updateClassification);
-app.delete('/classifications/:id', classifications.deleteClassification);
+app.get('/classifications/:howmany', classifications.findLastHowmany);
+app.get('/classifications/:howmany/offset/:timeperiod', classifications.findSince);
 
 app.listen(3000);
 console.log('Listening on port 3000...');

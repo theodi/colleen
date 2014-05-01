@@ -4,4 +4,7 @@ in server directory
 which looks at package.json and installs dependencies
 > node server &
 to run app on port 3000
-
+> mongod --config /usr/local/etc/mongod.conf
+to run mongod
+> mongoimport -d classificationdb -c classifications --file zooniverselive201404161612-50-anon.json --jsonArray
+example of loading a json file into mongo

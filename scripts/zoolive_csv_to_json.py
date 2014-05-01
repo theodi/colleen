@@ -26,6 +26,9 @@ reader = csv.DictReader(csvfile)
 def processline(line):
     location = {}
     result = {}
+    # skip line if location data missing
+    if line['latitude'] == 'NULL':
+        return None
     location['latitude'] = float(line['latitude'])
     location['longitude'] = float(line['longitude'])
     location['country'] = line['country']
@@ -44,6 +47,7 @@ output = []
 
 for line in reader:
     row = processline(line)
-    output.append(row)
+    if row:
+        output.append(row)
 
 json.dump(output, jsonfile, sort_keys=True)
