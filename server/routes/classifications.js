@@ -42,7 +42,16 @@ exports.findLastHowmany = function(req, res) {
     console.log('Retrieving last ' + howmany + ' classifications');
     db.collection('classifications', function(err, collection) {
 	    collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).toArray(function(err, items) {
-		    res.send(items);
+
+
+            res.header('Content-Type', 'application/json');
+            res.header('Charset', 'utf-8');
+
+            // JSONP
+            res.send(req.query.callback + '('+JSON.stringify(items)+');');
+
+            // JSON
+            //res.send(items);
 		});
 	});
 };

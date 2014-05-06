@@ -110,8 +110,8 @@ ZN.App.prototype = {
 
     loadClassification:function () {
         var nItems = 100;
-        //var url = this.apiPath + "classifications/" + nItems;
-        var url = "http://live.zooniverse.org/classifications/100";
+        var url = this.apiPath + "classifications/" + nItems;
+        //var url = "http://live.zooniverse.org/classifications/100";
 
         this.loadUrl(url, "jsonp",this.classificationLoaded);
 
