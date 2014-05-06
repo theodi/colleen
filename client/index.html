@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="Zooniverse" />
+    <meta name="description" content="" />
+    <title>Zooniverse</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/colorpicker/css/colorpicker.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+
+
+    <script src="lib/jquery/jquery-1.11.1.min.js"></script>
+    <script src="lib/lodash/lodash.compat.min.js"></script>
+    <script src="lib/datgui/dat.gui.js"></script>
+    <script src="lib/chroma/chroma.min.js"></script>
+    <script src="lib/colorpicker/colorpicker.min.js"></script>
+    <script src="js/app.js"></script>
+
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            var app = new ZN.App();
+            app.init();
+        });
+    </script>
+
+</head>
+<body  scroll="no">
+
+
+<!--
+<div id="loader">
+    <img src="images/loader_panel.jpg">
+    <div id="loader-bar">
+        <div id="loading-text" >Loading: 0%</div>
+    </div>
+</div>
+-->
+
+
+
+<div id="wrapper">
+
+    <div id="header"></div>
+
+    <div id="canvas">
+    </div>
+
+    <div id="footer"></div>
+</div> <!-- close wrapper -->
+</body>
+</html>

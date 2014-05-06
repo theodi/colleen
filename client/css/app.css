@@ -1,0 +1,281 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    color: #ccc;
+    background-color: #000000;
+    font-family: 'Roboto Condensed', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+
+body a, body a:visited {
+    color: #ddd;
+}
+html{
+    height:100%;
+}
+
+
+#loader{
+    background: #000000;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    width: 787px;
+    height: 525px;
+
+    margin: auto;
+    position: absolute;
+    display:none;
+    z-index:1500;
+
+}
+
+#loader-bar{
+    position:absolute;
+    top:385px;
+    left:520px;
+}
+#loading-text {
+    width:200px;
+    display:inline-block;
+    font-size:  24px;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: #c1c1c1;
+
+
+}
+
+#wrapper{
+    visibility:visible;
+}
+
+#footer{
+    bottom:0px;
+    width:100%;
+    height:0px;
+    background-color:#000;
+    position:absolute;
+}
+
+#header {
+    height: 0px;
+    width:100%;
+    background-color: #000;
+}
+
+
+/*
+#logos{
+    display:block;
+    position: absolute;
+    float:right;
+    right:10px;
+    top:6px;
+    border-width:0px;
+    padding:0px;
+    font-size: 0.9em;
+
+
+}
+
+#logos a span {
+    position:relative;
+    top:0px;
+    padding: 0px 0px 0 0;
+}
+#logos a{
+    display: block;
+    float:left;
+    margin: 4px 0 0 0;
+    color: #666;
+
+}
+#logos a:hover{
+    color: #aaa;
+}
+
+#logos .logo-image{
+    height:16px;
+}
+
+
+#logos .logo-image.info{
+    background: transparent url('../images/info.png') no-repeat scroll top left;
+    width:35px;
+    padding: 0 10px 0 0;
+}
+
+
+
+
+#logos .logo-image.twitter{
+    background: transparent url('../images/twitter.png') no-repeat scroll top left;
+    width:16px;
+    padding: 0 5px 0 0;
+}
+
+#logos .logo-image.facebook{
+    background: transparent url('../images/facebook.png') no-repeat scroll top left;
+    width:16px;
+    padding: 0 5px 0 0;
+}
+
+#logos .logo-image.google{
+    background: transparent url('../images/google.png') no-repeat scroll top left;
+    width:16px;
+    padding: 0 5px 0 0;
+}
+
+#logos .logo-image:hover{
+    background-position: bottom left;
+}
+*/
+
+
+
+
+/* Map */
+
+#canvas{
+    background-color: #000;
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    width:100%;
+    overflow:hidden; /* fixes scrollbar in ie */
+    padding:0;
+    margin:0;
+
+
+}
+
+
+/* dat.gui */
+
+
+#gui-div{
+    z-index:1100;
+    position:absolute;
+    bottom:25px;
+    right:0px
+}
+
+
+
+.gui-button2{
+    display:block;
+    position: absolute;
+    bottom:0px;
+    padding:5px 15px 3px 20px;
+    margin: 0;
+    height: 20px;
+    width: 60px;
+    z-index: 1009;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #a2a2a2;
+    text-transform:uppercase;
+    text-indent: 15px;
+    background: none no-repeat scroll 5% 50% transparent;/*none no-repeat scroll right center transparent;*/
+    background-color: #0d0c0d;
+    border: 1px solid #000;
+    -moz-user-select: none;-webkit-user-select: none;
+    cursor: pointer;
+}
+
+.gui-button2:hover{
+    background-color: #0a0a0a;
+    color: #d2d2d2;
+}
+
+
+/*
+#gui-open-but{
+    background-image: url('../images/icon_cog.png');
+    background-position: 10px 6px;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+#gui-open-but:hover{
+    background-image: url('../images/icon_cog_over.png');
+    background-color: #0a0a0a;
+    color: #d2d2d2;
+}
+
+#gui-open-but.gui-button2 {
+
+    right: 0px;
+}
+*/
+
+
+
+
+.dg {
+    color: #ccc !important;
+    font: 12px 'Roboto Condensed', Helvetica, Arial, sans-serif !important;
+    /*text-shadow: 0 -1px 0 #111;*/
+}
+
+.dg select {
+    width: auto;
+    height: auto;
+    border: none;
+    color: #000;
+    font: 12px Helvetica, Arial, sans-serif;
+}
+.dg input {
+    box-shadow: none;
+    -webkit-box-shadow: none
+    -moz-box-shadow: none;
+    border-radius: 0;
+    font: 12px 'Roboto Condensed', Helvetica, Arial, sans-serif;
+}
+
+/* sliders */
+.dg .c .slider-fg {
+    background: #999 !important/*#2fa1d6*/
+}
+
+.dg .c .slider:hover {
+    background: #3c3c3c
+}
+
+.dg .c .slider:hover .slider-fg {
+    background: #b9b9b9 !important/*#44abda*/
+}
+
+/* left borders */
+.dg .cr.string {
+    border-left: 3px solid #333 !important /*#1ed36f;*/
+}
+
+.dg .cr.number {
+    border-left: 3px solid #333 !important/*#2fa1d6;*/
+}
+
+/* number field */
+.dg .cr.number input[type=text] {
+    color: #ccc !important /*#2fa1d6;*/
+}
+
+.dg.main .close-button{
+    display:none !important;
+}
+
+
+.clear {
+    clear: both;
+    display: block;
+}
+
