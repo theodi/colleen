@@ -142,7 +142,7 @@ html{
 
 /* Map */
 
-#canvas{
+#canvas-container{
     background-color: #000;
     position:absolute;
     top:0px;
