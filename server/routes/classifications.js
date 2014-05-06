@@ -1,11 +1,3 @@
-exports.findAll = function(req, res) {
-    res.send([{name:'classification1'}, {name:'classification2'}, {name:'classification3'}]);
-};
- 
-exports.findById = function(req, res) {
-    res.send({id:req.params.id, name: "The Name", description: "description"});
-};
-
 var mongo = require('mongodb');
  
 var Server = mongo.Server,
@@ -27,15 +19,6 @@ db.open(function(err, db) {
 	}
     });
  
-exports.findById = function(req, res) {
-    var id = req.params.id;
-    console.log('Retrieving classification: ' + id);
-    db.collection('classifications', function(err, collection) {
-	    collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-		    res.send(item);
-		});
-	});
-};
 
 exports.findLastHowmany = function(req, res) {
     var howmany = req.params.howmany;
