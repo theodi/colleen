@@ -13,7 +13,11 @@ ZN.App = function () {
 
     this.canvasContainer = "canvas-container";
     this.ctx = null;
-    this.rendererType = "canvas"; // "raphael"
+    this.rendererType = "raphael" //"canvas"; //
+
+    this.paper = null;
+    this.paths = [];
+    //this.tick = 0;
 
 }
 
@@ -22,8 +26,8 @@ ZN.App.prototype = {
 
     init:function(){
         this.model = new ZN.Model();
+        this.model.init();
         this.loadConfig();
-
 
     },
 
@@ -38,24 +42,18 @@ ZN.App.prototype = {
             dataType:"script",
             success:function (data) {
                 self.configLoaded();
-
             },
             error:function (xhr, status, error) {
                 //if (xhr.status != 404) {alert(error);} else {alert("404 config not found");}
-
             }
         })
     },
 
     configLoaded:function(){
         this.apiPath = ZN.config.apiPath;
-        this.model.projects = ZN.config.projects;
+        //this.model.projects = ZN.config.projects;
+        this.loadProjects();
 
-        this.initCanvas();
-
-        this.loadClassification();
-
-        this.update();
     },
 
     loadUrl:function (url, type, callback) {
@@ -117,6 +115,20 @@ ZN.App.prototype = {
 
     },
 
+    loadProjects:function () {
+        var url = "js/projects.json";
+        this.loadUrl(url, "json",this.projectsLoaded);
+
+    },
+    projectsLoaded:function(data){
+        this.model.initProjects(data);
+
+        this.initCanvas();
+        this.loadClassification();
+        this.update();
+
+    },
+
 
     loadClassification:function () {
         var nItems = 100;
@@ -133,9 +145,13 @@ ZN.App.prototype = {
 
     },
 
-    initCanvas:function(){
+    resize:function(){
 
-        var w = 1224, h = 768;
+    },
+
+    initCanvas:function(){
+        var size = this.getCanvasSize();
+        var w = size.width, h = size.height;
         switch(this.rendererType){
             case "canvas":
                 var canvas = document.createElement('canvas');
@@ -148,18 +164,37 @@ ZN.App.prototype = {
                 break;
             case "raphael":
                 //var paper = Raphael(10, 50, 320, 200);
-                var paper = Raphael(this.canvasContainer, w, h);
+                this.paper = Raphael(this.canvasContainer, w, h);
                 break;
 
         }
     },
 
-    getCanvasSize: function(){
+    update:function(){
+        var self = this;
+        requestAnimationFrame(function(){self.update()});
+        switch(this.rendererType){
+            case "canvas":
+                this.renderCanvas();
+                break;
+            case "raphael":
+                this.renderRaphael();
+                break;
+        }
 
+    },
+
+    getCanvasSize: function(){
+        var size={};
+        size.width = $("#"+this.canvasContainer).width();
+        size.height = $("#"+this.canvasContainer).height();
+        return size;
     },
 
     renderCanvas:function(){
         var ctx = this.ctx;
+        var size = this.getCanvasSize();
+        var w = size.width, h = size.height;
 
         ctx.clearRect (0, 0, w, h);
 
@@ -191,12 +226,51 @@ ZN.App.prototype = {
     },
 
 
-    update:function(){
-        var self = this;
-        requestAnimationFrame(function(){self.update()});
+    renderRaphael:function(){
 
-        this.renderCanvas();
+        // animations: http://raphaeljs.com/animation.html
+        // scale image fill: http://stackoverflow.com/questions/1098994/scaling-a-fill-pattern-in-raphael-js
+        // svg import: https://github.com/wout/raphael-svg-import
 
+        if(this.paths.length>0) return;
+
+        var projects = this.model.projects;
+        for(var i=0;i<projects.length;i++){
+
+            /*
+            var proj = projects[i];
+            var pathStrs = proj.pointsToRaphael();
+
+            for(p=0;p<pathStrs.length;p++){
+                var pathStr = pathStrs[p];
+                var tx = i*20, ty = i*20;
+                var path = this.paper.path(pathStr)
+                    .attr({"fill":"#f00","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
+
+                var path2 = this.paper.path(pathStr)
+                    .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
+
+                this.paths.push(path,path2);
+            }
+            */
+
+        }
+
+        /*
+        if(this.paths.length>0) return;
+        var nItems = 10;
+
+        for(var i=0;i<nItems;i++){
+            var tx = i*20, ty = i*20;
+            var path = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
+               .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
+
+            var path2 = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
+                .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
+
+            this.paths.push(path,path2);
+        }
+        */
 
     }
 
