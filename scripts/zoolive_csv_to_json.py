@@ -15,11 +15,13 @@ TODO: replace subject_id field with subject when we get that data.
 """
 
 csvfilename = sys.argv[1]
+maxoutputlines = 69999
+
 inpath, infilename = os.path.split(csvfilename)
 #output filename is .csv replaced with .json, put in current dir
-jsonfilename = infilename.split('.')[-2] + '.json'
+basefilename = infilename.split('.')[-2] 
 csvfile = open(csvfilename, 'r')
-jsonfile = open(jsonfilename, 'w')
+
 reader = csv.DictReader(csvfile)
 
 
@@ -27,7 +29,7 @@ def processline(line):
     location = {}
     result = {}
     # skip line if location data missing
-    if line['latitude'] == 'NULL':
+    if (line['longitude'] == 'NULL') or (line['latitude'] == 'NULL'):
         return None
     location['latitude'] = float(line['latitude'])
     location['longitude'] = float(line['longitude'])
@@ -42,12 +44,25 @@ def processline(line):
     result['user_id'] = int(line['user_id'])
     return result
 
+def writeoutputtofile(output, basefilename, outputfilecount):
+    jsonfilename = "%s-%02d.json" % (basefilename, outputfilecount)
+    jsonfile = open(jsonfilename, 'w')
+    json.dump(output, jsonfile, indent=0, sort_keys=True)
+    jsonfile.close()
 
 output = []
+outputfilecount = 0
 
 for line in reader:
     row = processline(line)
     if row:
         output.append(row)
+    if len(output) > maxoutputlines:
+        writeoutputtofile(output, basefilename, outputfilecount)
+        output = []
+        outputfilecount += 1
 
-json.dump(output, jsonfile, sort_keys=True)
+if len(output) > 0:
+    writeoutputtofile(output, basefilename, outputfilecount)
+        
+
