@@ -15,7 +15,7 @@ TODO: replace subject_id field with subject when we get that data.
 """
 
 csvfilename = sys.argv[1]
-maxoutputlines = 69999
+maxoutputlines = 49999
 
 inpath, infilename = os.path.split(csvfilename)
 #output filename is .csv replaced with .json, put in current dir
@@ -36,6 +36,7 @@ def processline(line):
     location['country'] = line['country']
     location['city'] = line['city']
     result['location'] = location
+    result['project'] = line['project']
     result['subject_id'] = line['subject_id']
     timestamp = strftime("%Y-%m-%dT%H:%M:%SZ", strptime(line['created_at'],
                                                         "%Y-%m-%d %H:%M:%S"))
