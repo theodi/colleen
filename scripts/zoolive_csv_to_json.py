@@ -40,7 +40,7 @@ def processline(line):
     result['subject_id'] = line['subject_id']
     timestamp = strftime("%Y-%m-%dT%H:%M:%SZ", strptime(line['created_at'],
                                                         "%Y-%m-%d %H:%M:%S"))
-    result['timestamp'] = timestamp
+    result['timestamp'] = {'$date' : timestamp}
     result['id'] = int(line['id'])
     result['user_id'] = int(line['user_id'])
     return result
