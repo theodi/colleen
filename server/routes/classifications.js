@@ -54,8 +54,27 @@ exports.findSince = function(req, res) {
 		});
 	});
 };
- 
- 
+
+
+exports.getLast = function(req, res) {
+    var howmany = req.params.howmany;
+    var offset = req.params.count;
+    console.log('Retrieving last ' + howmany + ' classifications, offet: ' + offset);
+    db.collection('classifications', function(err, collection) {
+        collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).skip(parseInt(offset)).toArray(function(err, items) {
+
+
+            res.header('Content-Type', 'application/json');
+            res.header('Charset', 'utf-8');
+
+            // JSONP
+            res.send(req.query.callback + '('+JSON.stringify(items)+');');
+
+            // JSON
+            //res.send(items);
+        });
+    });
+};
  
 /*--------------------------------------------------------------------------------------------------------------------*/
 // Populate database with sample data -- Only used once: the first time the application is started.
