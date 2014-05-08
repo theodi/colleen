@@ -26,7 +26,6 @@ exports.findLastHowmany = function(req, res) {
     db.collection('classifications', function(err, collection) {
 	    collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).toArray(function(err, items) {
 
-
             res.header('Content-Type', 'application/json');
             res.header('Charset', 'utf-8');
 
@@ -56,13 +55,12 @@ exports.findSince = function(req, res) {
 };
 
 
-exports.getLast = function(req, res) {
+exports.findLast = function(req, res) {
     var howmany = req.params.howmany;
     var offset = req.params.count;
     console.log('Retrieving last ' + howmany + ' classifications, offet: ' + offset);
     db.collection('classifications', function(err, collection) {
         collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).skip(parseInt(offset)).toArray(function(err, items) {
-
 
             res.header('Content-Type', 'application/json');
             res.header('Charset', 'utf-8');
@@ -74,6 +72,55 @@ exports.getLast = function(req, res) {
             //res.send(items);
         });
     });
+};
+
+exports.findDuration = function(req, res) {
+    var max = req.params.max;
+    var duration = req.params.duration; //  in seconds
+    var offset = req.params.offset; // multiples of duration
+    var offsetMS = duration*offset*1000;
+
+    var maxDateStr = 0;
+    db.collection('classifications', function(err, collection) {
+        collection.find().sort( { timestamp: -1 } ).limit(1).toArray(function(err, items) {
+            //console.log(items);
+            maxDateStr = items[0].timestamp;
+            //console.log("maxDateStr:" +maxDateStr);
+
+            var maxDate = new Date(maxDateStr);
+            var maxDateValue = maxDate.valueOf();
+
+            console.log("max value:" +  maxDate.valueOf());
+            console.log("max toISOString:" +  maxDate.toISOString());
+
+            maxDateValue -= offsetMS;
+            maxDate = new Date(maxDateValue);
+            console.log("max value offset:" +  maxDate.valueOf());
+            console.log("max offset toISOString:" +  maxDate.toISOString());
+
+
+            var minDateValue = maxDateValue-duration*1000;
+            var minDate = new Date(minDateValue);
+            console.log("min value:" +  minDate.valueOf());
+            console.log("min toISOString:" +  minDate.toISOString());
+
+            //collection.find({ timestamp: {"$lt": maxDate.toISOString(),"$gt":minDate.toISOString()}}).limit(parseInt(max)).toArray(function(err, items) {
+            collection.find({ timestamp: {"$lt": maxDate,"$gt":minDate}}).limit(parseInt(max)).toArray(function(err, items) {
+
+                res.header('Content-Type', 'application/json');
+                res.header('Charset', 'utf-8');
+
+                // JSONP
+                res.send(req.query.callback + '('+JSON.stringify(items)+');');
+
+                // JSON
+                //res.send(items);
+            });
+
+
+        });
+    });
+
 };
  
 /*--------------------------------------------------------------------------------------------------------------------*/
