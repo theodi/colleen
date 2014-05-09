@@ -25,15 +25,11 @@ exports.findLastHowmany = function(req, res) {
     console.log('Retrieving last ' + howmany + ' classifications');
     db.collection('classifications', function(err, collection) {
 	    collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).toArray(function(err, items) {
-
-            res.header('Content-Type', 'application/json');
-            res.header('Charset', 'utf-8');
-
             // JSONP
-            res.send(req.query.callback + '('+JSON.stringify(items)+');');
+            //res.send(req.query.callback + '('+JSON.stringify(items)+');');
 
             // JSON
-            //res.send(items);
+            res.send(items);
 		});
 	});
 };
@@ -61,15 +57,11 @@ exports.findLast = function(req, res) {
     console.log('Retrieving last ' + howmany + ' classifications, offet: ' + offset);
     db.collection('classifications', function(err, collection) {
         collection.find().sort( { timestamp: -1 } ).limit(parseInt(howmany)).skip(parseInt(offset)).toArray(function(err, items) {
-
-            res.header('Content-Type', 'application/json');
-            res.header('Charset', 'utf-8');
-
             // JSONP
-            res.send(req.query.callback + '('+JSON.stringify(items)+');');
+            //res.send(req.query.callback + '('+JSON.stringify(items)+');');
 
             // JSON
-            //res.send(items);
+            res.send(items);
         });
     });
 };
@@ -106,15 +98,11 @@ exports.findDuration = function(req, res) {
 
             collection.find({ timestamp: {"$lt": maxDate.toISOString(),"$gt":minDate.toISOString()}}).limit(parseInt(max)).toArray(function(err, items) {
             //collection.find({ timestamp: {"$lt": maxDate,"$gt":minDate}}).limit(parseInt(max)).toArray(function(err, items) {
-
-                res.header('Content-Type', 'application/json');
-                res.header('Charset', 'utf-8');
-
                 // JSONP
-                res.send(req.query.callback + '('+JSON.stringify(items)+');');
+                //res.send(req.query.callback + '('+JSON.stringify(items)+');');
 
                 // JSON
-                //res.send(items);
+                res.send(items);
             });
 
 
@@ -131,14 +119,10 @@ exports.getClassificationCountByProject = function(req, res){
 
         collection.group(['project'], {}, {"count":0}, "function (obj, prev) { prev.count++; }", function(err, results) {
 
-            res.header('Content-Type', 'application/json');
-            res.header('Charset', 'utf-8');
-
             // JSONP
-            res.send(req.query.callback + '('+JSON.stringify(results)+');');
-
+            //res.send(req.query.callback + '('+JSON.stringify(results)+');');
             // JSON
-            //res.send(items);
+            res.send(results);
         });
 
     });
