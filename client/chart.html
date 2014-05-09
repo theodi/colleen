@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="Zooniverse" />
+    <meta name="description" content="" />
+    <title>Zooniverse Charts</title>
+
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/d3/nv.d3.css"/>
+
+
+    <script src="lib/jquery/jquery-1.11.1.min.js"></script>
+    <script src="lib/lodash/lodash.compat.min.js"></script>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="lib/d3/nv.d3.min.js"></script>
+    <script src="js/chart.js"></script>
+
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            var chart = new ZN.Chart();
+            chart.init();
+        });
+    </script>
+
+</head>
+<body  scroll="no">
+
+
+<div id="chart-container">
+    <svg style="width:1000px;height:500px" ></svg>
+</div> <!-- close wrapper -->
+</body>
+</html>

@@ -12,6 +12,7 @@ app.get('/classifications/:howmany', classifications.findLastHowmany);
 app.get('/classifications/:howmany/offset/:timeperiod', classifications.findSince);
 app.get('/classifications/:howmany/offset_count/:count', classifications.findLast);
 app.get('/classifications/:max/duration/:duration/offset/:offset', classifications.findDuration);
+app.get('/classificationsByProject', classifications.getClassificationCountByProject);
 
 app.listen(3000);
 console.log('Listening on port 3000...');

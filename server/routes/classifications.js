@@ -77,8 +77,8 @@ exports.findLast = function(req, res) {
 exports.findDuration = function(req, res) {
     var max = req.params.max;
     var duration = req.params.duration; //  in seconds
-    var offset = req.params.offset; // multiples of duration
-    var offsetMS = duration*offset*1000;
+    var offset = req.params.offset; // in seconds
+    var offsetMS = offset*1000;
 
     var maxDateStr = 0;
     db.collection('classifications', function(err, collection) {
@@ -104,8 +104,8 @@ exports.findDuration = function(req, res) {
             console.log("min value:" +  minDate.valueOf());
             console.log("min toISOString:" +  minDate.toISOString());
 
-            //collection.find({ timestamp: {"$lt": maxDate.toISOString(),"$gt":minDate.toISOString()}}).limit(parseInt(max)).toArray(function(err, items) {
-            collection.find({ timestamp: {"$lt": maxDate,"$gt":minDate}}).limit(parseInt(max)).toArray(function(err, items) {
+            collection.find({ timestamp: {"$lt": maxDate.toISOString(),"$gt":minDate.toISOString()}}).limit(parseInt(max)).toArray(function(err, items) {
+            //collection.find({ timestamp: {"$lt": maxDate,"$gt":minDate}}).limit(parseInt(max)).toArray(function(err, items) {
 
                 res.header('Content-Type', 'application/json');
                 res.header('Charset', 'utf-8');
@@ -122,8 +122,32 @@ exports.findDuration = function(req, res) {
     });
 
 };
- 
-/*--------------------------------------------------------------------------------------------------------------------*/
+
+exports.getClassificationCountByProject = function(req, res){
+    // command line
+    // db.classifications.group({key:{project:1},reduce:function(curr,result){result.total+=1},initial:{total:0}})
+
+    db.collection('classifications', function(err, collection) {
+
+        collection.group(['project'], {}, {"count":0}, "function (obj, prev) { prev.count++; }", function(err, results) {
+
+            res.header('Content-Type', 'application/json');
+            res.header('Charset', 'utf-8');
+
+            // JSONP
+            res.send(req.query.callback + '('+JSON.stringify(results)+');');
+
+            // JSON
+            //res.send(items);
+        });
+
+    });
+
+
+
+};
+
+    /*--------------------------------------------------------------------------------------------------------------------*/
 // Populate database with sample data -- Only used once: the first time the application is started.
 // You'd typically not find this code in a real-life app, since the database would already exist.
 var populateDB = function() {

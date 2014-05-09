@@ -134,6 +134,8 @@ ZN.App.prototype = {
         var nItems = 100;
         var url = this.apiPath + "classifications/" + nItems;
         //var url = "http://live.zooniverse.org/classifications/100";
+        // duration
+        // http://localhost:3000/classifications/2000/duration/60/offset/120?callback=?
 
         this.loadUrl(url, "jsonp",this.classificationLoaded);
 
