@@ -2,7 +2,7 @@ import csv
 import json
 import sys
 import os
-from time import strptime, strftime
+from time import strptime, strftime, mktime
 
 """
 A quick & dirty script to turn the Zooniverse classification csv files
@@ -38,8 +38,10 @@ def processline(line):
     result['location'] = location
     result['project'] = line['project']
     result['subject_id'] = line['subject_id']
-    timestamp = strftime("%Y-%m-%dT%H:%M:%SZ", strptime(line['created_at'],
-                                                        "%Y-%m-%d %H:%M:%S"))
+#    timestamp = strftime("%Y-%m-%dT%H:%M:%SZ", strptime(line['created_at'],
+#                                                        "%Y-%m-%d %H:%M:%S"))
+    dt =strptime(line['created_at'], "%Y-%m-%d %H:%M:%S")
+    timestamp = int(mktime(dt) * 1000)
     result['timestamp'] = {'$date' : timestamp}
     result['id'] = int(line['id'])
     result['user_id'] = int(line['user_id'])
