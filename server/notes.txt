@@ -1,15 +1,34 @@
 install mongodb (install Homebrew if necessary)
-> mongod --config /usr/local/etc/mongod.conf
+$ mongod --config /usr/local/etc/mongod.conf
 to run mongod
 move into data directory
-> cd ../data
+$ cd ../data
+
+if you need to delete an existing collection:
+
+from mongo shell ($mongo): 
+> use classificationdb
+> db.classifications.drop()
+
 and load some json into mongodb
-> mongoimport -d classificationdb -c classifications --file zooniverselive201404161612-50-anon.json --jsonArray
+$ mongoimport -d classificationdb -c classifications --file zooniverselive201404161612-50-anon.json --jsonArray
 example of loading a json file into mongo
+
+to load a whole bunch of files:
+$ for i in zoo-classifications-january13-28-04-2014-*.json; do mongoimport -d classificationdb -c classifications --file "$i" --jsonArray; done
 
 install node
 in server directory 
-> npm install
+$ npm install
 which looks at package.json and installs dependencies
-> node server &
+$ node server &
 to run app on port 3000
+
+
+=======
+
+notes on mongo queries:
+
+to get a count of classifications by project:
+db.classifications.group({key: { project: 1 }, reduce: function(curr, result){ result.count++;}, initial: {count : 0}})
+

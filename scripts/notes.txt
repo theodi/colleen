@@ -2,3 +2,17 @@ deletefield.py now unnessary thanks to discovery of the jq tool.
 
 to strip 'user' field from json use:
 cat withuser.json | jq '[.[] | {id, location, project, subject, timestamp, user_id }]' > userstripped.json
+
+to get largest id from live classifications db:
+
+curl 'http://live.zooniverse.org/classifications/10'  | jq '[.[] | .id] | max'
+
+to filter documents with id field less than or equal to 1808632
+jq '.[]  | select(.id > 1808632)'
+
+run on cron
+get maxid of most recent file
+get latest classifications with ids greater than that and
+save into file called <maxid_of_previous_file>.json
+import each new json file into mongo
+optionally cleanup files older than X
