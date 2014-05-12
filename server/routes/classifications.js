@@ -115,6 +115,9 @@ exports.getClassificationCountByProject = function(req, res){
     // command line
     // db.classifications.group({key:{project:1},reduce:function(curr,result){result.total+=1},initial:{total:0}})
 
+    // group by date
+    // http://stackoverflow.com/questions/5168904/group-by-dates-in-mongodb
+
     db.collection('classifications', function(err, collection) {
 
         collection.group(['project'], {}, {"count":0}, "function (obj, prev) { prev.count++; }", function(err, results) {

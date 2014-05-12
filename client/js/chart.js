@@ -39,6 +39,24 @@ ZN.Chart.prototype = {
 
     configLoaded:function(){
         this.apiPath = ZN.config.apiPath;
+
+        $( "#start-date" ).datepicker();
+        $( "#end-date" ).datepicker();
+        $("#time-select").change(function () {
+            var str = "";
+            $( "#time-select option:selected" ).each(function() {
+                var value = $( this ).val();
+
+            });
+
+        })
+
+        $( "#update-but" )
+            .button()
+            .click(function( event ) {
+                event.preventDefault();
+            });
+
         this.loadData();
 
     },
@@ -120,57 +138,10 @@ ZN.Chart.prototype = {
 
     },
 
-    /*
-    aggregateByProject: function(){
-
-        var secsPerBar = 60;
-        var format = d3.time.format.utc("%Y-%m-%d %H:%M");
-
-        var minTimeMs = Math.floor(this.classifications[0].unixTime/secsPerBar)*secsPerBar*1000;
-        var nBars = this.durationSecs/secsPerBar;
-
-
-        var barchartObj = [];
-        for(var project in this.projects){
-            var projItems = _.filter(this.classifications, function(classification) { return classification.project == project; });
-            var projectValues = _.countBy(projItems, function(classification) { return Math.floor(classification.unixTime/secsPerBar)*secsPerBar; });
-
-            // create empty keys
-            var values = [];
-            for(var i=0;i<nBars;i++){
-                var time = new Date(minTimeMs+secsPerBar*1000*i);
-                var timeStr = format(time);
-                values.push({"label":timeStr,"value":0});
-
-            }
-
-            var series = {
-                key: project,
-                values: values
-            };
-            barchartObj.push(series);
-
-
-
-            for(var key in  projectValues){
-                var time = new Date(key*1000);
-                var timeStr = format(time);
-                //series.values.push({"label":timeStr,"value":values[key]});
-                var item = _.find(series.values,{"label":timeStr});
-                //series.values[timeStr].value=projectValues[key];
-                item.value = projectValues[key];
-
-            }
-        }
-        this.barChart(barchartObj);
-
-
-    },
-    */
 
     aggregateByProject: function(){
 
-        var secsPerBar = 60;
+        var secsPerBar = 300;
         var format = d3.time.format.utc("%Y-%m-%d %H:%M");
         var barchartObj = [];
         var minTimeMs = Math.floor(this.classifications[0].unixTime/secsPerBar)*secsPerBar*1000;
@@ -231,7 +202,7 @@ ZN.Chart.prototype = {
                     //.reduceXTicks(true)
                     //.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
                     .tooltips(true)        //Don't show tooltips
-                    //.stacked(true)       //...instead, show the bar value right on top of each bar.
+                    .stacked(true)       //...instead, show the bar value right on top of each bar.
                     .transitionDuration(50)
                     .rotateLabels(45)
                     .width(1100)
