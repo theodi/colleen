@@ -1,7 +1,7 @@
 ZN.Model = function () {
     this.projects = [];
     this.classifications = [];// classificationsn order by timestamp
-    this.classificationIds = {};
+    //this.classificationIds = {};
 
 }
 
@@ -29,8 +29,6 @@ ZN.Model.prototype = {
             if(typeof _.find(this.classifications, { 'id': classification.id }) == 'undefined'){
                 this.classifications.push(classification);
             }
-
-
             //for(var key in classification){}
         }
         var minTime = classifications[0].time;
