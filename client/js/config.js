@@ -1,6 +1,7 @@
 ZN.config = {
     apiPath:"http://localhost:3000/",
     zooniversePath:"http://live.zooniverse.org/",
+    dataSource:"archive",
 
     projectIds:["andromeda","asteroid","bat_detective","cancer_cells","cancer_gene_runner","condor",
         "cyclone_center","galaxy_zoo","leaf",

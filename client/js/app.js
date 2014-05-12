@@ -10,6 +10,15 @@ ZN.App = function () {
     this.bLoadData = true;
     this.dataType = "json";
     this.apiPath = "";
+    this.dataSource = "archive"; // "live"
+    this.archiveStartSecs = 120000;//2*24*60*60; // seconds
+
+    this.nextRequestTime = 0;
+    this.curTime = 0;
+    this.requestDuration = 60*1000; // in ms
+    this.firstFrame = true;
+    this.classificationDelay = 0;
+    this.classificationLoadCount = 0;
 
     this.canvasContainer = "canvas-container";
     this.ctx = null;
@@ -18,6 +27,8 @@ ZN.App = function () {
     this.paper = null;
     this.paths = [];
     //this.tick = 0;
+
+
 
 }
 
@@ -51,6 +62,7 @@ ZN.App.prototype = {
 
     configLoaded:function(){
         this.apiPath = ZN.config.apiPath;
+        this.dataSource = ZN.config.dataSource;
         //this.model.projects = ZN.config.projects;
         this.loadProjects();
 
@@ -125,25 +137,52 @@ ZN.App.prototype = {
 
         this.initCanvas();
         this.loadClassification();
-        this.update();
+
+
 
     },
 
 
     loadClassification:function () {
-        var nItems = 100;
-        var url = this.apiPath + "classifications/" + nItems;
+        //var nItems = 100;
+        //var url = this.apiPath + "classifications/" + nItems;
         //var url = "http://live.zooniverse.org/classifications/100";
         // duration
         // http://localhost:3000/classifications/2000/duration/60/offset/120?callback=?
+        var maxItems = 1000;
+        var requestDurationSecs = this.requestDuration/1000;
+        var offsetSecs = 0;
+        if(this.dataSource=="archive"){
+            offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
+        }
+        var url = this.apiPath + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
 
-        this.loadUrl(url, "jsonp",this.classificationLoaded);
-
-
+        this.loadUrl(url, "json", this.classificationLoaded);
 
     },
+
     classificationLoaded:function(data){
         var d = data;
+        var classifications = this.model.addClassifications(data);
+        var delay = (new Date()).valueOf() - classifications[0].time;
+
+        this.classificationLoadCount += 1;
+
+        if(this.firstFrame){
+            this.firstFrame = false;
+            this.classificationDelay = delay;
+            this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
+            this.update();
+
+        }
+        else{
+            /*
+            if(this.classificationDelay < delay){
+                this.classificationDelay = delay;
+            }
+            */
+        }
+
 
     },
 
@@ -174,6 +213,27 @@ ZN.App.prototype = {
 
     update:function(){
         var self = this;
+        this.curTime = (new Date()).valueOf();
+
+        // load new classifications
+        if(this.curTime>this.nextRequestTime){
+            this.loadClassification();
+            this.nextRequestTime = this.curTime + this.requestDuration;
+            console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
+        }
+
+        // classification
+        if(this.model.classifications.length>0){
+            var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
+            if(this.curTime>nextClassificationTime){
+                console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
+                var classification = this.model.removeFirstClassification();
+                console.log("classification timestamp:",classification.timestamp);
+
+            }
+        }
+
+
         requestAnimationFrame(function(){self.update()});
         switch(this.rendererType){
             case "canvas":
