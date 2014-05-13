@@ -6,6 +6,8 @@ ZN.Chart = function () {
     this.offsetSecs = 0;//120000;
     this.classifications = [];
     this.projects = {};
+    this.minDate = new Date();
+    this.maxDate = new Date();
 
 
 }
@@ -40,8 +42,36 @@ ZN.Chart.prototype = {
     configLoaded:function(){
         this.apiPath = ZN.config.apiPath;
 
-        $( "#start-date" ).datepicker();
-        $( "#end-date" ).datepicker();
+
+        this.minDate = new Date(2013,2,1);
+        this.maxDate = new Date(2013,2,30);
+        var format = d3.time.format("%Y/%m/%d");
+        var minDateStr = format(this.minDate);
+        var maxDateStr = format(this.maxDate);
+
+        format = d3.time.format("%Y/%m/%d %H:%M");
+        var minValue = format(this.minDate);
+        var maxValue = format(this.maxDate);
+
+
+        $("#start-date").datetimepicker({
+            minDate:minDateStr,//'2013/03/01',
+            maxDate:maxDateStr,//'2013/03/30',
+            value:minValue, //'2013/03/30 00:00',
+            format:'Y/m/d H:i',
+            onChangeDateTime:function(dp,$input){
+                console.log($input.val())
+            }
+        });
+        $( "#end-date" ).datetimepicker({
+            minDate:minDateStr,//'2013/03/01',
+            maxDate:maxDateStr,//'2013/03/30',
+            value:maxValue,
+            format:'Y/m/d H:i',
+            onChangeDateTime:function(dp,$input){
+                console.log($input.val())
+            }
+        });
         $("#time-select").change(function () {
             var str = "";
             $( "#time-select option:selected" ).each(function() {
@@ -52,7 +82,7 @@ ZN.Chart.prototype = {
         })
 
         $( "#update-but" )
-            .button()
+
             .click(function( event ) {
                 event.preventDefault();
             });

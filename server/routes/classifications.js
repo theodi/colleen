@@ -130,9 +130,36 @@ exports.getClassificationCountByProject = function(req, res){
 
     });
 
+};
 
+exports.groupByDate = function(req, res){
+    // command line
+    // db.classifications.group({key:{project:1},reduce:function(curr,result){result.total+=1},initial:{total:0}})
+
+    // Mongo Node API
+    // http://mongodb.github.io/node-mongodb-native/
+
+    // group by date
+    // http://stackoverflow.com/questions/5168904/group-by-dates-in-mongodb
+    // http://smyl.es/how-to-use-mongodb-date-aggregation-operators-in-node-js-with-mongoose-dayofmonth-dayofyear-dayofweek-etc/
+    // http://stackoverflow.com/questions/3428246/executing-mongodb-query-in-node-js
+    // Collection.prototype.group = function group(keys, condition, initial, reduce, finalize, command, callback) {
+
+    db.collection('classifications', function(err, collection) {
+        collection.group({
+            keyf: function(doc) {
+                var date = new Date(doc.date);
+                var dateKey = (date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear()+'';
+                return {'day':dateKey};
+            },
+            cond: {topic:"abc"},
+            initial: {count:0},
+            reduce: function(obj, prev) {prev.count++;}
+        });
+    });
 
 };
+
 
     /*--------------------------------------------------------------------------------------------------------------------*/
 // Populate database with sample data -- Only used once: the first time the application is started.

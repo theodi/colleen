@@ -10,10 +10,12 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="css/d3/nv.d3.css"/>
     <link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.min.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/jquery/datetimepicker/jquery.datetimepicker.css"/>
 
 
     <script src="lib/jquery/jquery-1.11.1.min.js"></script>
     <script src="lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="lib/jquery/datetimepicker/jquery.datetimepicker.js"></script>
     <script src="lib/lodash/lodash.compat.min.js"></script>
 
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -32,15 +34,18 @@
 <body  scroll="no">
 
 <div>
+
     Start Date: <input type="text" id="start-date">
     End Date: <input type="text" id="end-date">
+
+
     Duration: <select id="time-select">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="5">5</option>
         <option value="10">10</option>
     </select>
-    <a id="update-but" href="#">Update</a>
+    <button id="update-but" href="#">Update</button>
 
 </div>
 
