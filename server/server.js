@@ -10,11 +10,13 @@ app.configure(function () {
 	app.use(express.bodyParser());
     });
 
+/*
 app.get('/classifications/:howmany', classifications.findLastHowmany);
 app.get('/classifications/:howmany/offset/:timeperiod', classifications.findSince);
 app.get('/classifications/:howmany/offset_count/:count', classifications.findLast);
 app.get('/classifications/:max/duration/:duration/offset/:offset', classifications.findDuration);
 app.get('/classificationsByProject', classifications.getClassificationCountByProject);
+*/
 
 
 

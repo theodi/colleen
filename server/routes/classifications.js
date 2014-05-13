@@ -1,9 +1,33 @@
-var mongo = require('mongodb');
- 
-var Server = mongo.Server,
-    Db = mongo.Db,
-    BSON = mongo.BSONPure;
- 
+
+//https://www.npmjs.org/package/node-mysql
+
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'colleen',
+    password : 'galaxy',
+    database: 'zoon'
+});
+
+connection.connect(function(err) {
+    // connected! (unless `err` is set)
+    if(!err){
+        console.log('connected');
+    }
+    else{
+        console.log("Broken");
+    }
+});
+
+connection.query('SELECT COUNT(*) AS count from `classifications`', function(err, rows, fields) {
+    if (err) throw err;
+
+    console.log('The count is: ', rows[0].count);
+});
+
+
+
+/*
 var server = new Server('localhost', 27017, {auto_reconnect: true});
 db = new Db('classificationdb', server);
  
@@ -36,7 +60,7 @@ exports.findLastHowmany = function(req, res) {
 
 exports.findSince = function(req, res) {
     var howmany = req.params.howmany;
-    var offset = req.params.timeperiod; /*  in days */
+    var offset = req.params.timeperiod; //  in days
     var d = new Date();
     d.setTime(d.getTime() - (parseInt(offset)*60*60*24*1000));
     var targetdatestring = d.toISOString();
@@ -161,7 +185,7 @@ exports.groupByDate = function(req, res){
 };
 
 
-    /*--------------------------------------------------------------------------------------------------------------------*/
+
 // Populate database with sample data -- Only used once: the first time the application is started.
 // You'd typically not find this code in a real-life app, since the database would already exist.
 var populateDB = function() {
@@ -187,3 +211,4 @@ var populateDB = function() {
     });
  
 };
+    */
