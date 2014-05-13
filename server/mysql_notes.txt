@@ -1,8 +1,10 @@
 
-install MySQL
-import data using either:
+Install MySQL
+
+Import data using either:
 Command Line - http://dev.mysql.com/doc/refman/5.0/en/mysqlimport.html
 GUI Tools - Sequel Pro for Mac, HeidiSQL for PC
+
 
 install node
 in server directory:

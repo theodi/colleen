@@ -10,6 +10,8 @@ app.configure(function () {
 	app.use(express.bodyParser());
     });
 
+app.get('/classificationCount', classifications.getClassificationCount);
+app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
 /*
 app.get('/classifications/:howmany', classifications.findLastHowmany);
 app.get('/classifications/:howmany/offset/:timeperiod', classifications.findSince);

@@ -1,5 +1,6 @@
 
 //https://www.npmjs.org/package/node-mysql
+//https://github.com/felixge/node-mysql
 
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -10,38 +11,41 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-    // connected! (unless `err` is set)
     if(!err){
-        console.log('connected');
+        console.log('Connected to DB');
     }
     else{
-        console.log("Broken");
+        console.log("Failed to Connect to DB",err.code);
     }
 });
 
-connection.query('SELECT COUNT(*) AS count from `classifications`', function(err, rows, fields) {
-    if (err) throw err;
-
-    console.log('The count is: ', rows[0].count);
-});
 
 
+exports.getClassificationCount = function(req, res) {
+    //connection.query('SELECT COUNT(*) AS count FROM `classifications`', function(err, rows, fields) {
+    connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
+        if(err) throw err;
+        console.log('Classification count: ', rows[0].count);
+        res.send(rows);
+    });
+}
+
+
+exports.getLastClassifications = function(req, res) {
+    var count = req.params.count;//mysql.escapeId(req.params.count);
+    var offset = req.params.offset;//mysql.escapeId(req.params.count);
+    console.log('Retrieving last ' + count + ' classifications, offet: ' + offset);
+
+    connection.query("SELECT * FROM ?? LIMIT "+offset+","+count,['classifications'], function(err, rows, fields) {
+    //connection.query('SELECT * FROM ?? LIMIT ?,?',['classifications',offset,count], function(err, rows, fields) {
+
+        if(err) throw err;
+        res.send(rows);
+    });
+
+};
 
 /*
-var server = new Server('localhost', 27017, {auto_reconnect: true});
-db = new Db('classificationdb', server);
- 
-db.open(function(err, db) {
-	if(!err) {
-	    console.log("Connected to 'classificationdb' database");
-	    db.collection('classifications', {strict:true}, function(err, collection) {
-		    if (err) {
-			console.log("The 'classifications' collection doesn't exist. Creating it with sample data...");
-			populateDB();
-		    }
-		});
-	}
-    });
  
 
 exports.findLastHowmany = function(req, res) {
