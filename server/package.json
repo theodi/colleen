@@ -1,16 +1,30 @@
 {
-    "name": "zoo-data",
-    "description": "Zooniverse mocked classification data",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "3.x",
-        "cps": "*",
-        "mysql":"*"
-
-    },
-    "engines": {
-    	"node": "0.10.25",
-	"npm": "1.3.24"
-    }
+  "name": "zoo-data",
+  "description": "Zooniverse mocked classification data",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "cps": "*",
+    "mysql": "*"
+  },
+  "engines": {
+    "node": "0.10.25",
+    "npm": "1.3.24"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theodi/colleen.git"
+  },
+  "author": "kassschmitt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theodi/colleen/issues"
+  },
+  "homepage": "https://github.com/theodi/colleen"
 }
