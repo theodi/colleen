@@ -79,10 +79,12 @@ exports.getClassificationInterval = function(req, res) {
         _.map(rows,function(item){
             item.time = parseInt(item.time)*interval;
             item.date = new Date(item.time*1000).toISOString();
+            //console.log('date',item.date,'count',item.count);
         });
 
         var minTimeMs = from*1000;
         var nBars = (to-from)/interval;
+        //console.log('nBars',nBars);
         var projects = {};
 
         var projectsObj = _.countBy(rows,'project');
@@ -92,8 +94,11 @@ exports.getClassificationInterval = function(req, res) {
             var values = [];
             for(var i=0;i<nBars;i++){
                 var time = new Date(minTimeMs+interval*1000*i);
+                time = new Date( Date.UTC(time.getFullYear(), time.getMonth(),time.getDate(),time.getHours(),time.getMinutes()) );
+
                 var timeStr = time.toISOString();
                 values.push({"label":timeStr,"value":0});
+                //console.log('timeStr',timeStr);
             }
 
             var series = {
@@ -110,6 +115,7 @@ exports.getClassificationInterval = function(req, res) {
             if(item){
                 item.value = row.count;
             }
+            //console.log('row.date',row.date);
 
         });
 
