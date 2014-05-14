@@ -12,6 +12,7 @@ app.configure(function () {
 
 app.get('/classificationCount', classifications.getClassificationCount);
 app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
+app.get('/classifications/from/:from/to/:to/interval/:interval', classifications.getClassificationInterval);
 /*
 app.get('/classifications/:howmany', classifications.findLastHowmany);
 app.get('/classifications/:howmany/offset/:timeperiod', classifications.findSince);

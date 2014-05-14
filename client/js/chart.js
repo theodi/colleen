@@ -43,8 +43,8 @@ ZN.Chart.prototype = {
         this.apiPath = ZN.config.apiPath;
 
 
-        this.minDate = new Date(2013,2,1);
-        this.maxDate = new Date(2013,2,30);
+        this.minDate = new Date(2012,8,1);
+        this.maxDate = new Date(2012,8,2);
         var format = d3.time.format("%Y/%m/%d");
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);
@@ -84,10 +84,12 @@ ZN.Chart.prototype = {
         $( "#update-but" )
 
             .click(function( event ) {
+
                 event.preventDefault();
             });
 
-        this.loadData();
+        //this.loadData();
+        this.loadChart();
 
     },
 
@@ -110,6 +112,19 @@ ZN.Chart.prototype = {
 
         });
 
+    },
+
+    loadChart: function(){
+        var from = this.minDate.valueOf()/1000;
+        var to = this.maxDate.valueOf()/1000;
+        var interval = 1800;
+        var url = this.apiPath + "classifications/from/" + from +"/to/"+ to +"/interval/"+interval;
+
+        this.loadUrl(url, "json",this.chartLoaded);
+
+    },
+    chartLoaded: function(data){
+        this.barChart(data);
     },
 
     loadData:function () {
@@ -184,7 +199,6 @@ ZN.Chart.prototype = {
                 var time = new Date(minTimeMs+secsPerBar*1000*i);
                 var timeStr = format(time);
                 values.push({"label":timeStr,"value":0});
-
             }
 
             var series = {
@@ -192,9 +206,7 @@ ZN.Chart.prototype = {
                 values: values
             };
             barchartObj.push(series);
-
         }
-
 
 
         var nClassifications = this.classifications.length;
@@ -232,14 +244,15 @@ ZN.Chart.prototype = {
                     //.reduceXTicks(true)
                     //.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
                     .tooltips(true)        //Don't show tooltips
-                    .stacked(true)       //...instead, show the bar value right on top of each bar.
+                    .stacked(false)       //...instead, show the bar value right on top of each bar.
                     .transitionDuration(50)
                     .rotateLabels(45)
                     .width(1100)
-                    .height(400);
+                    .height(400)
+                    .groupSpacing(0.1);
 
             d3.select('#chart-container svg')
-                .datum(barchartObj)//(exampleData())
+                .datum(barchartObj)
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
