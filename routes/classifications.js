@@ -71,7 +71,7 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-    connection.query('SET time_zone = "+00:00',function(err, rows, fields){
+    connection.query('SET time_zone = "+00:00"',function(err, rows, fields){
         console.log(err);
     });
 
@@ -81,9 +81,10 @@ exports.getClassificationInterval = function(req, res) {
     "GROUP BY time,project", function(err, rows, fields) {
         if(err) throw err;
         _.map(rows,function(item){
-            item.time = parseInt(item.time)*interval;
+            //console.log("divided time",item.time);
+            item.time = parseFloat(item.time)*interval;
             item.date = new Date(item.time*1000).toISOString();
-            //console.log('date',item.date,'count',item.count);
+            //console.log('date',item.date,'count',item.count,"time",item.time);
         });
 
         var minTimeMs = from*1000;
@@ -102,7 +103,7 @@ exports.getClassificationInterval = function(req, res) {
 
                 var timeStr = time.toISOString();
                 values.push({"label":timeStr,"value":0});
-                console.log('timeStr',timeStr);
+                //console.log('timeStr',timeStr);
             }
 
             var series = {
@@ -119,7 +120,7 @@ exports.getClassificationInterval = function(req, res) {
             if(item){
                 item.value = row.count;
             }
-            console.log('row.date',row.date);
+            //console.log('row.date',row.date);
 
         });
 
