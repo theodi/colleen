@@ -52,17 +52,28 @@ ZN.Chart.prototype = {
         this.loadChart();
     },
 
+    getUTC: function(date){
+        var dateUTC = new Date( Date.UTC(date.getFullYear(), date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(), date.getSeconds()));
+        return new Date(dateUTC);
+    },
+
     initInterface:function () {
 
         var self = this;
-        this.minDate = this.pickerMinDate = new Date(2012, 8, 1);
-        this.maxDate = this.pickerMaxDate = new Date(2012, 8, 30);
+        var d0 = new Date(2012, 8, 1);
+        var v0 = d0.valueOf();
+        var d1 = this.getUTC(d0);
+        var v1 = d1.valueOf();
+        console.log("UTC min", d1,v1);
+
+        this.minDate = this.pickerMinDate = this.getUTC(new Date(2012, 8, 1));
+        this.maxDate = this.pickerMaxDate = this.getUTC(new Date(2012, 8, 30));
         var format = d3.time.format("%Y/%m/%d");
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);
 
-        this.pickerStartDate = new Date(2012, 8, 1);
-        this.pickerEndDate = new Date(2012, 8, 2);
+        this.pickerStartDate = this.getUTC(new Date(2012, 8, 1));
+        this.pickerEndDate = this.getUTC(new Date(2012, 8, 2));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);
@@ -76,6 +87,9 @@ ZN.Chart.prototype = {
             onChangeDateTime:function (dp, $input) {
                 console.log($input.val());
                 self.pickerStartDate = dp;
+                var d1 = this.getUTC(self.pickerStartDate);
+                var v1 = d1.valueOf();
+                console.log("Picker UTC min", d1,v1);
 
             }
         });
@@ -87,6 +101,7 @@ ZN.Chart.prototype = {
             onChangeDateTime:function (dp, $input) {
                 console.log($input.val());
                 self.pickerEndDate = dp;
+
             }
         });
         $("#time-select").change(function () {
