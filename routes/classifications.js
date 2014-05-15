@@ -9,7 +9,8 @@ var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'colleen',
     password : 'galaxy',
-    database: 'zoon'
+    database: 'zoon',
+    timezone: '+00:00'
 });
 
 connection.connect(function(err) {
@@ -23,7 +24,6 @@ connection.connect(function(err) {
 });
 
 
-
 exports.getClassificationCount = function(req, res) {
     //connection.query('SELECT COUNT(*) AS count FROM `classifications`', function(err, rows, fields) {
     connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
@@ -33,6 +33,36 @@ exports.getClassificationCount = function(req, res) {
     });
 }
 
+exports.getClassificationCountLatest = function(req, res) {
+
+    var seconds = parseInt(req.params.seconds);
+
+    if(isNaN(seconds)){
+        res.send([]);
+        return;
+    }
+
+    var maxTimeUnix = 0;
+    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows, fields) {
+
+        if(err) throw err;
+        maxTimeUnix = rows[0].time;
+        console.log('maxTimeUnix: ', maxTimeUnix);
+
+        var unixTime = maxTimeUnix-seconds;
+        console.log('unixTime: ', unixTime);
+
+        connection.query("SELECT count(*) AS count,project,country "+
+            "FROM classifications WHERE created_at > FROM_UNIXTIME("+unixTime+")"+
+            "GROUP BY project,country", function(err, rows, fields) {
+
+            if(err) throw err;
+            res.send(rows);
+
+        });
+    });
+
+}
 
 exports.getLastClassifications = function(req, res) {
     var count = parseInt(req.params.count);
@@ -71,9 +101,11 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
+    /*
     connection.query('SET time_zone = "+00:00"',function(err, rows, fields){
         console.log(err);
     });
+    */
 
 
     connection.query("SELECT count(*) AS count,project,FLOOR(UNIX_TIMESTAMP(created_at)/"+interval+") AS time "+
