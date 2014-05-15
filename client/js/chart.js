@@ -60,20 +60,16 @@ ZN.Chart.prototype = {
     initInterface:function () {
 
         var self = this;
-        var d0 = new Date(2012, 8, 1);
-        var v0 = d0.valueOf();
-        var d1 = this.getUTC(d0);
-        var v1 = d1.valueOf();
-        console.log("UTC min", d1,v1);
 
-        this.minDate = this.pickerMinDate = this.getUTC(new Date(2012, 8, 1));
-        this.maxDate = this.pickerMaxDate = this.getUTC(new Date(2012, 8, 30));
+
+        this.minDate = this.pickerMinDate = new Date(Date.UTC(2012, 8, 1));
+        this.maxDate = this.pickerMaxDate = new Date(Date.UTC(2012, 8, 30));
         var format = d3.time.format("%Y/%m/%d");
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);
 
-        this.pickerStartDate = this.getUTC(new Date(2012, 8, 1));
-        this.pickerEndDate = this.getUTC(new Date(2012, 8, 2));
+        this.pickerStartDate = new Date(Date.UTC(2012, 8, 1));
+        this.pickerEndDate = new Date(Date.UTC(2012, 8, 2));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);
@@ -85,11 +81,8 @@ ZN.Chart.prototype = {
             value:minValue, //'2013/03/30 00:00',
             format:'Y/m/d H:i',
             onChangeDateTime:function (dp, $input) {
-                console.log($input.val());
+                //console.log($input.val());
                 self.pickerStartDate = dp;
-                var d1 = this.getUTC(self.pickerStartDate);
-                var v1 = d1.valueOf();
-                console.log("Picker UTC min", d1,v1);
 
             }
         });
@@ -99,7 +92,7 @@ ZN.Chart.prototype = {
             value:maxValue,
             format:'Y/m/d H:i',
             onChangeDateTime:function (dp, $input) {
-                console.log($input.val());
+                //console.log($input.val());
                 self.pickerEndDate = dp;
 
             }
@@ -283,6 +276,8 @@ ZN.Chart.prototype = {
         nv.addGraph(function () {
             var chart = nv.models.multiBarChart()//discreteBarChart()
                 .x(function (d) {
+                    d.label = d.label.replace("T"," ");
+                    d.label = d.label.replace(":00.000Z","");
                     return d.label
                 })//Specify the data accessors.
                 .y(function (d) {

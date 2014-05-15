@@ -8,6 +8,7 @@
     <title>Zooniverse Charts</title>
 
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/chart.css"/>
     <link rel="stylesheet" type="text/css" href="css/d3/nv.d3.css"/>
     <link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.min.css"/>
     <link rel="stylesheet" type="text/css" href="lib/jquery/datetimepicker/jquery.datetimepicker.css"/>
@@ -33,21 +34,20 @@
 </head>
 <body  scroll="no">
 
-<div>
+<div id="menu">
+    <span>Start Date: <input type="text" id="start-date"></span>
+    <span>End Date: <input type="text" id="end-date"></span>
 
-    Start Date: <input type="text" id="start-date">
-    End Date: <input type="text" id="end-date">
-
-
-    Interval (mins): <select id="time-select">
+    <span>Interval (mins): <select id="time-select">
         <option value="1">1</option>
         <option value="5">5</option>
         <option value="15">15</option>
-        <option value="60">60</option>
-        <option value="1440">1440</option>
-    </select>
-    <button id="update-but" href="#">Update</button>
-    <span id="loading" style="display:none">Loading...</span>
+        <option value="60">1 hr</option>
+        <option value="1440">1 day</option>
+        <!--<option value="10080">1 week</option>-->
+    </select></span>
+    <span><button id="update-but" href="#">Update</button></span>
+    <span><span id="loading" style="display:none">Loading...</span></span>
 
 </div>
 
