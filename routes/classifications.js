@@ -137,3 +137,10 @@ exports.getClassificationInterval = function(req, res) {
 
 };
 
+exports.cleanUp = function() {
+    console.log('Checking for open DB connections');
+    if (null != connection){
+	console.log('Closing DB connection');
+	connection.end();
+    }
+}
