@@ -78,9 +78,10 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-    connection.query('SET time_zone = "+00:00"',function(err, rows, fields){
-        console.log(err);
-    });
+
+    //    connection.query('SET time_zone = "+00:00"',function(err, rows, fields){
+	    //	    console.log(err);
+	    //        });
 
 
     connection.query("SELECT count(*) AS count,project,FLOOR(UNIX_TIMESTAMP(created_at)/"+interval+") AS time "+
