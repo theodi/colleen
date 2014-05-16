@@ -5,7 +5,7 @@
 var _ = require('lodash');
 
 var mysql      = require('mysql');
-var DATABASE_URL = process.ENV.DATABASE_URL;
+var DATABASE_URL = process.env.DATABASE_URL;
 var connection = mysql.createConnection(DATABASE_URL);
 
 connection.connect(function(err) {
