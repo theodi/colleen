@@ -8,6 +8,17 @@ var mysql      = require('mysql');
 var DATABASE_URL = process.env.DATABASE_URL;
 var connection = mysql.createConnection(DATABASE_URL);
 
+connection.addListener('error', function(connectionException){
+	if (connectionException.errno === process.ECONNREFUSED) {
+	    console.log('ECONNREFUSED: connection refused to '
+            +connection.host
+            +':'
+		    +connection.port);
+	} else {
+	    console.log(connectionException);
+	}
+    });
+
 connection.connect(function(err) {
 
     if(!err){
