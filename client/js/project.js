@@ -14,7 +14,7 @@ ZN.Project = function () {
         clsPercent:{},
         userPercent:{},
 
-        userData: [],
+        userData:[],
         clsData:[]
 
     };

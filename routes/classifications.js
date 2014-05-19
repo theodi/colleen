@@ -271,7 +271,7 @@ exports.getAnalytics = function(req, res) {
 
 exports.getAnalyticsAggregateCountries = function(req, res) {
 
-    connection.query("SELECT `project`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`",function(err, rows, fields) {
+    connection.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
         if(err) throw err;
         res.send(rows);
     });

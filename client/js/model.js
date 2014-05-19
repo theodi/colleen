@@ -78,7 +78,7 @@ ZN.Model.prototype = {
 
         },this);
 
-        /*
+        /* test percentages
         var percentTotal = _.reduce(this.projects, function(sum, project) {
             var value = 0;
             if(project.analytics.clsPercent['d']){
