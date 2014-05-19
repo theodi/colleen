@@ -1,5 +1,5 @@
 ZN.config = {
-    apiPath:"http://localhost:3000/",
+    apiPath:"http://enigmatic-bayou-2150.herokuapp.com/",
     zooniversePath:"http://live.zooniverse.org/",
     dataSource:"archive",
 
