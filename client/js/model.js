@@ -3,6 +3,10 @@ ZN.Model = function () {
     this.projectDict = {};
     this.classifications = [];// classificationsn order by timestamp
     //this.classificationIds = {};
+    this.analytics={
+        clsCount:{},
+        userCount:{}
+    };
 
 }
 
@@ -36,15 +40,22 @@ ZN.Model.prototype = {
                     interval:item.interval
                 };
                 switch(item.type_id){
-                    case 0:
+                    case 'c':
                         if(!analytics.clsCount[item.interval]) analytics.clsCount[item.interval] = 0;
                         analytics.clsCount[item.interval]+=item.count;
                         analytics.clsData.push(analyticObj);
+
+                        if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
+                        this.analytics.clsCount[item.interval]+=item.count;
+
                         break;
-                    case 1:
+                    case 'u':
                         if(!analytics.userCount[item.interval]) analytics.userCount[item.interval] = 0;
                         analytics.userCount[item.interval]+=item.count;
                         analytics.userData.push(analyticObj);
+
+                        if(!this.analytics.userCount[item.interval]) this.analytics.userCount[item.interval] = 0;
+                        this.analytics.userCount[item.interval]+=item.count;
                         break;
 
                 }
@@ -56,6 +67,30 @@ ZN.Model.prototype = {
 
 
         },this);
+
+        _.each(this.projects,function(project,index){
+            _.each(this.analytics.clsCount,function(value,key){
+                if(project.analytics.clsCount[key]){
+                    project.analytics.clsPercent[key] = project.analytics.clsCount[key]/this.analytics.clsCount[key];
+                    console.log(project.name, key, project.analytics.clsPercent[key]);
+                }
+            },this);
+
+        },this);
+
+        /*
+        var percentTotal = _.reduce(this.projects, function(sum, project) {
+            var value = 0;
+            if(project.analytics.clsPercent['d']){
+                value = project.analytics.clsPercent['d'];
+            }
+            return sum + value;
+        },0);
+        */
+        console.log('percent sum:',percentTotal);
+
+
+
 
     },
     addClassifications:function(classifications){

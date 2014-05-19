@@ -10,7 +10,7 @@
 --
 
 CREATE TABLE IF NOT EXISTS `analytics` (
-  `type_id` smallint(5) unsigned NOT NULL,
+  `type_id` varchar(1) NOT NULL DEFAULT '',
   `project` varchar(255) NOT NULL,
   `interval` varchar(1) NOT NULL,
   `country` varchar(2) DEFAULT '',

@@ -219,11 +219,11 @@ function updateAnalyticsIntervals(res,analyticsArray){
         switch(dataType){
             case "cls":
                 dataQuery = "COUNT(*) AS count";
-                dataId = "0";
+                dataId = "c";
                 break;
             case "users":
                 dataQuery = "COUNT(DISTINCT user_id) as count";
-                dataId = "1";
+                dataId = "u";
                 break;
         }
 

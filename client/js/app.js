@@ -146,7 +146,7 @@ ZN.App.prototype = {
         this.model.parseAnalytics(data);
 
         this.initCanvas();
-        this.loadClassification();
+        //this.loadClassification();
     },
 
 
