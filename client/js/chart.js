@@ -62,8 +62,8 @@ ZN.Chart.prototype = {
         var self = this;
 
 
-        this.minDate = this.pickerMinDate = new Date(Date.UTC(2012, 8, 1));
-        this.maxDate = this.pickerMaxDate = new Date(Date.UTC(2012, 8, 30));
+        this.minDate = this.pickerMinDate = new Date(Date.UTC(2007, 0, 1));
+        this.maxDate = this.pickerMaxDate = new Date();
         var format = d3.time.format("%Y/%m/%d");
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);

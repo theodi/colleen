@@ -2,49 +2,142 @@
     {
         "name": "andromeda",
         "display_name": "Andromeda Project",
-        "created_at": "2012-12-04T19:27:41Z",
-
-        "classification_count_total": 1897369,
-        "classification_count_month": 897369,
-        "classification_count_week": 97369,
-        "classification_count_hour": 369,
-
-        "user_count_total": 10503,
-        "user_count_month": 5000,
-        "user_count_week": 2000,
-        "user_count_hour": 100
-
+        "created_at": "2012-12-04T19:27:41Z"
     },
     {
         "name": "asteroid",
         "display_name": "Astroid Project",
-        "created_at": "2012-12-04T19:27:41Z",
-
-        "classification_count_total": 2576898,
-        "classification_count_month": 1897369,
-        "classification_count_week": 197369,
-        "classification_count_hour": 1369,
-
-        "user_count_total": 20503,
-        "user_count_month": 2000,
-        "user_count_week": 4000,
-        "user_count_hour": 200
+        "created_at": "2012-12-04T19:27:41Z"
     },
-
     {
         "name": "bat_detective",
         "display_name": "Bat Detective",
-        "created_at": "2012-12-04T19:27:41Z",
-
-        "classification_count_total": 309827,
-        "classification_count_month": 897369,
-        "classification_count_week": 97369,
-        "classification_count_hour": 369,
-
-        "user_count_total": 2342,
-        "user_count_month": 1000,
-        "user_count_week": 500,
-        "user_count_hour": 50
+        "created_at": "2012-12-04T19:27:41Z"
+    },
+    {
+        "name": "cancer_cells",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "cancer_gene_runner",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "condor",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "cyclone_center",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "galaxy_zoo",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "hubble",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "leaf",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "mergers",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "milky_way_project",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "moon_zoo",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "notes_from_nature",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "penguin",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "planet_hunters",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "planet_four",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "plankton",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "radio",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "sea_floor_explorer",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "serengeti",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "spacewarp",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "solar_storm_watch",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "sunspot",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "war_diary",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "whalefm",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "wise",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "worms",
+        "display_name": "",
+        "created_at": ""
     }
 
 ]

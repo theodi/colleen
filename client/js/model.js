@@ -1,5 +1,6 @@
 ZN.Model = function () {
     this.projects = [];
+    this.projectDict = {};
     this.classifications = [];// classificationsn order by timestamp
     //this.classificationIds = {};
 
@@ -18,7 +19,44 @@ ZN.Model.prototype = {
             var project = new ZN.Project();
             project.setProps(projProps);
             this.projects.push(project);
+            this.projectDict[project.name] = project;
         }
+    },
+    parseAnalytics: function(data){
+
+        _.each(data,function(item,index){
+            var projectName = item.project;
+            var project = this.projectDict[projectName];
+            if(project){
+
+                var analytics = project.analytics;
+                var analyticObj = {
+                    country:item.country,
+                    count:item.count,
+                    interval:item.interval
+                };
+                switch(item.type_id){
+                    case 0:
+                        if(!analytics.clsCount[item.interval]) analytics.clsCount[item.interval] = 0;
+                        analytics.clsCount[item.interval]+=item.count;
+                        analytics.clsData.push(analyticObj);
+                        break;
+                    case 1:
+                        if(!analytics.userCount[item.interval]) analytics.userCount[item.interval] = 0;
+                        analytics.userCount[item.interval]+=item.count;
+                        analytics.userData.push(analyticObj);
+                        break;
+
+                }
+            }
+            else{
+                console.log('no project:', projectName);
+            }
+
+
+
+        },this);
+
     },
     addClassifications:function(classifications){
         var nClassifications = classifications.length;
@@ -44,6 +82,7 @@ ZN.Model.prototype = {
     removeFirstClassification:function(){
         return this.classifications.shift();
     }
+
 
 
 

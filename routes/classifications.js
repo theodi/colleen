@@ -170,10 +170,15 @@ exports.getClassificationInterval = function(req, res) {
 
 exports.updateAnalytics = function(req, res) {
 
-    updateAnalyticsIntervals(res,[{type:'users',interval:'d'},{type:'users',interval:'w'},{type:'users',interval:'m'},
-        {type:'cls',interval:'d'},{type:'cls',interval:'w'},{type:'cls',interval:'m'}
+    connection.query("TRUNCATE `analytics`",function(err) {
 
-    ]);
+        if(err) throw err;
+
+        updateAnalyticsIntervals(res,[{type:'users',interval:'d'},{type:'users',interval:'w'},{type:'users',interval:'m'},
+            {type:'cls',interval:'d'},{type:'cls',interval:'w'},{type:'cls',interval:'m'}
+
+        ]);
+    });
 
 
 
@@ -222,8 +227,8 @@ function updateAnalyticsIntervals(res,analyticsArray){
                 break;
         }
 
-        connection.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`)"+
-            "SELECT '"+dataId+"',project,'"+interval+"',country,"+dataQuery+" "+
+        connection.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`,`updated`)"+
+            "SELECT '"+dataId+"',project,'"+interval+"',country,"+dataQuery+",NOW() "+
             "FROM classifications WHERE created_at > FROM_UNIXTIME("+unixTime+")"+
             "GROUP BY project,country", function(err, rows, fields) {
 
@@ -250,6 +255,25 @@ function testUserAnalytics(res){
         res.send(rows);
 
 
+    });
+
+}
+
+exports.getAnalytics = function(req, res) {
+
+    connection.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
+        if(err) throw err;
+        res.send(rows);
+
+    });
+
+}
+
+exports.getAnalyticsAggregateCountries = function(req, res) {
+
+    connection.query("SELECT `project`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`",function(err, rows, fields) {
+        if(err) throw err;
+        res.send(rows);
     });
 
 }
