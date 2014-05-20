@@ -5,7 +5,7 @@ body {
     width: 100%;
     overflow: hidden;
     color: #ccc;
-    background-color: #000000;
+    background-color: #fefdfc;
     font-family: 'Roboto Condensed', Helvetica, Arial, sans-serif;
     font-size: 14px;
 }
@@ -20,7 +20,7 @@ html{
 
 
 #loader{
-    background: #000000;
+    background: #fefefe;
     bottom: 0;
     left: 0;
     top: 0;
@@ -143,7 +143,7 @@ html{
 /* Map */
 
 #canvas-container{
-    background-color: #000;
+    background-color: #fefdfc;
     position:absolute;
     top:0px;
     bottom:0px;

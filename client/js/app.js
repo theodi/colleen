@@ -134,7 +134,19 @@ ZN.App.prototype = {
     },
     projectsLoaded:function(data){
         this.model.initProjects(data);
+        this.loadAssets();
+    },
+
+    loadAssets:function () {
+        var url = "data/comp_1.json";
+
+        this.loadUrl(url, "json",this.assetsLoaded);
+
+    },
+    assetsLoaded:function(data){
+        this.model.setStyles(data);
         this.loadProjectAnalytics();
+
     },
 
     loadProjectAnalytics:function () {
@@ -146,6 +158,7 @@ ZN.App.prototype = {
         this.model.parseAnalytics(data);
 
         this.initCanvas();
+        this.update();
         //this.loadClassification();
     },
 
@@ -224,6 +237,7 @@ ZN.App.prototype = {
         var self = this;
         this.curTime = (new Date()).valueOf();
 
+        /*
         // load new classifications
         if(this.curTime>this.nextRequestTime){
             this.loadClassification();
@@ -241,6 +255,7 @@ ZN.App.prototype = {
 
             }
         }
+        */
 
 
         requestAnimationFrame(function(){self.update()});
@@ -306,9 +321,27 @@ ZN.App.prototype = {
         if(this.paths.length>0) return;
 
         var projects = this.model.projects;
+
+        var tx=10,ty=10;
+
+        _.each(projects,function(project,index){
+            var set = this.paper.set();
+            _.each(project.paths,function(path){
+                var path = this.paper.path(path.d)
+                   .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("T"+tx+","+ty).transform("s1.0");
+                this.paths.push(path);
+                set.push(path);
+
+            },this);
+            set.attr({fill: "red"});
+            set.transform("s0.5,0.5,100,100");
+
+        },this);
+
+        /*
         for(var i=0;i<projects.length;i++){
 
-            /*
+
             var proj = projects[i];
             var pathStrs = proj.pointsToRaphael();
 
@@ -323,9 +356,10 @@ ZN.App.prototype = {
 
                 this.paths.push(path,path2);
             }
-            */
+
 
         }
+        */
 
         /*
         if(this.paths.length>0) return;
