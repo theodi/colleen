@@ -5,8 +5,8 @@
 var _ = require('lodash');
 
 var mysql      = require('mysql');
-var DATABASE_URL = process.env.DATABASE_URL;
-var connection = mysql.createConnection(DATABASE_URL);
+var WNU_DB_URL = process.env.WNU_DB_URL;
+var connection = mysql.createConnection(WNU_DB_URL);
 
 connection.addListener('error', function(connectionException){
 	if (connectionException.errno === process.ECONNREFUSED) {

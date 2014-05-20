@@ -45,7 +45,7 @@ ZN.Chart.prototype = {
     },
 
     configLoaded:function () {
-        this.apiPath = ZN.config.apiPath;
+        this.apiUrl = ZN.config.apiUrl;
 
         //this.loadData();
         this.initInterface();
@@ -149,7 +149,7 @@ ZN.Chart.prototype = {
         var from = this.pickerStartDate.valueOf() / 1000;
         var to = this.pickerEndDate.valueOf() / 1000;
         var interval = this.intervalSecs;
-        var url = this.apiPath + "classifications/from/" + from + "/to/" + to + "/interval/" + interval;
+        var url = this.apiUrl + "classifications/from/" + from + "/to/" + to + "/interval/" + interval;
 
         this.loadUrl(url, "json", this.chartLoaded);
         this.displayLoading(true);
@@ -163,7 +163,7 @@ ZN.Chart.prototype = {
     loadData:function () {
         var maxItems = 10000000;
 
-        var url = this.apiPath + "classifications/" + maxItems + "/duration/" + this.durationSecs + "/offset/" + this.offsetSecs;
+        var url = this.apiUrl + "classifications/" + maxItems + "/duration/" + this.durationSecs + "/offset/" + this.offsetSecs;
 
         this.loadUrl(url, "json", this.dataLoaded);
 

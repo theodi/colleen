@@ -1,6 +1,6 @@
 ZN.config = {
-    apiPath:"http://enigmatic-bayou-2150.herokuapp.com/",
-    zooniversePath:"http://live.zooniverse.org/",
+    apiUrl:"http://enigmatic-bayou-2150.herokuapp.com/",
+    zooniverseUrl:"http://live.zooniverse.org/",
     dataSource:"archive",
 
     projectIds:["andromeda","asteroid","bat_detective","cancer_cells","cancer_gene_runner","condor",

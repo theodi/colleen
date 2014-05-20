@@ -9,7 +9,7 @@ ZN.App = function () {
     this.timeoutCount = 0;
     this.bLoadData = true;
     this.dataType = "json";
-    this.apiPath = "";
+    this.apiUrl = "";
     this.dataSource = "archive"; // "live"
     this.archiveStartSecs = 120000;//2*24*60*60; // seconds
 
@@ -61,7 +61,7 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-        this.apiPath = ZN.config.apiPath;
+        this.apiUrl = ZN.config.apiUrl;
         this.dataSource = ZN.config.dataSource;
         //this.model.projects = ZN.config.projects;
         this.loadProjects();
@@ -144,18 +144,13 @@ ZN.App.prototype = {
 
 
     loadClassification:function () {
-        //var nItems = 100;
-        //var url = this.apiPath + "classifications/" + nItems;
-        //var url = "http://live.zooniverse.org/classifications/100";
-        // duration
-        // http://localhost:3000/classifications/2000/duration/60/offset/120?callback=?
         var maxItems = 1000;
         var requestDurationSecs = this.requestDuration/1000;
         var offsetSecs = 0;
         if(this.dataSource=="archive"){
             offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
         }
-        var url = this.apiPath + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
+        var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
 
         this.loadUrl(url, "json", this.classificationLoaded);
 
