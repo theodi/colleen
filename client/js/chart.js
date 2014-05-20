@@ -164,7 +164,6 @@ ZN.Chart.prototype = {
         var maxItems = 10000000;
 
         var url = this.apiUrl + "classifications/" + maxItems + "/duration/" + this.durationSecs + "/offset/" + this.offsetSecs;
-
         this.loadUrl(url, "json", this.dataLoaded);
 
     },
