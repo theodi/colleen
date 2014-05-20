@@ -273,7 +273,7 @@ exports.getAnalyticsAggregateCountries = function(req, res) {
         if(err) throw err;
         res.send(rows);
     });
-
+}
 
 exports.cleanUp = function() {
     console.log('Checking for open DB connections');
