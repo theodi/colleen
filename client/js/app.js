@@ -134,13 +134,22 @@ ZN.App.prototype = {
     },
     projectsLoaded:function(data){
         this.model.initProjects(data);
+        this.loadProjectAnalytics();
+    },
 
-        this.initCanvas();
-        this.loadClassification();
-
-
+    loadProjectAnalytics:function () {
+        var url = this.apiPath+"analytics";
+        this.loadUrl(url, "json",this.analyticsLoaded);
 
     },
+    analyticsLoaded:function(data){
+        this.model.parseAnalytics(data);
+
+        this.initCanvas();
+        //this.loadClassification();
+    },
+
+
 
 
     loadClassification:function () {

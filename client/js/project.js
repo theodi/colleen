@@ -6,6 +6,19 @@ ZN.Project = function () {
     this.classificationCount=0;
     this.userCount=0;
     this.position=[];
+    this.analytics = {
+
+        clsCount:{},
+        userCount:{},
+
+        clsPercent:{},
+        userPercent:{},
+
+        userData:[],
+        clsData:[]
+
+    };
+
 
 }
 
