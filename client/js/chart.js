@@ -45,9 +45,10 @@ ZN.Chart.prototype = {
     },
 
     configLoaded:function () {
-        this.apiUrl = ZN.config.apiUrl;
-
-        //this.loadData();
+	/* url for api on same host as this page served from
+	 */
+	var url = window.location.protocol + "//" + window.location.host + "/"; 
+        this.apiUrl = url;
         this.initInterface();
         this.loadChart();
     },

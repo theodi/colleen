@@ -1,7 +1,4 @@
 ZN.config = {
-    //    apiUrl:"http://enigmatic-bayou-2150.herokuapp.com/",
-    apiUrl:"http://localhost:5000/",
-    zooniverseUrl:"http://live.zooniverse.org/",
     dataSource:"archive",
 
     projectIds:["andromeda","asteroid","bat_detective","cancer_cells","cancer_gene_runner","condor",
