@@ -8,4 +8,4 @@ flush privileges;
 # substituting actual password for XXXXX, in mysql type:
 # set password for 'colleen'@'localhost' = password('XXXXX');
 # quit to shell and then run the following. you will be prompted for pw
-# > mysql -u colleen -p zoon < zoon_2014-05-13.sql
+# > mysql -u colleen -p zoon < data/test_data.sql
