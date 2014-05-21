@@ -128,7 +128,7 @@ ZN.App.prototype = {
     },
 
     loadProjects:function () {
-        var url = "js/projects.json";
+        var url = "data/projects.json";
         this.loadUrl(url, "json",this.projectsLoaded);
 
     },
