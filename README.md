@@ -34,9 +34,7 @@ Many have helped us. We will name them in time.
 
 1. run MySQL server:
 
-        ```
         $ sudo /usr/local/mysql/support-files/mysql.server start
-        ```
 
 you will be prompted for a password. it wants the admin password for your mac.
 
