@@ -29,7 +29,7 @@ Many have helped us. We will name them in time.
 
 ###dev on Mac
 1. clone project from github
-1.install MySQL Community Server (download from http://dev.mysql.com/downloads/mysql/) if not already on your machine.
+1. install MySQL Community Server (download from http://dev.mysql.com/downloads/mysql/) if not already on your machine.
 1. run MySQL server:
         $ sudo /usr/local/mysql/support-files/mysql.server start
 you will be prompted for a password. it wants the admin password for your mac.
