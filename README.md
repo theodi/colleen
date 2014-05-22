@@ -79,9 +79,9 @@ Many have helped us. We will name them in time.
         http://sharp-rain-871.herokuapp.com/ | git@heroku.com:sharp-rain-871.git
         Git remote heroku added			
 
-1. if you do not want to use an existing database then provision a cleardb addon for your heroku app http://dashboard.heroku.com/apps/YOURAPPNAME, you will be given a db connection string to use which contains a user, password, dbhost and dbname. If you are a Team Colleen member you can use the one in the Technical Resources document on Google Drive. You can then load the test data from data/test_data.sql much as you did for your dev instance, but use the connection string provided.
+1. If you do not want to use an existing database then provision a cleardb addon for your heroku app http://dashboard.heroku.com/apps/YOURAPPNAME, you will be given a db connection string to use which contains a user, password, dbhost and dbname. If you are a Team Colleen member you can use the one in the Technical Resources document on Google Drive. You can then load the test data from data/test_data.sql much as you did for your dev instance, but use the connection string provided.
 
-1. run 
+1. Run 
 
         $ heroku config:set WEB='node server.js'
         $ heroku config:set WNU_DATA_MODE=archive
@@ -89,7 +89,7 @@ Many have helped us. We will name them in time.
         $ heroku config:set WNU_DB_URL=mysql://<user>:<password>@<dbhost>/<dbname>?reconnect=true
         $ git push heroku master
 
-1. visit your app at http://YOURAPPNAME
+1. Visit your app at http://YOURAPPNAME
 
 
 ##TODO
