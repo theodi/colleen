@@ -61,7 +61,10 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-        this.apiUrl = ZN.config.apiUrl;
+	/* url for api on same host as this page served from
+	 */
+	var url = window.location.protocol + "//" + window.location.host + "/"; 
+        this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
         //this.model.projects = ZN.config.projects;
         this.loadProjects();
