@@ -45,9 +45,10 @@ ZN.Chart.prototype = {
     },
 
     configLoaded:function () {
-        this.apiPath = ZN.config.apiPath;
-
-        //this.loadData();
+	/* url for api on same host as this page served from
+	 */
+	var url = window.location.protocol + "//" + window.location.host + "/"; 
+        this.apiUrl = url;
         this.initInterface();
         this.loadChart();
     },
@@ -68,8 +69,10 @@ ZN.Chart.prototype = {
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);
 
-        this.pickerStartDate = new Date(Date.UTC(2012, 8, 1));
-        this.pickerEndDate = new Date(Date.UTC(2012, 8, 2));
+	// set start/end dates to mirror contents of data/test_data.sql
+	//beware, the month is 0 based, i.e. January is 0!
+        this.pickerStartDate = new Date(Date.UTC(2012, 8, 27));
+        this.pickerEndDate = new Date(Date.UTC(2012, 8, 28));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);
@@ -149,7 +152,7 @@ ZN.Chart.prototype = {
         var from = this.pickerStartDate.valueOf() / 1000;
         var to = this.pickerEndDate.valueOf() / 1000;
         var interval = this.intervalSecs;
-        var url = this.apiPath + "classifications/from/" + from + "/to/" + to + "/interval/" + interval;
+        var url = this.apiUrl + "classifications/from/" + from + "/to/" + to + "/interval/" + interval;
 
         this.loadUrl(url, "json", this.chartLoaded);
         this.displayLoading(true);
@@ -163,8 +166,7 @@ ZN.Chart.prototype = {
     loadData:function () {
         var maxItems = 10000000;
 
-        var url = this.apiPath + "classifications/" + maxItems + "/duration/" + this.durationSecs + "/offset/" + this.offsetSecs;
-
+        var url = this.apiUrl + "classifications/" + maxItems + "/duration/" + this.durationSecs + "/offset/" + this.offsetSecs;
         this.loadUrl(url, "json", this.dataLoaded);
 
     },

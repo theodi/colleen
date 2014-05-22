@@ -5,13 +5,19 @@
 var _ = require('lodash');
 
 var mysql      = require('mysql');
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'colleen',
-    password : 'galaxy',
-    database: 'zoon',
-    timezone: '+00:00'
-});
+var WNU_DB_URL = process.env.WNU_DB_URL;
+var connection = mysql.createConnection(WNU_DB_URL);
+
+connection.addListener('error', function(connectionException){
+	if (connectionException.errno === process.ECONNREFUSED) {
+	    console.log('ECONNREFUSED: connection refused to '
+            +connection.host
+            +':'
+		    +connection.port);
+	} else {
+	    console.log(connectionException);
+	}
+    });
 
 connection.connect(function(err) {
 
@@ -275,5 +281,12 @@ exports.getAnalyticsAggregateCountries = function(req, res) {
         if(err) throw err;
         res.send(rows);
     });
+}
 
+exports.cleanUp = function() {
+    console.log('Checking for open DB connections');
+    if (null != connection){
+	console.log('Closing DB connection');
+	connection.end();
+    }
 }
