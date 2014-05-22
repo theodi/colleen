@@ -90,11 +90,8 @@ function parseSVG(filename,projectJson){
 
             _.each(paths, function(path,index){
                 var stroke = path['$'].stroke;
-                console.log('stroke',stroke);
                 var id = (stroke.substr(stroke.length-1,1));
-                console.log('id',id);
-                var pathObj = _.find(projectJson.paths,{'id':id});
-                console.log('pathObj',pathObj);
+                var pathObj = _.find(projectJson.shapes,{'id':id});
                 console.log('id',id,path['$'].d,path['$'].stroke);
                 var d = path['$'].d;
                 d =  d.replace(/\s/g, "");
@@ -103,9 +100,9 @@ function parseSVG(filename,projectJson){
             _.each(rects, function(rect,index){
                 var stroke = rect['$'].stroke;
                 var id = stroke.substr(stroke.length-1,1);
-                var pathObj = _.find(projectJson.paths,{'id':id});
+                var pathObj = _.find(projectJson.shapes,{'id':id});
                 console.log('id',id,'x',rect['$'].x,'y',rect['$'].y,'w',rect['$'].width,'h',rect['$'].height);
-                pathObj.bounds = rect['$'];
+                pathObj.bounds = {'x':rect['$'].x,'y':rect['$'].y,'width':rect['$'].width,'height':rect['$'].height};
             });
 
         });

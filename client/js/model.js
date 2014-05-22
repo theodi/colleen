@@ -118,9 +118,11 @@ ZN.Model.prototype = {
         return this.classifications.shift();
     },
 
-    setStyles: function(data){
-        var projectName = data.project;
-        this.projectDict[projectName].setStyles(data);
+    setStyles: function(projects){
+        _.each(projects,function(projectData){
+            var projectName = projectData.project;
+            this.projectDict[projectName].setStyles(projectData);
+        },this);
 
     }
 

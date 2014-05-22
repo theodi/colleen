@@ -61,9 +61,8 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-	/* url for api on same host as this page served from
-	 */
-	var url = window.location.protocol + "//" + window.location.host + "/"; 
+        // url for api on same host as this page served from
+        var url = window.location.protocol + "//" + window.location.host + "/";
         this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
         //this.model.projects = ZN.config.projects;
@@ -141,7 +140,7 @@ ZN.App.prototype = {
     },
 
     loadAssets:function () {
-        var url = "data/comp_1.json";
+        var url = "data/project_rules.json";
 
         this.loadUrl(url, "json",this.assetsLoaded);
 
@@ -153,7 +152,7 @@ ZN.App.prototype = {
     },
 
     loadProjectAnalytics:function () {
-        var url = this.apiPath+"analytics";
+        var url = this.apiUrl+"analytics";
         this.loadUrl(url, "json",this.analyticsLoaded);
 
     },
@@ -324,8 +323,8 @@ ZN.App.prototype = {
 
         _.each(projects,function(project,index){
             var set = this.paper.set();
-            _.each(project.paths,function(path){
-                var path = this.paper.path(path.d)
+            _.each(project.shapes,function(shape){
+                var path = this.paper.path(shape.d)
                    .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("T"+tx+","+ty).transform("s1.0");
                 this.paths.push(path);
                 set.push(path);

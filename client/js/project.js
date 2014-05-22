@@ -17,7 +17,7 @@ ZN.Project = function () {
         clsData:[]
 
     };
-    this.paths={};
+    this.shapes=[];
 
 
 }
@@ -47,9 +47,17 @@ ZN.Project.prototype = {
 
     },
     setStyles:function(data){
-        this.paths = data.paths;
-        _.each(data.paths,function(path){
-            var pathStr = path.d;
+        //this.shapes = data.shapes;
+        _.each(data.shapes,function(shapeData){
+
+            var shape = new ZN.Shape();
+            this.shapes.push(shape);
+
+            _.each(shapeData,function(value,key){
+                shape[key] = value;
+            });
+
+            var pathStr = shapeData.d;
             var segsRel = Raphael.pathToRelative(pathStr);
             var segsAbs = Raphael._pathToAbsolute(pathStr);
             var x, y, ox= 0, oy=0, mx=0, my=0,
@@ -78,9 +86,19 @@ ZN.Project.prototype = {
             ox = (minx+maxx)/2;
             oy = (miny+maxy)/2;
 
-            path['origin'] = {x:ox,y:oy};
+            shape['origin'] = {x:ox,y:oy};
 
         },this);
+    },
+
+    updateShapes:function(){
+
+        _.each(data.shapes,function(path){
+            var pathStr = path.d;
+            var segsRel = Raphael.pathToRelative(pathStr);
+            var segsAbs = Raphael._pathToAbsolute(pathStr);
+            var x, y, ox= 0, oy=0, mx=0, my=0;
+        });
     }
 
 
@@ -89,21 +107,19 @@ ZN.Project.prototype = {
 
 }
 
-ZN.Polygon = function () {
+ZN.Shape = function () {
 
 }
 
-ZN.Polygon.prototype = {
-    constructor:ZN.Polygon,
+ZN.Shape.prototype = {
+    constructor:ZN.Shape,
     id:"",
-    points:[],
-    // [[50,50],[50,150],[150,150],[150,50]],[[75,75],[125,75],[125,125],[75,125]]],
-    // [[[20,20],[20,120],[120,120],[120,20]],[[25,25],[75,25],[75,75],[25,75]]]
-    path:"",
+
     init: function(){
 
-    },
+    }
 
+    /*
     pointsToRaphael:function(){
 
         var pathPts = this.points;
@@ -123,4 +139,5 @@ ZN.Polygon.prototype = {
         return this.path;
 
     }
+    */
 }
