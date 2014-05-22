@@ -89,22 +89,23 @@ function parseSVG(filename,projectJson){
 
 
             _.each(paths, function(path,index){
-                var id = _.find(projectJson.paths,{'id':index.toString()});
-                console.log(path['$'].d);
-                console.log(path['$'].stroke);
+                var stroke = path['$'].stroke;
+                console.log('stroke',stroke);
+                var id = (stroke.substr(stroke.length-1,1));
                 console.log('id',id);
+                var pathObj = _.find(projectJson.paths,{'id':id});
+                console.log('pathObj',pathObj);
+                console.log('id',id,path['$'].d,path['$'].stroke);
                 var d = path['$'].d;
                 d =  d.replace(/\s/g, "");
-                id.d = d;
+                pathObj.d = d;
             });
             _.each(rects, function(rect,index){
-                var id = _.find(projectJson.paths,{'id':index.toString()});
-                console.log('x',rect['$'].x);
-                console.log('y',rect['$'].y);
-                console.log('w',rect['$'].width);
-                console.log('h',rect['$'].height);
-                console.log('id',id);
-                id.bounds = rect['$'];
+                var stroke = rect['$'].stroke;
+                var id = stroke.substr(stroke.length-1,1);
+                var pathObj = _.find(projectJson.paths,{'id':id});
+                console.log('id',id,'x',rect['$'].x,'y',rect['$'].y,'w',rect['$'].width,'h',rect['$'].height);
+                pathObj.bounds = rect['$'];
             });
 
         });
