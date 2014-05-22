@@ -15,7 +15,6 @@ ZN.Model.prototype = {
 
     init:function(){
 
-
     },
     initProjects: function(data){
         for(var i=0;i<data.length;i++){
@@ -86,8 +85,9 @@ ZN.Model.prototype = {
             }
             return sum + value;
         },0);
-        */
+
         console.log('percent sum:',percentTotal);
+         */
 
 
 
@@ -116,6 +116,12 @@ ZN.Model.prototype = {
     },
     removeFirstClassification:function(){
         return this.classifications.shift();
+    },
+
+    setStyles: function(data){
+        var projectName = data.project;
+        this.projectDict[projectName].setStyles(data);
+
     }
 
 
