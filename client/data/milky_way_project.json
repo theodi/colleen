@@ -1,11 +1,12 @@
 {
     "project":"milky_way_project",
     "colour":"#f00",
+    "vis_threshold":4,
 
     "shapes":[
         { "id":"0","rotation":0,"opacity":0.9},
-        { "id":"1","rotation":10,"opacity":0.8},
-        { "id":"2","rotation":0,"opacity":0.7},
+        { "id":"1","rotation":10,"opacity":0.8, "rotMin":0, "rotMax":50,"rotAnimStepMin":3,"rotAnimStepMax":5.5,"rotAnimTimeMin":3,"rotAnimTimeMax":10},
+        { "id":"2","rotation":0,"opacity":0.7, "rot_params":{"range":[0,50],"animStep":[3,5.5],"animTime":[3,10]}},
         { "id":"3","rotation":45,"opacity":0.6},
         { "id":"4","rotation":20,"opacity":0.5},
         { "id":"5","rotation":0,"opacity":0.4},
