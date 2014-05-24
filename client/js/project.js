@@ -1,8 +1,6 @@
 ZN.Project = function () {
     this.id="";
     this.name="";
-    this.colours=[];
-    this.polygons=[];
 
     this.position=[];
     this.analytics = {
@@ -18,6 +16,12 @@ ZN.Project = function () {
 
     };
     this.shapes=[];
+
+    // graphics
+    this.x = 0;
+    this.y = 0;
+    this.scale = 0.6;
+    this.rotation = 0.0;
 
 
 }
@@ -48,10 +52,19 @@ ZN.Project.prototype = {
     },
     setStyles:function(data){
         //this.shapes = data.shapes;
+
+        _.each(data,function(value,key){
+            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean'){
+                this[key] = value;
+            }
+        },this);
+
         _.each(data.shapes,function(shapeData){
 
             var shape = new ZN.Shape();
+            shape.init();
             this.shapes.push(shape);
+            shape.colour = this.colour;
 
             _.each(shapeData,function(value,key){
                 shape[key] = value;
@@ -83,18 +96,45 @@ ZN.Project.prototype = {
             if(y<miny) miny = y;
             if(y>maxy) maxy = y;
 
-            ox = (minx+maxx)/2;
-            oy = (miny+maxy)/2;
+            var ox = shape.ox = (minx+maxx)/2;
+            var oy = shape.oy = (miny+maxy)/2;
+            shape.x = shape.ox;
+            shape.y = shape.oy;
 
-            shape['origin'] = {x:ox,y:oy};
+            var shapeStr = "";
+            _.each(segsAbs,function(seg){
+                switch(seg[0]){
+                    case "M":
+                        seg[1] -= ox;
+                        seg[2] -= oy;
+                        mx = x, my=y;
+                        shapeStr+="M"+seg[1]+","+seg[2];
+                        break;
+                    case "C":
+                        seg[1] -= ox;
+                        seg[2] -= oy;
+                        seg[3] -= ox;
+                        seg[4] -= oy;
+                        seg[5] -= ox;
+                        seg[6] -= oy;
+                        seg.shift();
+                        shapeStr+="C"+seg.join(",");
+
+                        break;
+                };
+            },this);
+            shapeStr+="z";
+            shape.d = shapeStr;
+
 
         },this);
     },
 
     updateShapes:function(){
 
-        _.each(data.shapes,function(path){
-            var pathStr = path.d;
+        _.each(data.shapes,function(shape){
+            var pathStr = shape.d;
+
             var segsRel = Raphael.pathToRelative(pathStr);
             var segsAbs = Raphael._pathToAbsolute(pathStr);
             var x, y, ox= 0, oy=0, mx=0, my=0;
@@ -108,15 +148,26 @@ ZN.Project.prototype = {
 }
 
 ZN.Shape = function () {
+    this.id="";
+    this.x=0;
+    this.y=0;
+    this.ox=0;
+    this.oy=0;
+    this.vx=0;
+    this.vy=0;
+    this.path=null;
+    this.colour=null;
+    this.rotation=0;
+    this.opacity = 1.0;
 
 }
 
 ZN.Shape.prototype = {
     constructor:ZN.Shape,
-    id:"",
+
 
     init: function(){
-
+        //this.rotation = Math.random()*360;
     }
 
     /*

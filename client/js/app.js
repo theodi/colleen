@@ -258,8 +258,6 @@ ZN.App.prototype = {
         requestAnimationFrame(function(){self.update()});
         switch(this.rendererType){
             case "canvas":
-                this.renderCanvas();
-                break;
             case "raphael":
                 this.renderRaphael();
                 break;
@@ -274,39 +272,6 @@ ZN.App.prototype = {
         return size;
     },
 
-    renderCanvas:function(){
-        var ctx = this.ctx;
-        var size = this.getCanvasSize();
-        var w = size.width, h = size.height;
-
-        ctx.clearRect (0, 0, w, h);
-
-        ctx.beginPath();
-
-//polygon1--- usually the outside polygon, must be clockwise
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 200);
-        ctx.lineTo(0, 200);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-
-//polygon2 --- usually hole,must be counter-clockwise
-        ctx.moveTo(10, 10);
-        ctx.lineTo(10,100);
-        ctx.lineTo(100, 100);
-        ctx.lineTo(100, 10);
-        ctx.lineTo(10, 10);
-        ctx.closePath();
-
-//  add as many holes as you want
-        var alpha = 0.3;
-        ctx.fillStyle = "#FF0000";
-        ctx.strokeStyle = "rgba(255,0,255,"+alpha+")";
-        ctx.lineWidth = 1;
-        ctx.fill();
-        ctx.stroke();
-    },
 
 
     renderRaphael:function(){
@@ -314,65 +279,35 @@ ZN.App.prototype = {
         // animations: http://raphaeljs.com/animation.html
         // scale image fill: http://stackoverflow.com/questions/1098994/scaling-a-fill-pattern-in-raphael-js
         // svg import: https://github.com/wout/raphael-svg-import
-
-        if(this.paths.length>0) return;
+        var csz = this.getCanvasSize();
+        var cx = csz.width/ 2, cy = csz.height/2;
 
         var projects = this.model.projects;
 
-        var tx=10,ty=10;
-
         _.each(projects,function(project,index){
-            var set = this.paper.set();
+
+            var ps = project.scale, px = project.x+cx, py = project.y+cy;
             _.each(project.shapes,function(shape){
-                var path = this.paper.path(shape.d)
-                   .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("T"+tx+","+ty).transform("s1.0");
-                this.paths.push(path);
-                set.push(path);
+
+
+                if(!shape.path){
+                    shape.path = this.paper.path(shape.d);
+                }
+                var path = shape.path;
+                var tx= shape.x,ty=shape.y;//+Math.random()*100;
+                //shape.rotation = (shape.rotation+0.1)%360;
+
+
+                shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
+                //shape.path.attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("t"+tx+","+ty);
+
+                shape.path.transform("t"+px+","+py+"s"+ps+","+ps+",0,0...");
 
             },this);
-            set.attr({fill: "red"});
-            set.transform("s0.5,0.5,100,100");
 
         },this);
 
-        /*
-        for(var i=0;i<projects.length;i++){
 
-
-            var proj = projects[i];
-            var pathStrs = proj.pointsToRaphael();
-
-            for(p=0;p<pathStrs.length;p++){
-                var pathStr = pathStrs[p];
-                var tx = i*20, ty = i*20;
-                var path = this.paper.path(pathStr)
-                    .attr({"fill":"#f00","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
-
-                var path2 = this.paper.path(pathStr)
-                    .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
-
-                this.paths.push(path,path2);
-            }
-
-
-        }
-        */
-
-        /*
-        if(this.paths.length>0) return;
-        var nItems = 10;
-
-        for(var i=0;i<nItems;i++){
-            var tx = i*20, ty = i*20;
-            var path = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
-               .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
-
-            var path2 = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
-                .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
-
-            this.paths.push(path,path2);
-        }
-        */
 
     }
 
