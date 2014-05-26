@@ -20,8 +20,8 @@ ZN.App = function () {
     this.classificationDelay = 0;
     this.classificationLoadCount = 0;
 
-    this.canvasContainer = "canvas-container";
-    this.ctx = null;
+    this.canvasContainerId = "canvas-container";
+    this.renderer = null;
     this.rendererType = "raphael" //"canvas"; //
 
     this.paper = null;
@@ -159,7 +159,7 @@ ZN.App.prototype = {
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
 
-        this.initCanvas();
+        this.initRenderer();
         this.update();
         //this.loadClassification();
     },
@@ -209,22 +209,13 @@ ZN.App.prototype = {
 
     },
 
-    initCanvas:function(){
-        var size = this.getCanvasSize();
-        var w = size.width, h = size.height;
-        switch(this.rendererType){
-            case "canvas":
-                var canvas = document.createElement('canvas');
-                canvas.id     = "CanvasLayer";
-                canvas.width  = w;
-                canvas.height = h;
-                $("#"+this.canvasContainer).append(canvas);
-                this.ctx = canvas.getContext('2d');
+    initRenderer:function(){
 
-                break;
+        switch(this.rendererType){
             case "raphael":
-                //var paper = Raphael(10, 50, 320, 200);
-                this.paper = Raphael(this.canvasContainer, w, h);
+                this.renderer = new ZN.RaphaelRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
+
                 break;
 
         }
@@ -256,60 +247,45 @@ ZN.App.prototype = {
 
 
         requestAnimationFrame(function(){self.update()});
-        switch(this.rendererType){
-            case "canvas":
-            case "raphael":
-                this.renderRaphael();
-                break;
-        }
+
+        this.execRules();
+        this.renderer.render();
+
 
     },
 
-    getCanvasSize: function(){
-        var size={};
-        size.width = $("#"+this.canvasContainer).width();
-        size.height = $("#"+this.canvasContainer).height();
-        return size;
-    },
-
-
-
-    renderRaphael:function(){
-
-        // animations: http://raphaeljs.com/animation.html
-        // scale image fill: http://stackoverflow.com/questions/1098994/scaling-a-fill-pattern-in-raphael-js
-        // svg import: https://github.com/wout/raphael-svg-import
-        var csz = this.getCanvasSize();
-        var cx = csz.width/ 2, cy = csz.height/2;
+    execRules: function(){
 
         var projects = this.model.projects;
 
         _.each(projects,function(project,index){
 
-            var ps = project.scale, px = project.x+cx, py = project.y+cy;
+            // project rules
+
             _.each(project.shapes,function(shape){
 
+                // shape rules
 
-                if(!shape.path){
-                    shape.path = this.paper.path(shape.d);
-                }
-                var path = shape.path;
-                var tx= shape.x,ty=shape.y;//+Math.random()*100;
-                //shape.rotation = (shape.rotation+0.1)%360;
+                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
+                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
+
+                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
+                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
+
+                shape.x+=shape.vx;
+                shape.y+=shape.vy;
 
 
-                shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
-                //shape.path.attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("t"+tx+","+ty);
 
-                shape.path.transform("t"+px+","+py+"s"+ps+","+ps+",0,0...");
 
             },this);
 
         },this);
-
-
-
     }
+
+
+
+
 
 
 }

@@ -59,6 +59,8 @@ ZN.Project.prototype = {
             }
         },this);
 
+
+
         _.each(data.shapes,function(shapeData){
 
             var shape = new ZN.Shape();
@@ -70,6 +72,17 @@ ZN.Project.prototype = {
                 shape[key] = value;
             });
 
+
+            // bounds
+            var bounds = new ZN.Bounds();
+            var b = shapeData.bounds;
+            _.each(shapeData.bounds,function(value,key){
+                shapeData.bounds[key] = parseFloat(value);
+            });
+            bounds.setBounds(b.x- b.width/2, b.y- b.height/2, b.x+ b.width/2, b.y+ b.height/2);
+            shape.bounds = bounds;
+
+            // paths
             var pathStr = shapeData.d;
             var segsRel = Raphael.pathToRelative(pathStr);
             var segsAbs = Raphael._pathToAbsolute(pathStr);
@@ -78,6 +91,7 @@ ZN.Project.prototype = {
                 miny=Number.MAX_VALUE,
                 maxx=Number.MIN_VALUE,
                 maxy=Number.MIN_VALUE;
+
             _.each(segsAbs,function(seg){
                 switch(seg[0]){
                     case "M":
@@ -90,16 +104,23 @@ ZN.Project.prototype = {
                         y = seg[6];
                         break;
                 };
+
+                if(x<minx) minx = x;
+                if(x>maxx) maxx = x;
+                if(y<miny) miny = y;
+                if(y>maxy) maxy = y;
+
             },this);
-            if(x<minx) minx = x;
-            if(x>maxx) maxx = x;
-            if(y<miny) miny = y;
-            if(y>maxy) maxy = y;
+
 
             var ox = shape.ox = (minx+maxx)/2;
             var oy = shape.oy = (miny+maxy)/2;
             shape.x = shape.ox;
             shape.y = shape.oy;
+            shape.width = maxx-minx;
+            shape.height = maxy-miny;
+            //shape.bounds = new ZN.Bounds();
+            //shape.bounds.setArray(minx,miny,maxx,maxy);
 
             var shapeStr = "";
             _.each(segsAbs,function(seg){
@@ -159,6 +180,10 @@ ZN.Shape = function () {
     this.colour=null;
     this.rotation=0;
     this.opacity = 1.0;
+    this.bounds=null;
+    this.width=0;
+    this.height=0;
+    this.bounds = null;
 
 }
 
@@ -167,7 +192,8 @@ ZN.Shape.prototype = {
 
 
     init: function(){
-        //this.rotation = Math.random()*360;
+        this.vx = (Math.random()-0.5)*0.9;
+        this.vy = (Math.random()-0.5)*0.9;
     }
 
     /*
@@ -191,4 +217,30 @@ ZN.Shape.prototype = {
 
     }
     */
+}
+
+
+ZN.Bounds = function(){
+    this.left=0;
+    this.right=0;
+    this.top=0;
+    this.bottom=0;
+}
+
+ZN.Bounds.prototype = {
+    constructor:ZN.Bounds,
+    setBounds:function(l,t,r,b){
+        this.left=l;
+        this.right=r;
+        this.top=t;
+        this.bottom=b;
+    },
+    width:function(){
+        return this.right-this.left;
+    },
+    height:function(){
+        return this.bottom-this.top;
+    }
+
+
 }
