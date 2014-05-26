@@ -192,8 +192,8 @@ ZN.Shape.prototype = {
 
 
     init: function(){
-        this.vx = (Math.random()-0.5)*0.9;
-        this.vy = (Math.random()-0.5)*0.9;
+        //this.vx = (Math.random()-0.5)*0.9;
+        //this.vy = (Math.random()-0.5)*0.9;
     }
 
     /*

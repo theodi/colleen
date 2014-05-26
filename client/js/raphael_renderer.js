@@ -42,7 +42,9 @@ ZN.RaphaelRenderer.prototype = {
 
         _.each(projects,function(project,index){
 
-            var ps = project.scale, px = project.x+cx, py = project.y+cy;
+            var ps = project.scale,
+                px = project.x+cx, py = project.y+cy
+                pr = project.rotation;
             _.each(project.shapes,function(shape){
 
 
@@ -57,7 +59,7 @@ ZN.RaphaelRenderer.prototype = {
                 shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
                 //shape.path.attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("t"+tx+","+ty);
 
-                shape.path.transform("t"+px+","+py+"s"+ps+","+ps+",0,0...");
+                shape.path.transform("t"+px+","+py+"r"+pr+",0,0"+pr+"s"+ps+","+ps+",0,0...");
 
             },this);
 

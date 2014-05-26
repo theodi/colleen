@@ -261,6 +261,7 @@ ZN.App.prototype = {
         _.each(projects,function(project,index){
 
             // project rules
+            project.rotation = (project.rotation+1)%360;
 
             _.each(project.shapes,function(shape){
 
