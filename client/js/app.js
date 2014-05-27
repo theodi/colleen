@@ -147,7 +147,8 @@ ZN.App.prototype = {
     },
     assetsLoaded:function(data){
         this.model.setStyles(data);
-        this.loadProjectAnalytics();
+        this.startApp();
+        //this.loadProjectAnalytics();
 
     },
 
@@ -158,12 +159,14 @@ ZN.App.prototype = {
     },
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
-
-        this.initRenderer();
-        this.update();
+        this.startApp();
         //this.loadClassification();
     },
 
+    startApp:function(){
+        this.initRenderer();
+        this.update();
+    },
 
 
 
@@ -261,7 +264,7 @@ ZN.App.prototype = {
         _.each(projects,function(project,index){
 
             // project rules
-            project.rotation = (project.rotation+1)%360;
+            //project.rotation = (project.rotation+1)%360;
 
             _.each(project.shapes,function(shape){
 

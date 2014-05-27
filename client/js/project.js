@@ -79,7 +79,9 @@ ZN.Project.prototype = {
             _.each(shapeData.bounds,function(value,key){
                 shapeData.bounds[key] = parseFloat(value);
             });
-            bounds.setBounds(b.x- b.width/2, b.y- b.height/2, b.x+ b.width/2, b.y+ b.height/2);
+            //bounds.setBounds(b.x- b.width/2, b.y- b.height/2, b.x+ b.width/2, b.y+ b.height/2);
+            bounds.setBounds(b.x, b.y, b.x+ b.width, b.y+ b.height);
+
             shape.bounds = bounds;
 
             // paths
@@ -184,6 +186,7 @@ ZN.Shape = function () {
     this.width=0;
     this.height=0;
     this.bounds = null;
+    this.boundsPath = null;
 
 }
 

@@ -15,7 +15,7 @@ loadProjects();
 function loadProjects(){
 
     //'/../data/20140521_comp_01+bounds.svg';
-    var filename = '/../data/projects_test.json';
+    var filename = '/../data/projects.json';
     var path = '/../data/';
 
     fs.readFile(__dirname + filename, 'utf8', function (err, data) {
