@@ -279,14 +279,55 @@ ZN.App.prototype = {
                 shape.x+=shape.vx;
                 shape.y+=shape.vy;
 
+                if(shape.animation){
+                    switch(shape.animation.type){
+                        case "clouds":
+                            var r = shape.animation.radius;
+
+
+
+                            /*
+                            var pt = this.rotate(0,0,shape.x,shape.y,shape.animation.angle);
+                            shape.x = pt[0];
+                            shape.y = pt[1];
+                            */
+                            var speedRnd = shape.animation.speed[1]-shape.animation.speed[0];
+                            var speedMin = shape.animation.speed[0];
+                            shape.animation.angle = (shape.animation.angle+Math.random()*speedRnd+speedMin)%360;
+                            var phase = (shape.animation.angle+90)%360;
+                            var rad = (Math.PI / 180) * phase;
+                            r = (0.5+Math.cos(rad))*r;
+                            var x = r * Math.cos(rad);
+                            var y = r * Math.sin(rad);
+                            shape.x = shape.ox +x;
+                            shape.y = shape.oy +y;
+
+
+                            break;
+                    }
+                }
+
 
 
 
             },this);
 
         },this);
-    }
+    },
 
+    /*
+     cx, cy = rotation center
+     x,y = current x,y
+     nx, ny = new coordinates
+     */
+    rotateAroundPoint: function (cx, cy, x, y, angle) {
+        var radians = (Math.PI / 180) * angle,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
+            ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+        return [nx, ny];
+    }
 
 
 
