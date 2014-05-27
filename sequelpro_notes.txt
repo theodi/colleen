@@ -1,0 +1,10 @@
+To connect to the *started* MySQL db in Sequel Pro:
+
+Connect as standard
+
+Name: localhost
+Host: 127.0.0.1
+Username: colleen
+password: xxxxxx
+database: zoon
+port: whatever is default 
