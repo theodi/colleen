@@ -1,0 +1,3 @@
+import fetchandstore
+
+fetchandstore.thewholeshebang()
