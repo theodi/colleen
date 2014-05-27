@@ -39,27 +39,41 @@ ZN.RaphaelRenderer.prototype = {
         var cx = csz.width/ 2, cy = csz.height/2;
 
         var projects = this.model.projects;
+        //var projects = [this.model.projects[0]];
 
         _.each(projects,function(project,index){
 
-            var ps = project.scale,
-                px = project.x+cx, py = project.y+cy
+            var ps = project.scale;
+            if(index==1) ps = 0.1
+            var px = project.x+cx, py = project.y+cy
                 pr = project.rotation;
+
             _.each(project.shapes,function(shape){
 
 
                 if(!shape.path){
                     shape.path = this.paper.path(shape.d);
                 }
+                if(!shape.boundsPath){
+                    shape.boundsPath = this.paper.rect( shape.bounds.left, shape.bounds.top, shape.bounds.width(), shape.bounds.height() );
+
+
+                }
                 var path = shape.path;
-                var tx= shape.x,ty=shape.y;//+Math.random()*100;
-                //shape.rotation = (shape.rotation+0.1)%360;
+                var tx= shape.x,ty=shape.y;
 
 
                 shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
-                //shape.path.attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("t"+tx+","+ty);
 
-                shape.path.transform("t"+px+","+py+"r"+pr+",0,0"+pr+"s"+ps+","+ps+",0,0...");
+                shape.boundsPath.attr({
+                    'stroke': 'rgba(255,0,0,0.5)',
+                    'stroke-width': 1
+                });
+
+                var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0...";
+                shape.path.transform(trans);
+
+                shape.boundsPath.transform("t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0");
 
             },this);
 
