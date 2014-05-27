@@ -5,7 +5,7 @@ ZN.RaphaelRenderer = function () {
     this.containerId = "canvas-container";
     this.paper = null;
     this.paths = [];
-    this.showBB = false;
+    this.showBB = true;
 
 
 }

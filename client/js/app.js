@@ -284,21 +284,31 @@ ZN.App.prototype = {
                         case "clouds":
                             var r = shape.animation.radius;
 
-
-
                             /*
                             var pt = this.rotate(0,0,shape.x,shape.y,shape.animation.angle);
                             shape.x = pt[0];
                             shape.y = pt[1];
                             */
+
+                            // speed
                             var speedRnd = shape.animation.speed[1]-shape.animation.speed[0];
                             var speedMin = shape.animation.speed[0];
                             shape.animation.angle = (shape.animation.angle+Math.random()*speedRnd+speedMin)%360;
+
+                            // set radius
+                            var ry = shape.bounds.height()/2-shape.height/2;
+                            var rx = shape.bounds.width()/2-shape.width/2;
+                            var rad = (Math.PI / 180)*shape.animation.angle;
+                            /*
                             var phase = (shape.animation.angle+90)%360;
                             var rad = (Math.PI / 180) * phase;
-                            r = (0.5+Math.cos(rad))*r;
-                            var x = r * Math.cos(rad);
-                            var y = r * Math.sin(rad);
+                            rx = (Math.cos(rad))*rx;
+                            ry = (Math.cos(rad))*ry;
+                            */
+
+                            // position
+                            var x = rx * Math.cos(rad);
+                            var y = ry * Math.sin(rad);
                             shape.x = shape.ox +x;
                             shape.y = shape.oy +y;
 
