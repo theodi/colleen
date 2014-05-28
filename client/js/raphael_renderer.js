@@ -5,6 +5,7 @@ ZN.RaphaelRenderer = function () {
     this.containerId = "canvas-container";
     this.paper = null;
     this.paths = [];
+    this.showBB = true;
 
 
 }
@@ -44,8 +45,8 @@ ZN.RaphaelRenderer.prototype = {
         _.each(projects,function(project,index){
 
             var ps = project.scale;
-            if(index==1) ps = 0.1
-            var px = project.x+cx, py = project.y+cy
+            if(index==0) ps = 0.1;
+            var px = project.x+cx, py = project.y+cy,
                 pr = project.rotation;
 
             _.each(project.shapes,function(shape){
@@ -54,26 +55,25 @@ ZN.RaphaelRenderer.prototype = {
                 if(!shape.path){
                     shape.path = this.paper.path(shape.d);
                 }
-                if(!shape.boundsPath){
+                if(!shape.boundsPath && this.showBB){
                     shape.boundsPath = this.paper.rect( shape.bounds.left, shape.bounds.top, shape.bounds.width(), shape.bounds.height() );
-
+                    shape.boundsPath.attr({
+                        'stroke': 'rgba(255,0,0,0.5)',
+                        'stroke-width': 1
+                    });
 
                 }
                 var path = shape.path;
                 var tx= shape.x,ty=shape.y;
 
-
                 shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
-
-                shape.boundsPath.attr({
-                    'stroke': 'rgba(255,0,0,0.5)',
-                    'stroke-width': 1
-                });
 
                 var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0...";
                 shape.path.transform(trans);
 
-                shape.boundsPath.transform("t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0");
+                if(this.showBB){
+                    shape.boundsPath.transform("t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0");
+                }
 
             },this);
 

@@ -47,9 +47,7 @@ ZN.Project.prototype = {
 
     },
 
-    addPolygon: function(){
 
-    },
     setStyles:function(data){
         //this.shapes = data.shapes;
 
@@ -65,6 +63,10 @@ ZN.Project.prototype = {
 
             var shape = new ZN.Shape();
             shape.init();
+
+            if(shapeData.hasOwnProperty('parent')){
+                var parentId = shapeData.parent;
+            }
             this.shapes.push(shape);
             shape.colour = this.colour;
 
@@ -151,8 +153,9 @@ ZN.Project.prototype = {
 
 
         },this);
-    },
+    }
 
+    /*
     updateShapes:function(){
 
         _.each(data.shapes,function(shape){
@@ -163,6 +166,7 @@ ZN.Project.prototype = {
             var x, y, ox= 0, oy=0, mx=0, my=0;
         });
     }
+    */
 
 
 
@@ -187,6 +191,7 @@ ZN.Shape = function () {
     this.height=0;
     this.bounds = null;
     this.boundsPath = null;
+    this.shapes=[];
 
 }
 

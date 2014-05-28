@@ -279,14 +279,65 @@ ZN.App.prototype = {
                 shape.x+=shape.vx;
                 shape.y+=shape.vy;
 
+                if(shape.animation){
+                    switch(shape.animation.type){
+                        case "clouds":
+                            var r = shape.animation.radius;
+
+                            /*
+                            var pt = this.rotate(0,0,shape.x,shape.y,shape.animation.angle);
+                            shape.x = pt[0];
+                            shape.y = pt[1];
+                            */
+
+                            // speed
+                            var speedRnd = shape.animation.speed[1]-shape.animation.speed[0];
+                            var speedMin = shape.animation.speed[0];
+                            shape.animation.angle = (shape.animation.angle+Math.random()*speedRnd+speedMin)%360;
+
+                            // set radius
+                            var ry = shape.bounds.height()/2-shape.height/2;
+                            var rx = shape.bounds.width()/2-shape.width/2;
+                            var rad = (Math.PI / 180)*shape.animation.angle;
+                            /*
+                            var phase = (shape.animation.angle+90)%360;
+                            var rad = (Math.PI / 180) * phase;
+                            rx = (Math.cos(rad))*rx;
+                            ry = (Math.cos(rad))*ry;
+                            */
+
+                            // position
+                            var x = rx * Math.cos(rad);
+                            var y = ry * Math.sin(rad);
+                            shape.x = shape.ox +x;
+                            shape.y = shape.oy +y;
+
+
+                            break;
+                    }
+                }
+
 
 
 
             },this);
 
         },this);
-    }
+    },
 
+    /*
+     cx, cy = rotation center
+     x,y = current x,y
+     nx, ny = new coordinates
+     */
+    rotateAroundPoint: function (cx, cy, x, y, angle) {
+        var radians = (Math.PI / 180) * angle,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
+            ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+        return [nx, ny];
+    }
 
 
 
