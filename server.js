@@ -14,6 +14,8 @@ app.get('/classificationCount', classifications.getClassificationCount);
 app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
 app.get('/classifications/from/:from/to/:to/interval/:interval', classifications.getClassificationInterval);
 
+app.get('/dbstats',classifications.getDBstats);
+
 var port = process.env.PORT || 3000;
 app.listen(port);
 console.log('Listening on port ' + port + '...');
