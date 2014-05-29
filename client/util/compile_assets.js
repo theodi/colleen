@@ -95,12 +95,27 @@ function parseSVG(filename,projectJson){
                 //var stroke = path['$'].stroke;
                 var id = path['$'].id;//(stroke.substr(stroke.length-1,1));
                 id = id.substr(1);
+
+
                 var pathObj = _.find(projectJson.shapes,{'id':id});
                 if(!pathObj){
                     pathObj = {'id':id}
                     projectJson.shapes.push(pathObj);
                 }
                 console.log('path id:',id);//,path['$'].d,path['$'].stroke);
+
+                var fill = path['$'].fill;
+                if(fill && pathObj.hasOwnProperty('fill')==false){
+                    pathObj.fill = fill;
+                    console.log('fill:',fill);
+                }
+
+                var opacity = path['$'].opacity;
+                if(opacity && pathObj.hasOwnProperty('opacity')==false){
+                    pathObj.opacity = opacity;
+                    console.log('opacity:',opacity);
+                }
+
                 var d = path['$'].d;
                 d =  d.replace(/\s/g, "");
                 pathObj.d = d;

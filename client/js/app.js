@@ -285,41 +285,53 @@ ZN.App.prototype = {
                 shape.y+=shape.vy;
 
                 if(shape.animation){
-                    switch(shape.animation.type){
-                        case "clouds":
-                            var r = shape.animation.radius;
+                    _.each(shape.animation,function(anim){
+                        switch(anim.type){
+                            case "translate_circular":
+                                var r = anim.radius;
 
-                            /*
-                            var pt = this.rotate(0,0,shape.x,shape.y,shape.animation.angle);
-                            shape.x = pt[0];
-                            shape.y = pt[1];
-                            */
+                                // speed
+                                var speedRnd = anim.speed[1]-anim.speed[0];
+                                var speedMin = anim.speed[0];
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
 
-                            // speed
-                            var speedRnd = shape.animation.speed[1]-shape.animation.speed[0];
-                            var speedMin = shape.animation.speed[0];
-                            shape.animation.angle = (shape.animation.angle+Math.random()*speedRnd+speedMin)%360;
+                                // set radius
+                                var ry = r;//shape.bounds.height()/2-shape.height/2;
+                                var rx = r;//shape.bounds.width()/2-shape.width/2;
+                                var rad = (Math.PI / 180)*anim.angle;
 
-                            // set radius
-                            var ry = shape.bounds.height()/2-shape.height/2;
-                            var rx = shape.bounds.width()/2-shape.width/2;
-                            var rad = (Math.PI / 180)*shape.animation.angle;
-                            /*
-                            var phase = (shape.animation.angle+90)%360;
-                            var rad = (Math.PI / 180) * phase;
-                            rx = (Math.cos(rad))*rx;
-                            ry = (Math.cos(rad))*ry;
-                            */
-
-                            // position
-                            var x = rx * Math.cos(rad);
-                            var y = ry * Math.sin(rad);
-                            shape.x = shape.initial.x +x;
-                            shape.y = shape.initial.y +y;
+                                // position
+                                var x = rx * Math.cos(rad);
+                                var y = ry * Math.sin(rad);
+                                shape.x = shape.initial.x +x;
+                                shape.y = shape.initial.y +y;
 
 
-                            break;
-                    }
+                                break;
+
+                            case "translate_linear":
+                                var r = anim.radius;
+
+                                // speed
+                                var speedRnd = anim.speed[1]-anim.speed[0];
+                                var speedMin = anim.speed[0];
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
+
+                                // set radius
+                                var ry = shape.bounds.height()/2-shape.height/2;
+                                var rx = shape.bounds.width()/2-shape.width/2;
+                                var rad = (Math.PI / 180)*anim.angle;
+
+                                // position
+                                var x = rx * Math.cos(rad);
+                                var y = ry * Math.sin(rad);
+                                shape.x = shape.initial.x +x;
+                                shape.y = shape.initial.y +y;
+
+
+                                break;
+                        }
+                    },this);
                 }
 
 

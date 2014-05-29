@@ -21,7 +21,7 @@ ZN.Project = function () {
     // graphics
     this.x = 0;
     this.y = 0;
-    this.scale = 0.6;
+    this.scale = 0.9;
     this.rotation = 0.0;
 
 
@@ -59,8 +59,11 @@ ZN.Project.prototype = {
         },this);
 
 
-        var cScale = chroma.scale([data.colours[0],data.colours[1]]);//['lightyellow', 'navy']);
-        cScale(0.5);  // #7F7FB0
+        var fillScale = null;
+        if(data.hasOwnProperty('fills')){
+            fillScale = chroma.scale([data.fills[0],data.fills[1]]);
+        }
+
         var nShapes = data.shapes.length;
 
         _.map(data.shapes,function(shape){
@@ -99,7 +102,9 @@ ZN.Project.prototype = {
 
             }
             this.shapes.push(shape);
-            shape.colour = cScale(index/nShapes);//this.colour;
+            if(fillScale){
+                shape.fill = cScale(index/nShapes);
+            }
 
             _.each(shapeData,function(value,key){
                 shape[key] = value;
@@ -155,6 +160,7 @@ ZN.Project.prototype = {
 
             var ox = shape.initial.x = (minx+maxx)/2;
             var oy = shape.initial.y = (miny+maxy)/2;
+
             shape.x = shape.initial.x;
             shape.y = shape.initial.y;
             shape.width = maxx-minx;
@@ -214,7 +220,7 @@ ZN.Shape = function () {
     this.vx=0;
     this.vy=0;
     this.path=null;
-    this.colour=null;
+    this.fill="0x000000";
     this.rotation=0;
     this.opacity = 1.0;
     this.bounds=null;
@@ -225,7 +231,7 @@ ZN.Shape = function () {
     this.shapes=[];
     this.parent=null;
     this.initial={
-        x:0,y:0,colour:0,rotation:0,opacity:0,d:""
+        x:0,y:0,fill:0,rotation:0,opacity:0,d:""
     };
 
 }

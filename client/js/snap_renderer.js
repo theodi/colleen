@@ -74,7 +74,7 @@ ZN.SnapRenderer.prototype = {
                 var path = shape.path;
                 var tx= shape.x,ty=shape.y;
 
-                shape.path.attr({"fill":shape.colour,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
+                shape.path.attr({"fill":shape.fill,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
 
                 //var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0...";
                 //shape.path.transform(trans);

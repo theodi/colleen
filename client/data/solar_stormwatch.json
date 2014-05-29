@@ -2,19 +2,19 @@
     "project":"solar_stormwatch",
 
     "shapes":[
-        { "id":"1","rotation":20, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"2","rotation":-2, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
-        { "id":"3","rotation":35, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}},
-        { "id":"4","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.0,0.1]}},
-        { "id":"5","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.2]}},
-        { "id":"6","rotation":17, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.25]}},
-        { "id":"7","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.15,0.2]}},
-        { "id":"8","rotation":20, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.02]}},
-        { "id":"9","rotation":16, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.1,0.3]}},
-        { "id":"10","rotation":11, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"11","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"12","rotation":13, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
-        { "id":"13","rotation":9, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}}
+        { "id":"1","rotation":-20, "animation":[{"type":"translate_linear","radius":50,"angle":0,"speed":[0.1,0.3]}]},
+        { "id":"2","rotation":-2, "animation":[{"type":"scale","x":[0.9,1.1],"y":[0.9,1.1],"duration":[1.0,1.0]}]},
+        { "id":"3","rotation":-35, "animation":[{"type":"translate_circular","radius":50,"angle":0 ,"speed":[0.01,0.05]}]},
+        { "id":"4","rotation":-19, "animation":[{"type":"translate_circular","radius":50,"angle":0 ,"speed":[0.0,0.1]}]},
+        { "id":"5","rotation":-19, "animation":[{"type":"translate_circular","radius":50,"angle":0 ,"speed":[0.01,0.2]}]},
+        { "id":"6","rotation":-17, "animation":[{"type":"translate_circular","radius":50,"angle":0 ,"speed":[0.2,0.25]}]},
+        { "id":"7","rotation":-19, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"8","rotation":-20, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"9","rotation":-16, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"10","rotation":-11, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"11","rotation":-19, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"12","rotation":-13, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]},
+        { "id":"13","rotation":-9, "animation":[{"type":"translate_linear","x":[0.9,1.1],"y":[0.0,0.0] ,"speed":[0.15,0.2]}]}
 
     ]
 }

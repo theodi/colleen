@@ -1,6 +1,6 @@
 {
     "project":"milky_way_project",
-    "colours":["#ff0000","#000000"],
+    "fills":["#ff0000","#000000"],
     "vis_threshold":4,
 
     "shapes":[
