@@ -13,6 +13,10 @@ app.configure(function () {
 app.get('/classificationCount', classifications.getClassificationCount);
 app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
 app.get('/classifications/from/:from/to/:to/interval/:interval', classifications.getClassificationInterval);
+app.get('/classificationCount/latest/:seconds',classifications.getClassificationCountLatest);
+app.get('/updateAnalytics',classifications.updateAnalytics);
+app.get('/analytics',classifications.getAnalytics);
+app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 
 app.get('/dbstats',classifications.getDBstats);
 
