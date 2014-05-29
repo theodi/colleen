@@ -7,8 +7,8 @@ var _ = require('lodash');
 var mysql      = require('mysql');
 var WNU_DB_URL = process.env.WNU_DB_URL;
 // need to parse dbname out of connection string
-var WNU_DB_NAME = 'zoon';
-//var WNU_DB_NAME = 'heroku_4a02ed3a564c91f';
+//var WNU_DB_NAME = 'zoon';
+var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
 
 var connection = mysql.createConnection(WNU_DB_URL);
 
