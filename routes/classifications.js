@@ -6,6 +6,10 @@ var _ = require('lodash');
 
 var mysql      = require('mysql');
 var WNU_DB_URL = process.env.WNU_DB_URL;
+// need to parse dbname out of connection string
+var WNU_DB_NAME = 'zoon';
+//var WNU_DB_NAME = 'heroku_4a02ed3a564c91f';
+
 var connection = mysql.createConnection(WNU_DB_URL);
 
 connection.addListener('error', function(connectionException){
@@ -31,7 +35,6 @@ connection.connect(function(err) {
 
 
 exports.getClassificationCount = function(req, res) {
-    //connection.query('SELECT COUNT(*) AS count FROM `classifications`', function(err, rows, fields) {
     connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
         if(err) throw err;
         console.log('Classification count: ', rows[0].count);
@@ -79,7 +82,7 @@ exports.getLastClassifications = function(req, res) {
         res.send([]);
         return;
     }
-    console.log('Retrieving last ' + count + ' classifications, offet: ' + offset);
+    console.log('Retrieving last ' + count + ' classifications, offset: ' + offset);
 
     connection.query("SELECT * FROM ?? LIMIT "+offset+","+count,['classifications'], function(err, rows, fields) {
     //connection.query('SELECT * FROM ?? LIMIT ?,?',['classifications',offset,count], function(err, rows, fields) {
@@ -170,6 +173,22 @@ exports.getClassificationInterval = function(req, res) {
         });
         res.send(output);
 
+    });
+
+};
+
+exports.getDBstats = function(req, res) {
+    var output = [];
+    connection.query('SELECT COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ??',['classifications'], function(err, rows, fields) {
+        if(err) throw err;
+        console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
+	output.push(rows[0]);
+	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+		if(err) throw err;
+		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
+		output.push(rows[0]);
+		res.send(output);
+	    });
     });
 
 };
