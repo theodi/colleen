@@ -151,10 +151,10 @@ ZN.Project.prototype = {
             },this);
 
 
-            var ox = shape.ox = (minx+maxx)/2;
-            var oy = shape.oy = (miny+maxy)/2;
-            shape.x = shape.ox;
-            shape.y = shape.oy;
+            var ox = shape.initial.x = (minx+maxx)/2;
+            var oy = shape.initial.y = (miny+maxy)/2;
+            shape.x = shape.initial.x;
+            shape.y = shape.initial.y;
             shape.width = maxx-minx;
             shape.height = maxy-miny;
             //shape.bounds = new ZN.Bounds();
@@ -203,17 +203,12 @@ ZN.Project.prototype = {
     */
 
 
-
-
-
 }
 
 ZN.Shape = function () {
     this.id="";
     this.x=0;
     this.y=0;
-    this.ox=0;
-    this.oy=0;
     this.vx=0;
     this.vy=0;
     this.path=null;
@@ -228,7 +223,7 @@ ZN.Shape = function () {
     this.shapes=[];
     this.initial={
         x:0,y:0,colour:0,rotation:0,opacity:0,d:""
-    }; // initial state
+    };
 
 }
 

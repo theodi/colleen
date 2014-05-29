@@ -314,8 +314,8 @@ ZN.App.prototype = {
                             // position
                             var x = rx * Math.cos(rad);
                             var y = ry * Math.sin(rad);
-                            shape.x = shape.ox +x;
-                            shape.y = shape.oy +y;
+                            shape.x = shape.initial.x +x;
+                            shape.y = shape.initial.y +y;
 
 
                             break;
