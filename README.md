@@ -79,7 +79,9 @@ Many have helped us. We will name them in time.
         http://sharp-rain-871.herokuapp.com/ | git@heroku.com:sharp-rain-871.git
         Git remote heroku added			
 
-1. If you do not want to use an existing database then provision a cleardb addon for your heroku app http://dashboard.heroku.com/apps/YOURAPPNAME, you will be given a db connection string to use which contains a user, password, dbhost and dbname. If you are a Team Colleen member you can use the one in the Technical Resources document on Google Drive. You can then load the test data from data/test_data.sql much as you did for your dev instance, but use the connection string provided.
+1. If you do not want to use an existing database then provision a cleardb addon for your heroku app http://dashboard.heroku.com/apps/YOURAPPNAME, you will be given a db connection string to use which contains a user, password, dbhost and dbname. If you are a Team Colleen member you can use the one in the Technical Resources document on Google Drive. You can initialise the tables by running
+
+        $ mysql -u <username> -h <hostaddress> -p <dbname> < data/zoon_tables.sql
 
 1. Run 
 
