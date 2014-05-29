@@ -2,19 +2,19 @@
     "project":"solar_stormwatch",
 
     "shapes":[
-        { "id":"1","rotation":0,"opacity":0.8, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"2","rotation":-11,"opacity":0.7, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
-        { "id":"3","rotation":-16,"opacity":0.6, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}},
-        { "id":"4","rotation":-24,"opacity":0.5, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.0,0.1]}},
-        { "id":"5","rotation":-13,"opacity":0.4, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.2]}},
-        { "id":"6","rotation":0,"opacity":0.3, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.25]}},
-        { "id":"7","rotation":0,"opacity":0.2, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.15,0.2]}},
-        { "id":"8","rotation":0,"opacity":0.1, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.02]}},
-        { "id":"9","rotation":-16,"opacity":0.1, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.1,0.3]}},
-        { "id":"10","rotation":0,"opacity":0.8, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"11","rotation":0,"opacity":0.8, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"12","rotation":-11,"opacity":0.7, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
-        { "id":"13","rotation":-16,"opacity":0.6, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}}
+        { "id":"1","rotation":20, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
+        { "id":"2","rotation":-2, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
+        { "id":"3","rotation":35, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}},
+        { "id":"4","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.0,0.1]}},
+        { "id":"5","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.2]}},
+        { "id":"6","rotation":17, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.25]}},
+        { "id":"7","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.15,0.2]}},
+        { "id":"8","rotation":20, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.02]}},
+        { "id":"9","rotation":16, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.1,0.3]}},
+        { "id":"10","rotation":11, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
+        { "id":"11","rotation":19, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
+        { "id":"12","rotation":13, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
+        { "id":"13","rotation":9, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}}
 
     ]
 }
