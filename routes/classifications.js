@@ -5,23 +5,38 @@
 var _ = require('lodash');
 
 var mysql      = require('mysql');
+var parseDbUrl = require('parse-database-url');
+
 var WNU_DB_URL = process.env.WNU_DB_URL;
+var dbConfig = parseDbUrl(WNU_DB_URL);
+
 // need to parse dbname out of connection string
-//var WNU_DB_NAME = 'zoon';
-var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
+var WNU_DB_NAME = dbConfig['database'];
+
+//var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
 
 var connection = mysql.createConnection(WNU_DB_URL);
 
-connection.addListener('error', function(connectionException){
-	if (connectionException.errno === process.ECONNREFUSED) {
-	    console.log('ECONNREFUSED: connection refused to '
-            +connection.host
-            +':'
-		    +connection.port);
-	} else {
-	    console.log(connectionException);
-	}
-    });
+function handleDisconnect(connection) {
+    connection.on('error', function(err) {
+	    if (!err.fatal) {
+		return;
+	    }
+
+	    if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
+		throw err;
+	    }
+
+	    console.log('Re-connecting lost connection: ' + err.stack);
+
+	    connection = mysql.createConnection(WNU_DB_URL);
+	    handleDisconnect(connection);
+	    connection.connect();
+	});
+}
+
+handleDisconnect(connection);
+
 
 connection.connect(function(err) {
 
