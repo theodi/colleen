@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `analytics` (
   `project` varchar(255) NOT NULL,
   `interval` varchar(1) NOT NULL,
   `country` varchar(2) DEFAULT '',
-  `count` int(10) unsigned NOT NULL DEFAULT '0'
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
   `updated` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
