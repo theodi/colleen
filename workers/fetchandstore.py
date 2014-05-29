@@ -38,8 +38,12 @@ def get_max_created_at_by_project(con, project):
 
 def get_json_from_api(zoon_api_request_url, payload, headers):
     
+    logger.info('zoon_api_request_url is %s' % zoon_api_request_url)
+    logger.info('payload is %s' % payload)
     response = requests.get(zoon_api_request_url, params=payload, headers=headers)
-    return respose.json()
+    logger.info('response code was %d' % response.status_code)
+    logger.info('response text was %s' % response.text)
+    return response.json()
 
 def get_json_from_file(filepath):
 
@@ -53,6 +57,7 @@ def json_to_tuples(json, project):
     tuples_to_insert = []
     for classification in json:
         tuples_to_insert.append(construct_values_tuple(project, classification))
+    logger.info("there are %d tuples to insert" % len(tuples_to_insert))
     return tuples_to_insert
 
 def insert_tuples(con,data):
@@ -68,27 +73,32 @@ def insert_tuples(con,data):
 
 
 def thewholeshebang():
-    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
-    duration = 5 * 60 * 1000  # 5 minutes in milliseconds
-    per_page = 32
+#    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
+    projects = ['solar_stormwatch']
+#    duration = 5 * 60 * 1000  # 5 minutes in milliseconds
+    duration = 60 * 60 * 24 * 31 * 1000# a month in millisenconds
+    per_page = 2000
     page = 1
 
-    test_tuples = [(3425, u'2014-05-13T17:26:51Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3416, u'2014-05-13T17:26:46Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3417, u'2014-05-13T17:26:41Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3418, u'2014-05-13T17:26:37Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3419, u'2014-05-13T17:26:33Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3420, u'2014-05-13T17:26:29Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3412, u'2014-05-13T17:26:16Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3411, u'2014-05-13T17:26:13Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3413, u'2014-05-13T17:26:12Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3414, u'2014-05-13T17:26:08Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3415, u'2014-05-13T17:25:57Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3406, u'2014-05-13T17:25:55Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3407, u'2014-05-13T17:25:46Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3410, u'2014-05-13T17:25:42Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3408, u'2014-05-13T17:25:42Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3409, u'2014-05-13T17:25:39Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3402, u'2014-05-13T17:25:29Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3401, u'2014-05-13T17:25:27Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3403, u'2014-05-13T17:25:18Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3404, u'2014-05-13T17:25:14Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3405, u'2014-05-13T17:25:08Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3396, u'2014-05-13T17:25:01Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3397, u'2014-05-13T17:24:50Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3398, u'2014-05-13T17:24:19Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3399, u'2014-05-13T17:23:58Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3400, u'2014-05-13T17:23:41Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3391, u'2014-05-13T17:23:27Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3392, u'2014-05-13T17:23:13Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3393, u'2014-05-13T17:23:09Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3394, u'2014-05-13T17:22:57Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3395, u'2014-05-13T17:22:53Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512), (3386, u'2014-05-13T17:22:50Z', u'1473377', 'cyclone_center', u'US', 'NULL', u'Asheville', 35.647293, -82.5512)]
 
     con = mysql.connector.connect(host='localhost',user='colleen',password='galaxy',database='zoon')
     headers = {'X_REQUESTED_WITH': 'XMLHttpRequest', 
                'ACCEPT': 'application/vnd.zooevents.v1+json',}
 
     for project in projects:
-        start_time = get_max_created_at_by_project(con, project)
+#        start_time = get_max_created_at_by_project(con, project)
+        start_time = 1398698567000
         logger.info("max_created_at for %s is %d" % (project, start_time))
         end_time = start_time + duration
         zoon_api_request_url = 'http://event.zooniverse.org/classifications/%s' % project
         payload = {'from': start_time, 'to': end_time, 'per_page': per_page, 'page': page}
         logger.info("requesting %s from %d" % (zoon_api_request_url, start_time))
-        #    json = get_json_from_api(zoon_api_request_url, payload, headers)
-        #    data = json_to_tuples(json, project)
-        #    insert_tuples(con, data)
+        json_obj = get_json_from_api(zoon_api_request_url, payload, headers)
+        logger.info("got json from api")
+        data = json_to_tuples(json_obj, project)
+        logger.info("converted json to tuples")
+        insert_tuples(con, data)
+        logger.info("inserted tuples into db")
         
     con.close()
     con.disconnect()

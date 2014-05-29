@@ -8,6 +8,7 @@ var mysql      = require('mysql');
 var WNU_DB_URL = process.env.WNU_DB_URL;
 // need to parse dbname out of connection string
 var WNU_DB_NAME = 'zoon';
+//var WNU_DB_NAME = 'heroku_4a02ed3a564c91f';
 
 var connection = mysql.createConnection(WNU_DB_URL);
 
@@ -147,7 +148,7 @@ exports.getDBstats = function(req, res) {
 	output.push(rows[0]);
 	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
 		if(err) throw err;
-		console.log();
+		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
 		output.push(rows[0]);
 		res.send(output);
 	    });
