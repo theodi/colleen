@@ -17,6 +17,7 @@ ZN.Project = function () {
     };
     this.shapes=[];
 
+
     // graphics
     this.x = 0;
     this.y = 0;
@@ -58,38 +59,71 @@ ZN.Project.prototype = {
         },this);
 
 
+        var cScale = chroma.scale([data.colours[0],data.colours[1]]);//['lightyellow', 'navy']);
+        cScale(0.5);  // #7F7FB0
+        var nShapes = data.shapes.length;
 
-        _.each(data.shapes,function(shapeData){
+        _.map(data.shapes,function(shape){
+            var ids = shape.id.split('.');
+            var nParents = ids.length-1;
+            if(nParents>0){
+                ids.pop();
+
+                var parentId = ids.join('.');
+                shape['parentId'] = parentId;
+
+            }
+        });
+
+        data.shapes = _.sortBy(data.shapes, function(shape) {
+            var matches = shape.id.match(/\./g);
+            var ret = matches?matches.length:0;
+            return ret;
+        });
+
+
+        _.each(data.shapes,function(shapeData,index){
 
             var shape = new ZN.Shape();
             shape.init();
 
-            if(shapeData.hasOwnProperty('parent')){
-                var parentId = shapeData.parent;
+            if(shapeData.hasOwnProperty('parentId')){
+                var parentId = shapeData.parentId;
+                var parent = _.find(data.shapes,{'id':parentId});
+                if(parent){
+
+                }
+                else{
+                    console.log('Parse shapes. Parent not found.');
+                }
+
             }
             this.shapes.push(shape);
-            shape.colour = this.colour;
+            shape.colour = cScale(index/nShapes);//this.colour;
 
             _.each(shapeData,function(value,key){
                 shape[key] = value;
+                shape.initial[key]=value;
             });
 
 
             // bounds
             var bounds = new ZN.Bounds();
-            var b = shapeData.bounds;
-            _.each(shapeData.bounds,function(value,key){
-                shapeData.bounds[key] = parseFloat(value);
-            });
-            //bounds.setBounds(b.x- b.width/2, b.y- b.height/2, b.x+ b.width/2, b.y+ b.height/2);
-            bounds.setBounds(b.x, b.y, b.x+ b.width, b.y+ b.height);
+            if(shapeData.bounds){
+                var b = shapeData.bounds;
+                _.each(shapeData.bounds,function(value,key){
+                    shapeData.bounds[key] = parseFloat(value);
+                });
+                bounds.setBounds(b.x, b.y, b.x+ b.width, b.y+ b.height);
+            }
 
             shape.bounds = bounds;
 
             // paths
             var pathStr = shapeData.d;
-            var segsRel = Raphael.pathToRelative(pathStr);
-            var segsAbs = Raphael._pathToAbsolute(pathStr);
+            //var segsRel = Raphael.pathToRelative(pathStr);
+            var segsAbs = Snap.path.toAbsolute(pathStr);
+            //var segsAbs = Raphael._pathToAbsolute(pathStr);
             var x, y, ox= 0, oy=0, mx=0, my=0,
                 minx=Number.MAX_VALUE,
                 miny=Number.MAX_VALUE,
@@ -192,6 +226,9 @@ ZN.Shape = function () {
     this.bounds = null;
     this.boundsPath = null;
     this.shapes=[];
+    this.initial={
+        x:0,y:0,colour:0,rotation:0,opacity:0,d:""
+    }; // initial state
 
 }
 

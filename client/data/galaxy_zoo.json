@@ -1,6 +1,6 @@
 {
     "project":"galaxy_zoo",
-    "colour":"#000",
+    "colours":["#000","#f00"],
 
     "shapes":[
         { "id":"1","rotation":0,"opacity":0.8, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},

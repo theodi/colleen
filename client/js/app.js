@@ -22,7 +22,7 @@ ZN.App = function () {
 
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-    this.rendererType = "raphael" //"canvas"; //
+    this.rendererType = "snap";//"raphael" //"canvas"; //
 
     this.paper = null;
     this.paths = [];
@@ -217,6 +217,11 @@ ZN.App.prototype = {
         switch(this.rendererType){
             case "raphael":
                 this.renderer = new ZN.RaphaelRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
+
+                break;
+            case "snap":
+                this.renderer = new ZN.SnapRenderer();
                 this.renderer.init(this,this.model,this.canvasContainerId);
 
                 break;
