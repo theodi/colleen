@@ -5,7 +5,7 @@ ZN.SnapRenderer = function () {
     this.containerId = "canvas-container";
     this.paper = null;
     this.paths = [];
-    this.showBB = true;
+    this.showBB = false;
 
 
 }

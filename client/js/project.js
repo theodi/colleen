@@ -91,7 +91,7 @@ ZN.Project.prototype = {
                 var parentId = shapeData.parentId;
                 var parent = _.find(data.shapes,{'id':parentId});
                 if(parent){
-
+                    shape.parent = parent;
                 }
                 else{
                     console.log('Parse shapes. Parent not found.');
@@ -103,7 +103,9 @@ ZN.Project.prototype = {
 
             _.each(shapeData,function(value,key){
                 shape[key] = value;
-                shape.initial[key]=value;
+                if(key!="id"){
+                    shape.initial[key]=value;
+                }
             });
 
 
@@ -221,6 +223,7 @@ ZN.Shape = function () {
     this.bounds = null;
     this.boundsPath = null;
     this.shapes=[];
+    this.parent=null;
     this.initial={
         x:0,y:0,colour:0,rotation:0,opacity:0,d:""
     };
