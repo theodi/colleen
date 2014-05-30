@@ -63,7 +63,8 @@ ZN.App.prototype = {
     configLoaded:function(){
 	/* url for api on same host as this page served from
 	 */
-	var url = window.location.protocol + "//" + window.location.host + "/"; 
+	//	var url = window.location.protocol + "//" + window.location.host + "/"; 
+	var url = 'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
         //this.model.projects = ZN.config.projects;
@@ -153,7 +154,7 @@ ZN.App.prototype = {
     },
 
     loadProjectAnalytics:function () {
-        var url = this.apiPath+"analytics";
+        var url = this.apiUrl+"analytics";
         this.loadUrl(url, "json",this.analyticsLoaded);
 
     },
