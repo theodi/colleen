@@ -14,42 +14,6 @@ var dbConfig = parseDbUrl(WNU_DB_URL);
 var WNU_DB_NAME = dbConfig['database'];
 
 //var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
-/*
-var connection = mysql.createConnection(WNU_DB_URL);
-
-console.log('WNU_DB_NAME',WNU_DB_NAME);
-
-function handleDisconnect(connection) {
-    connection.on('error', function(err) {
-	    if (!err.fatal) {
-		return;
-	    }
-
-	    if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
-		throw err;
-	    }
-
-	    console.log('Re-connecting lost connection: ' + err.stack);
-
-	    connection = mysql.createConnection(WNU_DB_URL);
-	    handleDisconnect(connection);
-	    connection.connect();
-	});
-}
-
-handleDisconnect(connection);
-
-
-connection.connect(function(err) {
-
-    if(!err){
-        console.log('Connected to DB');
-    }
-    else{
-        console.log("Failed to Connect to DB",err.code);
-    }
-});
-*/
 
 
 var connection;
