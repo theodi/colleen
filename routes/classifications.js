@@ -189,10 +189,10 @@ exports.getClassificationInterval = function(req, res) {
 
 exports.getDBstats = function(req, res) {
     var output = [];
-    connection.query('SELECT COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ??',['classifications'], function(err, rows, fields) {
+    connection.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
         if(err) throw err;
         console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
-	output.push(rows[0]);
+	output.push(rows);
 	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
 		if(err) throw err;
 		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);

@@ -4,6 +4,10 @@ import mysql.connector
 import time, datetime
 import logging
 import logging.config
+import os
+import urlparse
+
+#urlparse.uses_netloc.append('mysql')
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('fetchandstore')
@@ -43,7 +47,10 @@ def get_json_from_api(zoon_api_request_url, payload, headers):
     response = requests.get(zoon_api_request_url, params=payload, headers=headers)
     logger.info('response code was %d' % response.status_code)
     logger.info('response text was %s' % response.text)
-    return response.json()
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
 
 def get_json_from_file(filepath):
 
@@ -73,32 +80,36 @@ def insert_tuples(con,data):
 
 
 def thewholeshebang():
-#    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
-    projects = ['solar_stormwatch']
-#    duration = 5 * 60 * 1000  # 5 minutes in milliseconds
+    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
     duration = 60 * 60 * 24 * 31 * 1000# a month in millisenconds
     per_page = 2000
     page = 1
 
-
-    con = mysql.connector.connect(host='localhost',user='colleen',password='galaxy',database='zoon')
+    mysql_url = os.environ['WNU_DB_URL']
+    mysql_config = urlparse.urlparse(mysql_url)
+    logger.info("connecting hostname: %s, user: %s, password: %s, db: %s" % (mysql_config.hostname,mysql_config.username,mysql_config.password,mysql_config.path[1:]))
+    con = mysql.connector.connect(host=mysql_config.hostname,user=mysql_config.username,password=mysql_config.password,database=mysql_config.path[1:])
     headers = {'X_REQUESTED_WITH': 'XMLHttpRequest', 
                'ACCEPT': 'application/vnd.zooevents.v1+json',}
 
     for project in projects:
-#        start_time = get_max_created_at_by_project(con, project)
-        start_time = 1398698567000
+        start_time = int(get_max_created_at_by_project(con, project))
+        if start_time is 'NULL':
+            logger.info("setting start_time to a month ago")
+            start_time = int(round(time.time() * 1000)) - duration
         logger.info("max_created_at for %s is %d" % (project, start_time))
-        end_time = start_time + duration
+        end_time = int(start_time + duration)
         zoon_api_request_url = 'http://event.zooniverse.org/classifications/%s' % project
         payload = {'from': start_time, 'to': end_time, 'per_page': per_page, 'page': page}
         logger.info("requesting %s from %d" % (zoon_api_request_url, start_time))
         json_obj = get_json_from_api(zoon_api_request_url, payload, headers)
+        if json_obj is None:
+            continue
         logger.info("got json from api")
         data = json_to_tuples(json_obj, project)
         logger.info("converted json to tuples")
         insert_tuples(con, data)
-        logger.info("inserted tuples into db")
+        logger.info("inserted %d tuples from %s into db" % (len(data), project))
         
     con.close()
     con.disconnect()
