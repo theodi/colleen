@@ -1,4 +1,5 @@
 [
+
     {
         "name": "milky_way_project",
         "display_name": "",
@@ -9,19 +10,13 @@
         "display_name": "",
         "created_at": ""
     },
-
     {
-        "name": "condor",
+        "name": "cancer_cells",
         "display_name": "",
         "created_at": ""
     },
     {
-        "name": "worms",
-        "display_name": "",
-        "created_at": ""
-    },
-    {
-        "name": "solar_stormwatch",
+        "name": "solar_storm_watch",
         "display_name": "",
         "created_at": ""
     }

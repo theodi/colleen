@@ -15,14 +15,16 @@ ZN.App = function () {
 
     this.nextRequestTime = 0;
     this.curTime = 0;
+    this.lastTime = 0;
+    this.frameTime = 50; // frame ms
     this.requestDuration = 60*1000; // in ms
     this.firstFrame = true;
     this.classificationDelay = 0;
     this.classificationLoadCount = 0;
 
-    this.canvasContainer = "canvas-container";
-    this.ctx = null;
-    this.rendererType = "raphael" //"canvas"; //
+    this.canvasContainerId = "canvas-container";
+    this.renderer = null;
+    this.rendererType = "snap";//"raphael" //"canvas"; //
 
     this.paper = null;
     this.paths = [];
@@ -142,14 +144,15 @@ ZN.App.prototype = {
     },
 
     loadAssets:function () {
-        var url = "data/comp_1.json";
+        var url = "data/project_rules.json";
 
         this.loadUrl(url, "json",this.assetsLoaded);
 
     },
     assetsLoaded:function(data){
         this.model.setStyles(data);
-        this.loadProjectAnalytics();
+        this.startApp();
+        //this.loadProjectAnalytics();
 
     },
 
@@ -160,12 +163,15 @@ ZN.App.prototype = {
     },
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
-
-        this.initCanvas();
-        this.update();
+        this.startApp();
         //this.loadClassification();
     },
 
+    startApp:function(){
+        this.initRenderer();
+        this.curTime = this.lastTime = (new Date()).valueOf();
+        this.update();
+    },
 
 
 
@@ -211,22 +217,18 @@ ZN.App.prototype = {
 
     },
 
-    initCanvas:function(){
-        var size = this.getCanvasSize();
-        var w = size.width, h = size.height;
+    initRenderer:function(){
+
         switch(this.rendererType){
-            case "canvas":
-                var canvas = document.createElement('canvas');
-                canvas.id     = "CanvasLayer";
-                canvas.width  = w;
-                canvas.height = h;
-                $("#"+this.canvasContainer).append(canvas);
-                this.ctx = canvas.getContext('2d');
+            case "raphael":
+                this.renderer = new ZN.RaphaelRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
 
                 break;
-            case "raphael":
-                //var paper = Raphael(10, 50, 320, 200);
-                this.paper = Raphael(this.canvasContainer, w, h);
+            case "snap":
+                this.renderer = new ZN.SnapRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
+
                 break;
 
         }
@@ -234,6 +236,7 @@ ZN.App.prototype = {
 
     update:function(){
         var self = this;
+        this.lastTime = this.curTime;
         this.curTime = (new Date()).valueOf();
 
         /*
@@ -258,125 +261,147 @@ ZN.App.prototype = {
 
 
         requestAnimationFrame(function(){self.update()});
-        switch(this.rendererType){
-            case "canvas":
-                this.renderCanvas();
-                break;
-            case "raphael":
-                this.renderRaphael();
-                break;
-        }
+
+        this.execRules();
+        this.renderer.render();
+
 
     },
 
-    getCanvasSize: function(){
-        var size={};
-        size.width = $("#"+this.canvasContainer).width();
-        size.height = $("#"+this.canvasContainer).height();
-        return size;
-    },
-
-    renderCanvas:function(){
-        var ctx = this.ctx;
-        var size = this.getCanvasSize();
-        var w = size.width, h = size.height;
-
-        ctx.clearRect (0, 0, w, h);
-
-        ctx.beginPath();
-
-//polygon1--- usually the outside polygon, must be clockwise
-        ctx.moveTo(0, 0);
-        ctx.lineTo(200, 0);
-        ctx.lineTo(200, 200);
-        ctx.lineTo(0, 200);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-
-//polygon2 --- usually hole,must be counter-clockwise
-        ctx.moveTo(10, 10);
-        ctx.lineTo(10,100);
-        ctx.lineTo(100, 100);
-        ctx.lineTo(100, 10);
-        ctx.lineTo(10, 10);
-        ctx.closePath();
-
-//  add as many holes as you want
-        var alpha = 0.3;
-        ctx.fillStyle = "#FF0000";
-        ctx.strokeStyle = "rgba(255,0,255,"+alpha+")";
-        ctx.lineWidth = 1;
-        ctx.fill();
-        ctx.stroke();
-    },
-
-
-    renderRaphael:function(){
-
-        // animations: http://raphaeljs.com/animation.html
-        // scale image fill: http://stackoverflow.com/questions/1098994/scaling-a-fill-pattern-in-raphael-js
-        // svg import: https://github.com/wout/raphael-svg-import
-
-        if(this.paths.length>0) return;
+    execRules: function(){
 
         var projects = this.model.projects;
 
-        var tx=10,ty=10;
-
         _.each(projects,function(project,index){
-            var set = this.paper.set();
-            _.each(project.paths,function(path){
-                var path = this.paper.path(path.d)
-                   .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.9).transform("T"+tx+","+ty).transform("s1.0");
-                this.paths.push(path);
-                set.push(path);
+
+            // project rules
+            //project.rotation = (project.rotation+1)%360;
+
+            _.each(project.shapes,function(shape,ind){
+
+                // shape rules
+
+                if(shape.animation){
+                    _.each(shape.animation,function(anim){
+
+                        switch(anim.type){
+
+                            case "translate_circular":
+                                var r = anim.radius;
+
+                                // speed
+                                var speedRnd = anim.speed[1]-anim.speed[0];
+                                var speedMin = anim.speed[0];
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
+
+                                // set radius
+                                var ry = r;//shape.bounds.height()/2-shape.height/2;
+                                var rx = r;//shape.bounds.width()/2-shape.width/2;
+                                var rad = (Math.PI / 180)*anim.angle;
+
+                                // position
+                                var x = rx * Math.cos(rad);
+                                var y = ry * Math.sin(rad);
+                                shape.x = shape.initial.x +x;
+                                shape.y = shape.initial.y +y;
+
+                                if(project.name=='milky_way_project' && ind==0){
+                                    //console.log('anim x,y',shape.x,shape.y);
+                                }
+
+                                break;
+
+                            case "scale":
+
+                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
+                                anim.time = (anim.time+this.frameTime/1000);
+                                if(!anim.data){
+                                    anim.data=1.0;
+                                }
+
+                                if(anim.time>anim.duration[0]) {
+                                    anim.time = -Math.random()*2 -0.5;
+                                    anim.data= Math.random()*0.7+0.3;
+
+                                }
+                                if(anim.time>0){
+                                    var n = anim.time/anim.duration[0];
+                                    n = n>0.5?1-n:n;
+                                    n*=2;
+                                    var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
+                                    var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
+                                    shape.sx = sx*anim.data;
+                                    shape.sy = sy*anim.data;
+                                }
+
+                                break;
+
+                            case "translate_bouce_bounds":
+
+                                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
+                                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
+
+                                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
+                                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
+
+                                shape.x+=shape.vx;
+                                shape.y+=shape.vy;
+
+                                break;
+
+                            case "translate_linear":
+                            /*
+                                var r = anim.radius;
+
+                                // speed
+                                var speedRnd = anim.speed[1]-anim.speed[0];
+                                var speedMin = anim.speed[0];
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
+
+                                // set radius
+                                var ry = shape.bounds.height()/2-shape.height/2;
+                                var rx = shape.bounds.width()/2-shape.width/2;
+                                var rad = (Math.PI / 180)*anim.angle;
+
+                                // position
+                                var x = rx * Math.cos(rad);
+                                var y = ry * Math.sin(rad);
+                                shape.x = shape.initial.x +x;
+                                shape.y = shape.initial.y +y;
+
+
+                                break;
+                                */
+                        }
+
+
+                    },this);
+                }
+
+
+
 
             },this);
-            set.attr({fill: "red"});
-            set.transform("s0.5,0.5,100,100");
 
         },this);
+    },
 
-        /*
-        for(var i=0;i<projects.length;i++){
-
-
-            var proj = projects[i];
-            var pathStrs = proj.pointsToRaphael();
-
-            for(p=0;p<pathStrs.length;p++){
-                var pathStr = pathStrs[p];
-                var tx = i*20, ty = i*20;
-                var path = this.paper.path(pathStr)
-                    .attr({"fill":"#f00","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
-
-                var path2 = this.paper.path(pathStr)
-                    .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0,'opacity':0.3}).transform("T"+tx+","+ty);
-
-                this.paths.push(path,path2);
-            }
-
-
-        }
-        */
-
-        /*
-        if(this.paths.length>0) return;
-        var nItems = 10;
-
-        for(var i=0;i<nItems;i++){
-            var tx = i*20, ty = i*20;
-            var path = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
-               .attr({"fill":"#f00","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
-
-            var path2 = this.paper.path("M 50 50 L 50 150 L 150 150 L 150 50 z M 75 75 L 125 75 L 125 125 L 75 125 z")
-                .attr({"fill":"url(images/paint_01.jpeg)","stroke-width":0}).attr('opacity',0.3).transform("T"+tx+","+ty);
-
-            this.paths.push(path,path2);
-        }
-        */
-
+    /*
+     cx, cy = rotation center
+     x,y = current x,y
+     nx, ny = new coordinates
+     */
+    rotateAroundPoint: function (cx, cy, x, y, angle) {
+        var radians = (Math.PI / 180) * angle,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
+            ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+        return [nx, ny];
     }
+
+
+
 
 
 }
