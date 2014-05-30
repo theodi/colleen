@@ -18,6 +18,8 @@ app.get('/updateAnalytics',classifications.updateAnalytics);
 app.get('/analytics',classifications.getAnalytics);
 app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 
+app.get('/dbstats',classifications.getDBstats);
+
 var port = process.env.PORT || 3000;
 app.listen(port);
 console.log('Listening on port ' + port + '...');

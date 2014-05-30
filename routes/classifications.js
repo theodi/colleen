@@ -5,33 +5,46 @@
 var _ = require('lodash');
 
 var mysql      = require('mysql');
+var parseDbUrl = require('parse-database-url');
+
 var WNU_DB_URL = process.env.WNU_DB_URL;
-var connection = mysql.createConnection(WNU_DB_URL);
+var dbConfig = parseDbUrl(WNU_DB_URL);
 
-connection.addListener('error', function(connectionException){
-	if (connectionException.errno === process.ECONNREFUSED) {
-	    console.log('ECONNREFUSED: connection refused to '
-            +connection.host
-            +':'
-		    +connection.port);
-	} else {
-	    console.log(connectionException);
-	}
+// need to parse dbname out of connection string
+var WNU_DB_NAME = dbConfig['database'];
+
+//var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
+
+
+var connection;
+
+
+function handleDisconnect() {
+    connection = mysql.createConnection(WNU_DB_URL); // Recreate the connection, since
+    // the old one cannot be reused.
+
+    connection.connect(function(err) {              // The server is either down
+        if(err) {                                     // or restarting (takes a while sometimes).
+            console.log('error when connecting to db:', err);
+            setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+    // If you're also serving http, display a 503 error.
+    connection.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
     });
+}
 
-connection.connect(function(err) {
+handleDisconnect();
 
-    if(!err){
-        console.log('Connected to DB');
-    }
-    else{
-        console.log("Failed to Connect to DB",err.code);
-    }
-});
 
 
 exports.getClassificationCount = function(req, res) {
-    //connection.query('SELECT COUNT(*) AS count FROM `classifications`', function(err, rows, fields) {
     connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
         if(err) throw err;
         console.log('Classification count: ', rows[0].count);
@@ -79,7 +92,7 @@ exports.getLastClassifications = function(req, res) {
         res.send([]);
         return;
     }
-    console.log('Retrieving last ' + count + ' classifications, offet: ' + offset);
+    console.log('Retrieving last ' + count + ' classifications, offset: ' + offset);
 
     connection.query("SELECT * FROM ?? LIMIT "+offset+","+count,['classifications'], function(err, rows, fields) {
     //connection.query('SELECT * FROM ?? LIMIT ?,?',['classifications',offset,count], function(err, rows, fields) {
@@ -170,6 +183,22 @@ exports.getClassificationInterval = function(req, res) {
         });
         res.send(output);
 
+    });
+
+};
+
+exports.getDBstats = function(req, res) {
+    var output = [];
+    connection.query('SELECT COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ??',['classifications'], function(err, rows, fields) {
+        if(err) throw err;
+        console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
+	output.push(rows[0]);
+	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+		if(err) throw err;
+		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
+		output.push(rows[0]);
+		res.send(output);
+	    });
     });
 
 };
