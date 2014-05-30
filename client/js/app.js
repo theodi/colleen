@@ -15,6 +15,8 @@ ZN.App = function () {
 
     this.nextRequestTime = 0;
     this.curTime = 0;
+    this.lastTime = 0;
+    this.frameTime = 50; // frame ms
     this.requestDuration = 60*1000; // in ms
     this.firstFrame = true;
     this.classificationDelay = 0;
@@ -165,6 +167,7 @@ ZN.App.prototype = {
 
     startApp:function(){
         this.initRenderer();
+        this.curTime = this.lastTime = (new Date()).valueOf();
         this.update();
     },
 
@@ -231,6 +234,7 @@ ZN.App.prototype = {
 
     update:function(){
         var self = this;
+        this.lastTime = this.curTime;
         this.curTime = (new Date()).valueOf();
 
         /*
@@ -271,22 +275,15 @@ ZN.App.prototype = {
             // project rules
             //project.rotation = (project.rotation+1)%360;
 
-            _.each(project.shapes,function(shape){
+            _.each(project.shapes,function(shape,ind){
 
                 // shape rules
 
-                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
-                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
-
-                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
-                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
-
-                shape.x+=shape.vx;
-                shape.y+=shape.vy;
-
                 if(shape.animation){
                     _.each(shape.animation,function(anim){
+
                         switch(anim.type){
+
                             case "translate_circular":
                                 var r = anim.radius;
 
@@ -306,10 +303,52 @@ ZN.App.prototype = {
                                 shape.x = shape.initial.x +x;
                                 shape.y = shape.initial.y +y;
 
+                                if(project.name=='milky_way_project' && ind==0){
+                                    //console.log('anim x,y',shape.x,shape.y);
+                                }
+
+                                break;
+
+                            case "scale":
+
+                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
+                                anim.time = (anim.time+this.frameTime/1000);
+                                if(!anim.data){
+                                    anim.data=1.0;
+                                }
+
+                                if(anim.time>anim.duration[0]) {
+                                    anim.time = -Math.random()*2 -0.5;
+                                    anim.data= Math.random()*0.7+0.3;
+
+                                }
+                                if(anim.time>0){
+                                    var n = anim.time/anim.duration[0];
+                                    n = n>0.5?1-n:n;
+                                    n*=2;
+                                    var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
+                                    var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
+                                    shape.sx = sx*anim.data;
+                                    shape.sy = sy*anim.data;
+                                }
+
+                                break;
+
+                            case "translate_bouce_bounds":
+
+                                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
+                                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
+
+                                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
+                                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
+
+                                shape.x+=shape.vx;
+                                shape.y+=shape.vy;
 
                                 break;
 
                             case "translate_linear":
+                            /*
                                 var r = anim.radius;
 
                                 // speed
@@ -330,7 +369,10 @@ ZN.App.prototype = {
 
 
                                 break;
+                                */
                         }
+
+
                     },this);
                 }
 

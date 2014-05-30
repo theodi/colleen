@@ -1,17 +1,20 @@
 {
     "project":"galaxy_zoo",
-    "fills":["#000","#f00"],
+    "fills":["#000000","#000000"],
+    "scale":0.7,
+    "x":0,
+    "y":0,
 
     "shapes":[
-        { "id":"1","rotation":0,"opacity":0.8, "animation":{"type":"clouds","radius":50,"angle":0,"speed":[0.1,0.3]}},
-        { "id":"2","rotation":-11,"opacity":0.7, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.5]}},
-        { "id":"3","rotation":-16,"opacity":0.6, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.05]}},
-        { "id":"4","rotation":-24,"opacity":0.5, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.0,0.1]}},
-        { "id":"5","rotation":-13,"opacity":0.4, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.2]}},
-        { "id":"6","rotation":0,"opacity":0.3, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.2,0.25]}},
-        { "id":"7","rotation":0,"opacity":0.2, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.15,0.2]}},
-        { "id":"8","rotation":0,"opacity":0.1, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.01,0.02]}},
-        { "id":"9","rotation":-16,"opacity":0.1, "animation":{"type":"clouds","radius":50,"angle":0 ,"speed":[0.1,0.3]}}
+        { "id":"1","rotation":0,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0,"speed":[0.5,0.7]}]},
+        { "id":"2","rotation":-11,"opacity":0.7, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.8,0.9]}]},
+        { "id":"3","rotation":-16,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.9,1.1]}]},
+        { "id":"4","rotation":-24,"opacity":0.6, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.3,0.5]}]},
+        { "id":"5","rotation":-13,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.6,0.9]}]},
+        { "id":"6","rotation":0,"opacity":0.7, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.3,0.45]}]},
+        { "id":"7","rotation":0,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.25,0.5]}]},
+        { "id":"8","rotation":0,"opacity":0.7, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.6,0.7]}]},
+        { "id":"9","rotation":-16,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.8,0.9]}]}
 
     ]
 }

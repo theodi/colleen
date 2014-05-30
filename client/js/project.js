@@ -102,9 +102,7 @@ ZN.Project.prototype = {
 
             }
             this.shapes.push(shape);
-            if(fillScale){
-                shape.fill = cScale(index/nShapes);
-            }
+
 
             _.each(shapeData,function(value,key){
                 shape[key] = value;
@@ -112,6 +110,10 @@ ZN.Project.prototype = {
                     shape.initial[key]=value;
                 }
             });
+
+            if(fillScale){
+                shape.fill = fillScale(index/nShapes).hex();
+            }
 
 
             // bounds
@@ -219,6 +221,8 @@ ZN.Shape = function () {
     this.y=0;
     this.vx=0;
     this.vy=0;
+    this.sx=1.0;
+    this.sy=1.0;
     this.path=null;
     this.fill="0x000000";
     this.rotation=0;

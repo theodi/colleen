@@ -48,11 +48,11 @@ ZN.SnapRenderer.prototype = {
         _.each(projects,function(project,index){
 
             var ps = project.scale;
-            if(index==0) ps = 0.1;
+            //if(index==0) ps = 0.1;
             var px = project.x+cx, py = project.y+cy,
                 pr = project.rotation;
 
-            _.each(project.shapes,function(shape){
+            _.each(project.shapes,function(shape,ind){
 
 
                 if(!shape.path){
@@ -73,11 +73,16 @@ ZN.SnapRenderer.prototype = {
                 }
                 var path = shape.path;
                 var tx= shape.x,ty=shape.y;
+                var sx= shape.sx,sy=shape.sy;
 
-                shape.path.attr({"fill":shape.fill,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation);
+                if(ind==0 && project.name=="galaxy_zoo"){
+                    //console.log('x,y',tx,ty);
+                }
 
-                //var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0...";
-                //shape.path.transform(trans);
+                shape.path.attr({"fill":shape.fill,"stroke-width":0}).attr('opacity',shape.opacity).transform("t"+tx+","+ty+"r"+shape.rotation+"s"+sx+","+sy);
+
+                var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0...";
+                shape.path.transform(trans);
 
                 if(this.showBB){
                     shape.boundsPath.transform("t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0");
@@ -85,8 +90,8 @@ ZN.SnapRenderer.prototype = {
 
             },this);
 
-            var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0";
-            project['svgGroup'].transform(trans);
+            //var trans = "t"+px+","+py+"r"+pr+",0,0"+"s"+ps+","+ps+",0,0";
+            //project['svgGroup'].transform(trans);
 
         },this);
 
