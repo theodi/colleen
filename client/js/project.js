@@ -114,7 +114,10 @@ ZN.Project.prototype = {
             if(fillScale){
                 shape.fill = fillScale(index/nShapes).hex();
             }
-
+            var colArray = chroma(shape.fill)._rgb;
+            colArray[3] = shape.opacity;
+            var rgba = "rgba("+colArray.join(",")+")";
+            shape.fill = rgba;
 
             // bounds
             var bounds = new ZN.Bounds();

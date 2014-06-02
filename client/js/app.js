@@ -24,10 +24,12 @@ ZN.App = function () {
 
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-    this.rendererType = "snap";//"raphael" //"canvas"; //
+    this.rendererType = "canvas"; //"snap";//"raphael" //
 
     this.paper = null;
     this.paths = [];
+    this.debug = true;
+    this.frameDurations = [];
     //this.tick = 0;
 
 
@@ -63,13 +65,11 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-	/* url for api on same host as this page served from
-	 */
+	// url for api on same host as this page served from
 	//	var url = window.location.protocol + "//" + window.location.host + "/"; 
-	var url = 'http://localhost:5000/'
+	    var url = 'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
-        //this.model.projects = ZN.config.projects;
         this.loadProjects();
 
     },
@@ -170,10 +170,15 @@ ZN.App.prototype = {
     startApp:function(){
         this.initRenderer();
         this.curTime = this.lastTime = (new Date()).valueOf();
+        this.initInterface();
         this.update();
     },
 
-
+    initInterface:function(){
+        if(this.debug){
+            $(document.body).append('<div id="diagnostics" style="position:absolute;z-index:10;"></div>');
+        }
+    },
 
     loadClassification:function () {
         var maxItems = 1000;
@@ -229,6 +234,10 @@ ZN.App.prototype = {
                 this.renderer = new ZN.SnapRenderer();
                 this.renderer.init(this,this.model,this.canvasContainerId);
 
+            case "canvas":
+                this.renderer = new ZN.CanvasRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
+
                 break;
 
         }
@@ -238,6 +247,17 @@ ZN.App.prototype = {
         var self = this;
         this.lastTime = this.curTime;
         this.curTime = (new Date()).valueOf();
+        var frame = this.curTime - this.lastTime;
+        this.frameDurations.push(frame);
+        if(this.frameDurations.length>10) this.frameDurations.shift();
+
+        var sum = this.frameDurations.reduce(function(prev, cur, index, array){
+            return prev + cur;
+        });
+        var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
+        if(this.debug){
+            $("#diagnostics").html(fps);
+        }
 
         /*
         // load new classifications
