@@ -90,6 +90,7 @@ ZN.Project.prototype = {
             var shape = new ZN.Shape();
             shape.init();
 
+
             if(shapeData.hasOwnProperty('parentId')){
                 var parentId = shapeData.parentId;
                 var parent = _.find(data.shapes,{'id':parentId});
@@ -114,10 +115,10 @@ ZN.Project.prototype = {
             if(fillScale){
                 shape.fill = fillScale(index/nShapes).hex();
             }
-            var colArray = chroma(shape.fill)._rgb;
-            colArray[3] = shape.opacity;
-            var rgba = "rgba("+colArray.join(",")+")";
-            shape.fill = rgba;
+
+            shape.fillObj = chroma(shape.fill).alpha(shape.opacity);
+            shape.fill = shape.fillObj.css();
+
 
             // bounds
             var bounds = new ZN.Bounds();
@@ -133,9 +134,8 @@ ZN.Project.prototype = {
 
             // paths
             var pathStr = shapeData.d;
-            //var segsRel = Raphael.pathToRelative(pathStr);
             var segsAbs = Snap.path.toAbsolute(pathStr);
-            //var segsAbs = Raphael._pathToAbsolute(pathStr);
+
             var x, y, ox= 0, oy=0, mx=0, my=0,
                 minx=Number.MAX_VALUE,
                 miny=Number.MAX_VALUE,
@@ -227,53 +227,81 @@ ZN.Shape = function () {
     this.sx=1.0;
     this.sy=1.0;
     this.path=null;
+    this.d = "";
     this.fill="0x000000";
+    this.flllObj = null;
     this.rotation=0;
     this.opacity = 1.0;
-    this.bounds=null;
     this.width=0;
     this.height=0;
+
     this.bounds = null;
     this.boundsPath = null;
+
     this.shapes=[];
     this.parent=null;
     this.initial={
         x:0,y:0,fill:0,rotation:0,opacity:0,d:""
     };
+    this.trail = null;
 
 }
 
 ZN.Shape.prototype = {
     constructor:ZN.Shape,
 
+    init: function(){
+        this.createTrail();
+    },
+    createTrail: function(opts){
+
+        this.trail = new ZN.Trail();
+        this.trail.type = "point";
+
+    },
+    addTrailShape: function(){
+        var shape = new ZN.Shape();
+        shape.x = this.x;
+        shape.y = this.y;
+        shape.rotation = this.rotation;
+        shape.sx = this.sx;
+        shape.sy = this.sy;
+        switch(this.trail.type){
+            case "path":
+                shape.d = this.d;
+                break;
+            case "point":
+                shape.sx = this.sx/3.0;
+                shape.sy = this.sy/3.0;
+                shape.d = this.d;
+                break;
+
+
+        }
+        shape.opacity = this.opacity;
+        shape.fill = this.fill;
+
+        this.trail.shapes.push(shape);
+    }
+
+}
+
+
+ZN.Trail = function(){
+    this.type = "path"; // "points"; //
+    this.shapes = [];
+
+
+}
+ZN.Trail.prototype = {
+    constructor:ZN.Trail,
 
     init: function(){
-        //this.vx = (Math.random()-0.5)*0.9;
-        //this.vy = (Math.random()-0.5)*0.9;
-    }
-
-    /*
-    pointsToRaphael:function(){
-
-        var pathPts = this.points;
-        var pathStr = "";
-        for(var polyId=0;polyId<pathPts.length;polyId++){
-            var polyPts = pathPts[polyId];
-
-            for(ptId=0;ptId<polyPts.length;ptId++){
-                pathStr += (ptId && "L" || "M");
-                pathStr+=polyPts[ptId][0]+" "+polyPts[ptId][1];
-            }
-            pathStr+="z";
-        }
-
-        this.path.push(pathStr);
-
-        return this.path;
 
     }
-    */
-}
+
+};
+
 
 
 ZN.Bounds = function(){

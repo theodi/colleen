@@ -102,49 +102,53 @@ ZN.CanvasRenderer.prototype = {
 
             _.each(project.shapes,function(shape,ind){
 
-                var path = shape.path;
-                var tx= shape.x,ty=shape.y;
-                var sx= shape.sx,sy=shape.sy;
+                _.each(shape.trail.shapes,function(trailShape,si){
 
-                if(ind==0 && project.name=="galaxy_zoo"){
-                    //console.log('x,y',tx,ty);
-                }
-
-                // Store project transform
-                this.ctx.save();
-                // Shape transform
-                this.ctx.translate(tx,ty);
-                this.ctx.rotate(shape.rotation*Math.PI/180);
-                this.ctx.scale(sx,sy);
-
-                this.ctx.beginPath();
-
-                var segsAbs = Snap.path.toAbsolute(shape.d);
-
-                var x, y;
-                _.each(segsAbs,function(seg){
-                    switch(seg[0]){
-                        case "M":
-                            this.ctx.moveTo(seg[1],seg[2]);
-                            break;
-                        case "C":
-                            this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
-                            break;
-                    };
+                    this.renderShape(trailShape);
 
                 },this);
 
-                this.ctx.fillStyle = shape.fill;
-                this.ctx.fill();
-
-                // Restore to project transform
-                this.ctx.restore();
+                this.renderShape(shape);
 
             },this);
 
             this.ctx.restore();
 
         },this);
+
+    },
+
+    renderShape: function(shape){
+
+        // Store project transform
+        this.ctx.save();
+        // Shape transform
+        this.ctx.translate(shape.x,shape.y);
+        this.ctx.rotate(shape.rotation*Math.PI/180);
+        this.ctx.scale(shape.sx,shape.sy);
+
+        this.ctx.beginPath();
+
+        var segsAbs = Snap.path.toAbsolute(shape.d);
+
+        var x, y;
+        _.each(segsAbs,function(seg){
+            switch(seg[0]){
+                case "M":
+                    this.ctx.moveTo(seg[1],seg[2]);
+                    break;
+                case "C":
+                    this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
+                    break;
+            };
+
+        },this);
+
+        this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity).css();
+        this.ctx.fill();
+
+        // Restore to project transform
+        this.ctx.restore();
 
     },
 

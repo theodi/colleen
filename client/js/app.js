@@ -30,9 +30,7 @@ ZN.App = function () {
     this.paths = [];
     this.frameDurations = [];
 
-
     this.debug = true;
-
 
 
 }
@@ -307,6 +305,20 @@ ZN.App.prototype = {
 
             _.each(project.shapes,function(shape,ind){
 
+                // shape trails
+
+                _.each(shape.trail.shapes,function(trailShape,si){
+
+                    trailShape.opacity *=0.985;//(trailShape);
+
+
+                },this);
+
+                _.remove(shape.trail.shapes, function(trailShape) {
+                    return trailShape.opacity < 0.05;
+                });
+
+
                 // shape rules
 
                 if(shape.animation){
@@ -317,10 +329,25 @@ ZN.App.prototype = {
                             case "translate_circular":
                                 var r = anim.radius;
 
+                                if(parseInt(anim.angle)%20 ==0){
+                                    if(project.name=='galaxy_zoo' && ind==6){
+                                        //console.log('anim x,y',shape.x,shape.y);
+                                        shape.addTrailShape();
+                                    }
+                                    //shape.addTrailShape();
+
+                                }
+
                                 // speed
                                 var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/this.frameTime;
                                 var speedMin = anim.speed[0]*10.0/this.frameTime;
-                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
+
+                                if(anim.angle>360){
+                                    anim.angle %= 360;
+                                    shape.addTrailShape();
+                                }
+
 
                                 // set radius
                                 var ry = r;//shape.bounds.height()/2-shape.height/2;
@@ -333,9 +360,7 @@ ZN.App.prototype = {
                                 shape.x = shape.initial.x +x;
                                 shape.y = shape.initial.y +y;
 
-                                if(project.name=='milky_way_project' && ind==0){
-                                    //console.log('anim x,y',shape.x,shape.y);
-                                }
+
 
                                 break;
 

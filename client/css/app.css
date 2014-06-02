@@ -40,6 +40,7 @@ html{
     top:385px;
     left:520px;
 }
+
 #loading-text {
     width:200px;
     display:inline-block;
@@ -47,8 +48,6 @@ html{
     font-weight: 300;
     text-transform: uppercase;
     color: #c1c1c1;
-
-
 }
 
 #wrapper{
