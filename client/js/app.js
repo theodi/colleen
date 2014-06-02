@@ -28,9 +28,10 @@ ZN.App = function () {
 
     this.paper = null;
     this.paths = [];
-    this.debug = true;
     this.frameDurations = [];
-    //this.tick = 0;
+
+
+    this.debug = true;
 
 
 
@@ -175,9 +176,15 @@ ZN.App.prototype = {
     },
 
     initInterface:function(){
+        var self = this;
         if(this.debug){
             $(document.body).append('<div id="diagnostics" style="position:absolute;z-index:10;"></div>');
         }
+
+        $(window).resize(function(){
+            self.renderer.resize();
+        });
+
     },
 
     loadClassification:function () {
@@ -248,6 +255,7 @@ ZN.App.prototype = {
         this.lastTime = this.curTime;
         this.curTime = (new Date()).valueOf();
         var frame = this.curTime - this.lastTime;
+        this.frameTime = Math.max(frame,50);
         this.frameDurations.push(frame);
         if(this.frameDurations.length>10) this.frameDurations.shift();
 
@@ -310,8 +318,8 @@ ZN.App.prototype = {
                                 var r = anim.radius;
 
                                 // speed
-                                var speedRnd = anim.speed[1]-anim.speed[0];
-                                var speedMin = anim.speed[0];
+                                var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/this.frameTime;
+                                var speedMin = anim.speed[0]*10.0/this.frameTime;
                                 anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
 
                                 // set radius

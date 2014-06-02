@@ -4,7 +4,9 @@ ZN.CanvasRenderer = function () {
     this.model = null;
     this.containerId = "canvas-container";
     this.ctx = null;
+    this.bgCtx = null;
     this.showBB = false;
+    this.bgImage=null;
 
 
 }
@@ -17,16 +19,46 @@ ZN.CanvasRenderer.prototype = {
         this.model = model;
         this.containerId = containerId;
 
-        var size = this.getCanvasSize();
-        var w = size.width, h = size.height;
+        var bgCanvas = document.createElement('canvas');
+        bgCanvas.id     = "CanvasBg";
+        $("#"+this.containerId).append(bgCanvas);
+        this.bgCtx = bgCanvas.getContext('2d');
+
+
 
         var canvas = document.createElement('canvas');
         canvas.id     = "CanvasLayer";
-        canvas.width  = w;
-        canvas.height = h;
         $("#"+this.containerId).append(canvas);
         this.ctx = canvas.getContext('2d');
 
+        this.bgImage = new Image();
+
+        var self = this;
+        this.bgImage.onload = function() {
+            self.resize();
+        };
+        this.bgImage.src = 'images/patina_test.jpg';
+
+
+
+
+    },
+
+
+
+    resize:function(){
+
+        var size = this.getCanvasSize();
+        var w = size.width, h = size.height;
+        this.ctx.canvas.width  = w;
+        this.ctx.canvas.height = h;
+
+        this.bgCtx.canvas.width  = w;
+        this.bgCtx.canvas.height = h;
+
+        if(this.bgImage){
+            this.bgCtx.drawImage(this.bgImage,0,0,w,h);
+        }
     },
 
     getCanvasSize: function(){

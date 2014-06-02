@@ -148,11 +148,16 @@ html{
     overflow:hidden; /* fixes scrollbar in ie */
     padding:0;
     margin:0;
+    /*
     background-image:url("../images/patina_test.jpg");
     background-repeat:no-repeat;
     background-size: 100%;
+    */
+}
 
 
+#canvas-container canvas{
+    position:absolute;
 }
 
 #svg-container{
