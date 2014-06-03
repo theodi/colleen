@@ -12,3 +12,16 @@ $ npm install
 which looks at package.json and installs dependencies
 $ node server
 to run app on port 3000
+
+
+If you have issues with MySQL not starting
+
+> sudo /usr/local/mysql/support-files/mysql.server 
+
+ensure present working directory is the project directory (i.e. colleen), then
+
+> source dev.env
+> node client/util/compile_assets.js
+> foreman start
+
+where node commend compiles the .js and foreman starts the node server
