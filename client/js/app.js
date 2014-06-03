@@ -12,6 +12,7 @@ ZN.App = function () {
     this.apiUrl = "";
     this.dataSource = "archive"; // "live"
     this.archiveStartSecs = 120000;//2*24*60*60; // seconds
+    this.ruleFile = "project_rules";
 
     this.nextRequestTime = 0;
     this.curTime = 0;
@@ -24,12 +25,13 @@ ZN.App = function () {
 
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-    this.rendererType = "snap";//"raphael" //"canvas"; //
+    this.rendererType = "canvas"; //"snap";//"raphael" //
 
     this.paper = null;
     this.paths = [];
-    //this.tick = 0;
+    this.frameDurations = [];
 
+    this.debug = false;
 
 
 }
@@ -41,6 +43,11 @@ ZN.App.prototype = {
         this.model = new ZN.Model();
         this.model.init();
         this.loadConfig();
+
+        var rules = this.getParameterByName("rules");
+        if(rules!=""){
+            this.ruleFile += "_" + rules;
+        }
 
     },
 
@@ -63,13 +70,11 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-	/* url for api on same host as this page served from
-	 */
+	// url for api on same host as this page served from
 	//	var url = window.location.protocol + "//" + window.location.host + "/"; 
-	var url = 'http://localhost:5000/'
+	    var url = 'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
-        //this.model.projects = ZN.config.projects;
         this.loadProjects();
 
     },
@@ -144,7 +149,7 @@ ZN.App.prototype = {
     },
 
     loadAssets:function () {
-        var url = "data/project_rules.json";
+        var url = "data/"+this.ruleFile+".json";
 
         this.loadUrl(url, "json",this.assetsLoaded);
 
@@ -170,10 +175,21 @@ ZN.App.prototype = {
     startApp:function(){
         this.initRenderer();
         this.curTime = this.lastTime = (new Date()).valueOf();
+        this.initInterface();
         this.update();
     },
 
+    initInterface:function(){
+        var self = this;
+        if(this.debug){
+            $(document.body).append('<div id="diagnostics" style="position:absolute;z-index:10;"></div>');
+        }
 
+        $(window).resize(function(){
+            self.renderer.resize();
+        });
+
+    },
 
     loadClassification:function () {
         var maxItems = 1000;
@@ -231,6 +247,12 @@ ZN.App.prototype = {
 
                 break;
 
+            case "canvas":
+                this.renderer = new ZN.CanvasRenderer();
+                this.renderer.init(this,this.model,this.canvasContainerId);
+
+                break;
+
         }
     },
 
@@ -238,6 +260,18 @@ ZN.App.prototype = {
         var self = this;
         this.lastTime = this.curTime;
         this.curTime = (new Date()).valueOf();
+        var frame = this.curTime - this.lastTime;
+        this.frameTime = Math.max(frame,50);
+        this.frameDurations.push(frame);
+        if(this.frameDurations.length>10) this.frameDurations.shift();
+
+        var sum = this.frameDurations.reduce(function(prev, cur, index, array){
+            return prev + cur;
+        });
+        var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
+        if(this.debug){
+            $("#diagnostics").html(fps);
+        }
 
         /*
         // load new classifications
@@ -279,6 +313,20 @@ ZN.App.prototype = {
 
             _.each(project.shapes,function(shape,ind){
 
+                // shape trails
+
+                _.each(shape.trail.shapes,function(trailShape,si){
+
+                    trailShape.opacity *=0.985;//(trailShape);
+
+
+                },this);
+
+                _.remove(shape.trail.shapes, function(trailShape) {
+                    return trailShape.opacity < 0.05;
+                });
+
+
                 // shape rules
 
                 if(shape.animation){
@@ -289,10 +337,25 @@ ZN.App.prototype = {
                             case "translate_circular":
                                 var r = anim.radius;
 
+                                if(parseInt(anim.angle)%20 ==0){
+                                    if(project.name=='galaxy_zoo' && ind==6){
+                                        //console.log('anim x,y',shape.x,shape.y);
+                                        //shape.addTrailShape();
+                                    }
+                                    //shape.addTrailShape();
+
+                                }
+
                                 // speed
-                                var speedRnd = anim.speed[1]-anim.speed[0];
-                                var speedMin = anim.speed[0];
-                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
+                                var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/this.frameTime;
+                                var speedMin = anim.speed[0]*10.0/this.frameTime;
+                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
+
+                                if(anim.angle>360){
+                                    anim.angle %= 360;
+                                    shape.addTrailShape();
+                                }
+
 
                                 // set radius
                                 var ry = r;//shape.bounds.height()/2-shape.height/2;
@@ -305,9 +368,7 @@ ZN.App.prototype = {
                                 shape.x = shape.initial.x +x;
                                 shape.y = shape.initial.y +y;
 
-                                if(project.name=='milky_way_project' && ind==0){
-                                    //console.log('anim x,y',shape.x,shape.y);
-                                }
+
 
                                 break;
 
@@ -398,10 +459,15 @@ ZN.App.prototype = {
             nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
             ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
         return [nx, ny];
+    },
+
+
+    getParameterByName:function(name){
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-
-
-
 
 
 }

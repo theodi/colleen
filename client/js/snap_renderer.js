@@ -36,9 +36,6 @@ ZN.SnapRenderer.prototype = {
 
     render:function(){
 
-        // animations: http://raphaeljs.com/animation.html
-        // scale image fill: http://stackoverflow.com/questions/1098994/scaling-a-fill-pattern-in-raphael-js
-        // svg import: https://github.com/wout/raphael-svg-import
         var csz = this.getCanvasSize();
         var cx = csz.width/ 2, cy = csz.height/2;
 
