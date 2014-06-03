@@ -12,6 +12,7 @@ ZN.App = function () {
     this.apiUrl = "";
     this.dataSource = "archive"; // "live"
     this.archiveStartSecs = 120000;//2*24*60*60; // seconds
+    this.ruleFile = "project_rules";
 
     this.nextRequestTime = 0;
     this.curTime = 0;
@@ -30,7 +31,7 @@ ZN.App = function () {
     this.paths = [];
     this.frameDurations = [];
 
-    this.debug = true;
+    this.debug = false;
 
 
 }
@@ -42,6 +43,11 @@ ZN.App.prototype = {
         this.model = new ZN.Model();
         this.model.init();
         this.loadConfig();
+
+        var rules = this.getParameterByName("rules");
+        if(rules!=""){
+            this.ruleFile += "_" + rules;
+        }
 
     },
 
@@ -143,7 +149,7 @@ ZN.App.prototype = {
     },
 
     loadAssets:function () {
-        var url = "data/project_rules.json";
+        var url = "data/"+this.ruleFile+".json";
 
         this.loadUrl(url, "json",this.assetsLoaded);
 
@@ -239,6 +245,8 @@ ZN.App.prototype = {
                 this.renderer = new ZN.SnapRenderer();
                 this.renderer.init(this,this.model,this.canvasContainerId);
 
+                break;
+
             case "canvas":
                 this.renderer = new ZN.CanvasRenderer();
                 this.renderer.init(this,this.model,this.canvasContainerId);
@@ -332,7 +340,7 @@ ZN.App.prototype = {
                                 if(parseInt(anim.angle)%20 ==0){
                                     if(project.name=='galaxy_zoo' && ind==6){
                                         //console.log('anim x,y',shape.x,shape.y);
-                                        shape.addTrailShape();
+                                        //shape.addTrailShape();
                                     }
                                     //shape.addTrailShape();
 
@@ -451,10 +459,15 @@ ZN.App.prototype = {
             nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
             ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
         return [nx, ny];
+    },
+
+
+    getParameterByName:function(name){
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-
-
-
 
 
 }
