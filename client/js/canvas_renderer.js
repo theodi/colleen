@@ -24,8 +24,6 @@ ZN.CanvasRenderer.prototype = {
         $("#"+this.containerId).append(bgCanvas);
         this.bgCtx = bgCanvas.getContext('2d');
 
-
-
         var canvas = document.createElement('canvas');
         canvas.id     = "CanvasLayer";
         $("#"+this.containerId).append(canvas);
@@ -38,8 +36,6 @@ ZN.CanvasRenderer.prototype = {
             self.resize();
         };
         this.bgImage.src = 'images/patina_test.jpg';
-
-
 
 
     },
@@ -108,7 +104,9 @@ ZN.CanvasRenderer.prototype = {
 
                 },this);
 
-                this.renderShape(shape);
+                if(typeof shape.parentId === "undefined"){
+                    this.renderShape(shape);
+                }
 
             },this);
 
@@ -120,8 +118,11 @@ ZN.CanvasRenderer.prototype = {
 
     renderShape: function(shape){
 
+        //var tr = this.ctx.currentTransform();
+
         // Store project transform
         this.ctx.save();
+        //console.log("ctx.save");
         // Shape transform
         this.ctx.translate(shape.x,shape.y);
         this.ctx.rotate(shape.rotation*Math.PI/180);
@@ -132,7 +133,9 @@ ZN.CanvasRenderer.prototype = {
         var segsAbs = Snap.path.toAbsolute(shape.d);
 
         var x, y;
-        _.each(segsAbs,function(seg){
+        //_.each(segsAbs,function(seg){
+        for(var s=0;s<segsAbs.length;s++){
+            var seg = segsAbs[s];
             switch(seg[0]){
                 case "M":
                     this.ctx.moveTo(seg[1],seg[2]);
@@ -140,15 +143,45 @@ ZN.CanvasRenderer.prototype = {
                 case "C":
                     this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
                     break;
+                case "L":
+                    this.ctx.lineTo(seg[1],seg[2]);
+                    break;
             };
+        }
 
-        },this);
+        //},this);
 
         this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity).css();
+
         this.ctx.fill();
 
+
+        // rectangle shape bounds
+
+        /*
+        this.ctx.rect(-shape.width/2,-shape.height/2,shape.width,shape.height);
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = 'black';
+        this.ctx.stroke();
+        */
+
+
+        //_.each(shape.children,function(childShape,shapeIndex){
+        for(var c=0;c<shape.children.length;c++){
+            var childShape = shape.children[c];
+            //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
+            this.renderShape(childShape);
+
+        }
+        //},this);
+
+
         // Restore to project transform
+        //console.log("ctx.restore");
         this.ctx.restore();
+
+
+
 
     },
 

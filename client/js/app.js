@@ -31,7 +31,7 @@ ZN.App = function () {
     this.paths = [];
     this.frameDurations = [];
 
-    this.debug = false;
+    this.debug = true;
 
 
 }
@@ -327,6 +327,12 @@ ZN.App.prototype = {
                 });
 
 
+                if(typeof shape.parentId==="undefined"){
+                    shape.x -=0.3;
+                    for(var c=0;c<shape.children.length;c++){
+                        //shape.children[c].x-=0.3;
+                    }
+                }
                 // shape rules
 
                 if(shape.animation){
@@ -337,10 +343,10 @@ ZN.App.prototype = {
                             case "translate_circular":
                                 var r = anim.radius;
 
-                                if(parseInt(anim.angle)%20 ==0){
+                                if(parseInt(anim.angle)%5 ==0){
                                     if(project.name=='galaxy_zoo' && ind==6){
                                         //console.log('anim x,y',shape.x,shape.y);
-                                        //shape.addTrailShape();
+                                        shape.addTrailShape();
                                     }
                                     //shape.addTrailShape();
 
@@ -353,7 +359,7 @@ ZN.App.prototype = {
 
                                 if(anim.angle>360){
                                     anim.angle %= 360;
-                                    shape.addTrailShape();
+
                                 }
 
 
