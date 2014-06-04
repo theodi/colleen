@@ -118,8 +118,6 @@ ZN.CanvasRenderer.prototype = {
 
     renderShape: function(shape){
 
-        //var tr = this.ctx.currentTransform();
-
         // Store project transform
         this.ctx.save();
         //console.log("ctx.save");
@@ -133,7 +131,7 @@ ZN.CanvasRenderer.prototype = {
         var segsAbs = Snap.path.toAbsolute(shape.d);
 
         var x, y;
-        //_.each(segsAbs,function(seg){
+
         for(var s=0;s<segsAbs.length;s++){
             var seg = segsAbs[s];
             switch(seg[0]){
@@ -149,7 +147,6 @@ ZN.CanvasRenderer.prototype = {
             };
         }
 
-        //},this);
 
         this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity).css();
 
@@ -165,16 +162,12 @@ ZN.CanvasRenderer.prototype = {
         this.ctx.stroke();
         */
 
-
-        //_.each(shape.children,function(childShape,shapeIndex){
         for(var c=0;c<shape.children.length;c++){
             var childShape = shape.children[c];
             //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
             this.renderShape(childShape);
 
         }
-        //},this);
-
 
         // Restore to project transform
         //console.log("ctx.restore");

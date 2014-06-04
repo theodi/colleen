@@ -209,10 +209,21 @@ exports.updateAnalytics = function(req, res) {
 
         if(err) throw err;
 
-        updateAnalyticsIntervals(res,[{type:'users',interval:'d'},{type:'users',interval:'w'},{type:'users',interval:'m'},
-            {type:'cls',interval:'d'},{type:'cls',interval:'w'},{type:'cls',interval:'m'}
 
-        ]);
+        var intervals = [1,12,24,24*7,24*30]; // hours
+        //var intervals = [1]; // hours
+        var types = ['c','u']; // classifications, users
+        var list = [];
+
+        for(var t=0;t<types.length;t++){
+            for(var i=0;i<intervals.length;i++){
+                list.push({type:types[t],interval:intervals[i]});
+                console.log(types[t],intervals[i]);
+            }
+        }
+
+        updateAnalyticsIntervals(res,list);
+
     });
 
 
@@ -224,7 +235,10 @@ function updateAnalyticsIntervals(res,analyticsArray){
     var analytics = analyticsArray.shift();
     var interval = analytics.interval;
     var dataType = analytics.type;
-    var seconds = 0;
+    var seconds = interval*60*60;
+
+    console.log('updateAnalyticsIntervals',analytics.type, analytics.interval);
+    /*
     switch(interval){
         case 'd': // day
             seconds = 60*60*24;
@@ -236,6 +250,7 @@ function updateAnalyticsIntervals(res,analyticsArray){
             seconds = 60*60*24*7*30;
             break;
     }
+    */
 
 
     var maxTimeUnix = 0;
@@ -252,11 +267,11 @@ function updateAnalyticsIntervals(res,analyticsArray){
         var dataQuery = "";
         var dataId = "";
         switch(dataType){
-            case "cls":
+            case "c":
                 dataQuery = "COUNT(*) AS count";
                 dataId = "c";
                 break;
-            case "users":
+            case "u":
                 dataQuery = "COUNT(DISTINCT user_id) as count";
                 dataId = "u";
                 break;
