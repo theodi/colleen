@@ -15,7 +15,12 @@ var WNU_DB_NAME = dbConfig['database'];
 
 //var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
 
-var MIN_SECS = 60, MIN_15_SECS = 900, HOUR_SECS = 3600, DAY_SECS = 86400, WEEK_SECS = 604800, MONTH_SECS = 2592000; // month 30 days
+var MIN_SECS = 60,
+    MIN_15_SECS = 900,
+    HOUR_SECS = 3600,
+    DAY_SECS = 86400,
+    WEEK_SECS = 604800,
+    MONTH_SECS = 2592000; // month 30 days
 
 
 var connection;
@@ -323,7 +328,10 @@ function updateAnalyticsIntervals(res,analyticsArray){
 
 exports.updateTimeSeries = function(req, res) {
 
-    // localhost:5000/updateTimeSeries/from/1348790400/to/1348876800/interval/3600
+    // localhost:5000/updateTimeSeries/from/1348790400/to/1348876800/interval/3600 // sept 2012
+    // localhost:5000/updateTimeSeries/from/1362096000/to/1364688000/interval/3600
+    // 1362096000 01/03/2013
+    // 1364688000 31/03/2013
 
     var from = parseInt(req.params.from); // unix timestamp
     var to = parseInt(req.params.to); // unix timestamp
@@ -350,6 +358,7 @@ exports.updateTimeSeries = function(req, res) {
      var from = 1348790400; //'2012-09-28'
      var to = 1348876800; //'2012-09-29'
 
+
      updateTimeSeriesIntervals(res,[{type:'c',interval:3600,from:from,to:to}]);
      */
 
@@ -364,9 +373,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
 
     console.log('updateTimeSeriesIntervals',analytics.type, analytics.interval);
 
-
-    // 1362096000 01/03/2013
-    // 1364688000 31/03/2013
 
 
     var dataQuery = "";
@@ -472,7 +478,7 @@ function deleteTimeSeriesIntervals(res,type,interval){
 
         if(err) throw err;
         maxTime = rows[0].time;
-        console.log('maxTime: ', maxTime);
+        console.log('maxTime: ', maxTime,'type',type,'interval',interval);
 
         // delete interval records before last update
         connection.query("DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+type+"' AND `interval`='"+interval+"'",
