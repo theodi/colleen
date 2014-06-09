@@ -1,6 +1,6 @@
 {
     "project":"cancer_cells",
-    "colours":["#ff0000","#000000"],
-
+    "fills":["#ff0000","#000000"],
+    "scale":1.0,
     "shapes":[]
 }
