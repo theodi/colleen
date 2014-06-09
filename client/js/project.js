@@ -88,14 +88,17 @@ ZN.Project.prototype = {
         _.each(data.shapes,function(shapeData,index){
 
             var shape = new ZN.Shape();
-            shape.init();
+            shape.createTrail();
 
 
+            var parent = null;
             if(shapeData.hasOwnProperty('parentId')){
+                isChild = true;
                 var parentId = shapeData.parentId;
-                var parent = _.find(data.shapes,{'id':parentId});
+                parent = _.find(this.shapes,{'id':parentId});
                 if(parent){
                     shape.parent = parent;
+                    shape.parent.children.push(shape);
                 }
                 else{
                     console.log('Parse shapes. Parent not found.');
@@ -116,6 +119,11 @@ ZN.Project.prototype = {
                 shape.fill = fillScale(index/nShapes).hex();
             }
 
+
+            //if(parent) shape.fill="#000000";
+            //shape.opacity=0.2;
+
+
             shape.fillObj = chroma(shape.fill).alpha(shape.opacity);
             shape.fill = shape.fillObj.css();
 
@@ -135,12 +143,15 @@ ZN.Project.prototype = {
             // paths
             var pathStr = shapeData.d;
             var segsAbs = Snap.path.toAbsolute(pathStr);
+            shape.pathSegs = segsAbs;
 
+
+            // find bounds
             var x, y, ox= 0, oy=0, mx=0, my=0,
-                minx=Number.MAX_VALUE,
+                minx=Number.MAX_VALUE
                 miny=Number.MAX_VALUE,
-                maxx=Number.MIN_VALUE,
-                maxy=Number.MIN_VALUE;
+                maxx=-Number.MAX_VALUE,
+                maxy=-Number.MAX_VALUE;
 
             _.each(segsAbs,function(seg){
                 switch(seg[0]){
@@ -155,24 +166,29 @@ ZN.Project.prototype = {
                         break;
                 };
 
-                if(x<minx) minx = x;
-                if(x>maxx) maxx = x;
-                if(y<miny) miny = y;
-                if(y>maxy) maxy = y;
+                if(seg[0]=="M" || seg[0]=="C"){
+                    if(x<minx) minx = x;
+                    if(x>maxx) maxx = x;
+                    if(y<miny) miny = y;
+                    if(y>maxy) maxy = y;
+                }
 
             },this);
 
 
-            var ox = shape.initial.x = (minx+maxx)/2;
-            var oy = shape.initial.y = (miny+maxy)/2;
 
-            shape.x = shape.initial.x;
-            shape.y = shape.initial.y;
+            var ox =  (minx+maxx)/2;
+            var oy =  (miny+maxy)/2;
+
+
+
+            shape.x = shape.initial.x = ox;
+            shape.y = shape.initial.y = oy;
             shape.width = maxx-minx;
             shape.height = maxy-miny;
-            //shape.bounds = new ZN.Bounds();
-            //shape.bounds.setArray(minx,miny,maxx,maxy);
 
+
+            // set origin to centre of shape
             var shapeStr = "";
             _.each(segsAbs,function(seg){
                 switch(seg[0]){
@@ -198,22 +214,19 @@ ZN.Project.prototype = {
             shapeStr+="z";
             shape.d = shapeStr;
 
+            // for child shapes set origin to parent
+            if(parent){
+                shape.x = shape.initial.x = ox-parent.x;
+                shape.y = shape.initial.y = oy-parent.y;
+
+            }
+
+            segsAbs = Snap.path.toAbsolute(shapeStr);
+            shape.pathSegs = segsAbs;
+
 
         },this);
     }
-
-    /*
-    updateShapes:function(){
-
-        _.each(data.shapes,function(shape){
-            var pathStr = shape.d;
-
-            var segsRel = Raphael.pathToRelative(pathStr);
-            var segsAbs = Raphael._pathToAbsolute(pathStr);
-            var x, y, ox= 0, oy=0, mx=0, my=0;
-        });
-    }
-    */
 
 
 }
@@ -227,6 +240,7 @@ ZN.Shape = function () {
     this.sx=1.0;
     this.sy=1.0;
     this.path=null;
+    this.pathSegs=[];
     this.d = "";
     this.fill="0x000000";
     this.flllObj = null;
@@ -238,7 +252,7 @@ ZN.Shape = function () {
     this.bounds = null;
     this.boundsPath = null;
 
-    this.shapes=[];
+    this.children=[];
     this.parent=null;
     this.initial={
         x:0,y:0,fill:0,rotation:0,opacity:0,d:""
@@ -250,8 +264,22 @@ ZN.Shape = function () {
 ZN.Shape.prototype = {
     constructor:ZN.Shape,
 
-    init: function(){
-        this.createTrail();
+    getPoints:function(){
+        var pts=[];
+        _.each(this.pathSegs,function(seg){
+            switch(seg[0]){
+                case "L":
+                    pts.push({x:seg[1],y:seg[2]});
+                    break;
+                case "C":
+                    pts.push({x:seg[5],y:seg[6]});
+                    break;
+            };
+
+        },this);
+
+        return pts;
+
     },
     createTrail: function(opts){
 
@@ -259,29 +287,65 @@ ZN.Shape.prototype = {
         this.trail.type = "point";
 
     },
+
+    setTrailData: function(shape){
+        this.x = shape.x;
+        this.y = shape.y;
+        this.rotation = shape.rotation;
+        this.sx = shape.sx;
+        this.sy = shape.sy;
+        this.d = shape.d;
+        this.opacity = shape.opacity;
+        this.fill = shape.fill;
+
+    },
+
     addTrailShape: function(){
-        var shape = new ZN.Shape();
-        shape.x = this.x;
-        shape.y = this.y;
-        shape.rotation = this.rotation;
-        shape.sx = this.sx;
-        shape.sy = this.sy;
+
         switch(this.trail.type){
             case "path":
-                shape.d = this.d;
+
+                var shape = new ZN.Shape();
+                shape.setTrailData(this);
+
+                this.trail.shapes.push(shape);
                 break;
             case "point":
-                shape.sx = this.sx/3.0;
-                shape.sy = this.sy/3.0;
-                shape.d = this.d;
+
+
+                var pts = this.getPoints();
+                for(var p=0;p<pts.length;p++){
+                    var pt = pts[p];
+
+                    var shape = new ZN.Shape();
+                    shape.setTrailData(this);
+
+                    shape.sx = this.sx*3.0;
+                    shape.sy = this.sy*3.0;
+
+                    shape.x = pt.x + this.x;
+                    shape.y = pt.y + this.y;
+
+                    var squarePath =
+                        "M-0.5,-0.5L-0.5,0.5L0.5,0.5L0.5,-0.5L-0.5,-0.5Z";
+                     /*  "M-0.5,-0.5"+
+                    "C-0.5,0.5,-0.5,0.5,-0.5,0.5"
+                    "C0.5,0.5,C0.5,0.5,C0.5,0.5"+
+                    "C0.5,-0.5,C0.5,-0.5,C0.5,-0.5"+
+                    "C-0.5,-0.5,-0.5,-0.5,-0.5,-0.5z"*/
+
+                    shape.d = squarePath;
+
+
+
+                    this.trail.shapes.push(shape);
+                }
+
                 break;
 
 
         }
-        shape.opacity = this.opacity;
-        shape.fill = this.fill;
 
-        this.trail.shapes.push(shape);
     }
 
 }

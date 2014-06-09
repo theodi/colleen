@@ -71,8 +71,8 @@ ZN.Chart.prototype = {
 
 	// set start/end dates to mirror contents of data/test_data.sql
 	//beware, the month is 0 based, i.e. January is 0!
-        this.pickerStartDate = new Date(Date.UTC(2012, 8, 27));
-        this.pickerEndDate = new Date(Date.UTC(2012, 8, 28));
+        this.pickerStartDate = new Date(Date.UTC(2013, 2, 1));
+        this.pickerEndDate = new Date(Date.UTC(2013, 2, 2));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);
@@ -160,6 +160,10 @@ ZN.Chart.prototype = {
     },
     chartLoaded:function (data) {
         this.displayLoading(false);
+        _.each(data,function(obj,index){
+            var disabled = !(index==0);
+            obj['disabled'] = disabled;
+        });
         this.barChart(data);
     },
 
@@ -242,7 +246,8 @@ ZN.Chart.prototype = {
 
             var series = {
                 key:project,
-                values:values
+                values:values,
+                disabled:true
             };
             barchartObj.push(series);
         }
@@ -289,7 +294,7 @@ ZN.Chart.prototype = {
                 //.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
                 .tooltips(true)//Don't show tooltips
                 .stacked(true)//...instead, show the bar value right on top of each bar.
-                .transitionDuration(50)
+                .transitionDuration(1)
                 .rotateLabels(45)
                 .width(1100)
                 .height(400)
