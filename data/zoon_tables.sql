@@ -21,6 +21,20 @@ CREATE TABLE IF NOT EXISTS `analytics` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `analytics`
+--
+CREATE TABLE IF NOT EXISTS `timeseries` (
+  `type_id` varchar(1) NOT NULL DEFAULT '',
+  `project` varchar(255) NOT NULL DEFAULT '',
+  `interval` int(10) unsigned NOT NULL,
+  `datetime` datetime NOT NULL,
+  `count` int(10) unsigned NOT NULL,
+  `updated` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `classifications`
 --
 
