@@ -1,6 +1,6 @@
 {
-    "name": "zoo-data",
-    "description": "Zooniverse mocked classification data",
+    "name": "wnu",
+    "description": "Zooniverse classification data",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
@@ -8,7 +8,15 @@
         "mysql":"*",
         "lodash": "*",
         "xml2js":"*",
-	"parse-database-url": "*"
+	    "parse-database-url": "*",
+        "grunt": "~0.4.5",
+        "grunt-contrib-clean": "0.5.x",
+        "grunt-contrib-copy":"~0.5.0",
+        "grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-nodeunit": "~0.3.3",
+        "grunt-contrib-uglify": "~0.4.0",
+        "grunt-contrib-watch":"~0.6.1"
+
     },
     "engines": {
     	"node": "0.10.25",
