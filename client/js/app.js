@@ -292,9 +292,14 @@ ZN.App.prototype = {
             }
         }
         */
+        var fps = 20;
+
+        setTimeout(function() {
+            requestAnimationFrame(function(){self.update()});
+
+        }, 1000 / fps);
 
 
-        requestAnimationFrame(function(){self.update()});
 
         this.execRules();
         this.renderer.render();
