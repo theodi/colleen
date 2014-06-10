@@ -156,8 +156,8 @@ ZN.App.prototype = {
     },
     assetsLoaded:function(data){
         this.model.setStyles(data);
-        //this.startApp();
-        this.loadTimeSeries([3600]);
+        this.startApp();
+        //this.loadTimeSeries([3600]);
 
     },
 
