@@ -156,18 +156,31 @@ ZN.App.prototype = {
     },
     assetsLoaded:function(data){
         this.model.setStyles(data);
-        this.startApp();
-        //this.loadProjectAnalytics();
+        //this.startApp();
+        this.loadTimeSeries([3600]);
 
     },
 
-    loadProjectAnalytics:function () {
+    loadProjectAnalytics:function() {
         var url = this.apiUrl+"analytics";
         this.loadUrl(url, "json",this.analyticsLoaded);
 
     },
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
+        this.startApp();
+        //this.loadClassification();
+    },
+
+
+    loadTimeSeries:function(intervals) {
+        var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
+        this.loadUrl(url, "json",this.timeSeriesLoaded);
+
+    },
+    timeSeriesLoaded:function(data){
+        this.model.parseTimeSeries(data);
+
         this.startApp();
         //this.loadClassification();
     },

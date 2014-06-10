@@ -15,6 +15,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {expand: true, cwd: 'client/css/', src: ['**'], dest: 'web/wnu/css/'},
+                    {expand: true, cwd: 'client/js/', src: ['**'], dest: 'web/wnu/js/'},
                     {expand: true, cwd: 'client/lib/', src: ['**'], dest: 'web/wnu/lib/'},
                     {expand: true, cwd: 'client/images/', src: ['**'], dest: 'web/wnu/images/'},
                     { src:"client/data/projects.json", dest:"web/wnu/data/projects.json" },
@@ -31,6 +32,7 @@ module.exports = function(grunt) {
 
             }
         },
+
 
 
         uglify: {
@@ -58,13 +60,14 @@ module.exports = function(grunt) {
 
         },
 
+
         watch: {
             scripts: {
                 files: 'client/*',
-                tasks: ['clean','copy','uglify'],
+                tasks: ['clean','copy'],//,'uglify'],
                 options: {
                     interrupt: true,
-                    debounceDelay: 1000,
+                    debounceDelay: 1000
                 }
             }
         }
@@ -80,6 +83,6 @@ module.exports = function(grunt) {
 
 
     // Default task(s).
-    grunt.registerTask('default', ['clean','copy','uglify']);
+    grunt.registerTask('default', ['clean','copy']);//,'uglify']);
 
 };

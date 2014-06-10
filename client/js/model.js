@@ -8,6 +8,20 @@ ZN.Model = function () {
         userCount:{}
     };
 
+    this.timeseries={
+        c:{},
+        u:{}
+    };
+
+    this.interval = {
+        MIN_SECS:60,
+        MIN_15_SECS:900,
+        HOUR_SECS:3600,
+        DAY_SECS:86400,
+        WEEK_SECS:604800,
+        MONTH_SECS:2592000 // month 30 days
+    };
+
 }
 
 ZN.Model.prototype = {
@@ -32,7 +46,7 @@ ZN.Model.prototype = {
             var project = this.projectDict[projectName];
             if(project){
 
-                var analytics = project.analytics;
+                var analytics = project.timeseries;
                 var analyticObj = {
                     country:item.country,
                     count:item.count,
@@ -88,9 +102,68 @@ ZN.Model.prototype = {
 
         console.log('percent sum:',percentTotal);
          */
+    },
+
+    parseTimeSeries: function(data){
+
+        _.each(data,function(item,index){
+            var projectName = item.project;
+            var project = this.projectDict[projectName];
+            if(project){
+
+                var timeseries = project.timeseries;
+                var seriesObj = {
+                    time:item.time,
+                    count:item.count,
+                    interval:item.interval
+                };
+                var type = item.type;
+
+                if(!timeseries[type].series[item.interval]) timeseries[type].series[item.interval] = [];
+                timeseries[type].series[item.interval].push(item.count);
+
+                if(!timeseries[type].count[item.interval]) timeseries[type].count[item.interval] = 0;
+                timeseries[type].count[item.interval] += item.count;
+                /*
+                switch(item.type_id){
+                    case 'c':
+                        if(!timeseries.c.series[item.interval]) timeseries.c.series[item.interval] = [];
+                        timeseries.c.series[item.interval].push(item.count);
+
+                        if(!timeseries.c.count[item.interval]) timeseries.c.count[item.interval] = 0;
+                        timeseries.c.count[item.interval] += item.count;
+                        //analytics.clsData.push(analyticObj);
+
+                        //if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
+                        //this.analytics.clsCount[item.interval]+=item.count;
+
+                        break;
+                    case 'u':
+
+                        break;
+
+                }
+                */
+            }
+            else{
+                console.log('no project:', projectName);
+            }
 
 
 
+        },this);
+
+        /*
+        _.each(this.projects,function(project,index){
+            _.each(this.analytics.clsCount,function(value,key){
+                if(project.analytics.clsCount[key]){
+                    project.analytics.clsPercent[key] = project.analytics.clsCount[key]/this.analytics.clsCount[key];
+                    console.log(project.name, key, project.analytics.clsPercent[key]);
+                }
+            },this);
+
+        },this);
+        */
 
     },
     addClassifications:function(classifications){
