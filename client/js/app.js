@@ -333,6 +333,7 @@ ZN.App.prototype = {
 
                 // shape trails
 
+                /*
                 _.each(shape.trail.shapes,function(trailShape,si){
 
                     trailShape.opacity *=0.985;//(trailShape);
@@ -351,6 +352,7 @@ ZN.App.prototype = {
                         //shape.children[c].x-=0.3;
                     }
                 }
+                */
                 // shape rules
 
                 if(shape.animation){
@@ -364,7 +366,7 @@ ZN.App.prototype = {
                                 if(parseInt(anim.angle)%5 ==0){
                                     if(project.name=='galaxy_zoo' && ind==6){
                                         //console.log('anim x,y',shape.x,shape.y);
-                                        shape.addTrailShape();
+                                        //shape.addTrailShape();
                                     }
                                     //shape.addTrailShape();
 

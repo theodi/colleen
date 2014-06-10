@@ -18,8 +18,9 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'client/js/', src: ['**'], dest: 'web/wnu/js/'},
                     {expand: true, cwd: 'client/lib/', src: ['**'], dest: 'web/wnu/lib/'},
                     {expand: true, cwd: 'client/images/', src: ['**'], dest: 'web/wnu/images/'},
-                    { src:"client/data/projects.json", dest:"web/wnu/data/projects.json" },
-                    { src:"client/data/project_rules.json", dest:"web/wnu/data/project_rules.json" },
+                    {expand: true, cwd: 'client/data/', src: ['**'], dest: 'web/wnu/data/'},
+                    //{ src:"client/data/projects.json", dest:"web/wnu/data/projects.json" },
+                    //{ src:"client/data/project_rules.json", dest:"web/wnu/data/project_rules.json" },
                     { src:"client/index.html", dest:"web/wnu/index.html" },
                     { src:"client/chart.html", dest:"web/wnu/chart.html" }
                 ]
