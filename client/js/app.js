@@ -157,7 +157,7 @@ ZN.App.prototype = {
     assetsLoaded:function(data){
         this.model.setStyles(data);
         //this.startApp();
-        this.loadTimeSeries([3600]);
+        this.loadTimeSeries([60,3600]);
 
     },
 
@@ -305,12 +305,12 @@ ZN.App.prototype = {
             }
         }
         */
-        var fps = 20;
+        var timeoutFps = 30;
 
         setTimeout(function() {
             requestAnimationFrame(function(){self.update()});
 
-        }, 1000 / fps);
+        }, 1000 / timeoutFps);
 
 
 
@@ -323,6 +323,7 @@ ZN.App.prototype = {
     execRules: function(){
 
         var projects = this.model.projects;
+        var intervals = this.model.intervals;
 
         _.each(projects,function(project,index){
 
@@ -423,7 +424,79 @@ ZN.App.prototype = {
 
                                 break;
 
-                            case "translate_bouce_bounds":
+
+                            case "scale_data":
+
+                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
+                                anim.time = (anim.time+this.frameTime/1000);
+                                var duration = anim.duration[0];
+                                var interval = this.model.intervals[anim.data];
+                                var type = 'c';
+                                // project data series and max value
+                                var series = project.timeseries[type][interval].series;
+                                var valueMax = project.timeseries[type][interval].max;
+
+                                if(anim.time>duration) {
+                                    anim.time -=duration;
+
+                                }
+
+                                var seriesIndex = anim.time*series.length/duration;
+                                // get value in series corresponding to current time
+                                var valueA = series[Math.floor(seriesIndex)];
+                                var valueB = series[Math.ceil(seriesIndex)];
+
+                                // get normalised value
+                                var n = valueA/valueMax;
+
+                                // set scale values from anim rule range and normalised value
+                                var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
+                                var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
+                                shape.sx = sx;
+                                shape.sy = sy;
+
+
+                                break;
+
+
+                            case "rotate_data":
+
+                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
+                                anim.time = (anim.time+this.frameTime/1000);
+                                var duration = anim.duration[0];
+                                var interval = this.model.intervals[anim.data];
+                                var type = 'c';
+                                // project data series and max value
+                                var series = project.timeseries[type][interval].series;
+                                var valueMax = project.timeseries[type][interval].max;
+
+                                if(anim.time>duration) {
+                                    anim.time -=duration;
+
+                                }
+
+                                var seriesIndex = anim.time*series.length/duration;
+                                // get value in series corresponding to current time
+                                var valueA = series[Math.floor(seriesIndex)];
+                                var valueB = series[Math.ceil(seriesIndex)];
+
+                                /*
+                                //(valueB-valueA)/(seriesIndex)
+
+                                // get normalised value
+                                var n = valueA/valueMax;
+
+                                // set scale values from anim rule range and normalised value
+                                //var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
+                                //var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
+                                shape.rotation = sx;
+                                */
+
+
+
+                                break;
+
+                            case "translate_bounce_bounds":
 
                                 if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
                                 if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;

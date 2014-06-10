@@ -17,8 +17,8 @@ ZN.Project = function () {
     };
 
     this.timeseries = {
-        c:{series:{},count:{}},
-        u:{series:{},count:{}}
+        c:{/*series:{},count:{},max:{}*/},
+        u:{/*series:{},count:{},max:{}*/}
     };
     this.shapes=[];
 

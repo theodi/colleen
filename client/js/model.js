@@ -12,15 +12,27 @@ ZN.Model = function () {
         c:{},
         u:{}
     };
+    // [<type>][<interval>] = {series:[],count:0,max:0}
 
-    this.interval = {
+    this.intervals = {
         MIN_SECS:60,
+        MIN_5_SECS:300,
         MIN_15_SECS:900,
         HOUR_SECS:3600,
         DAY_SECS:86400,
         WEEK_SECS:604800,
-        MONTH_SECS:2592000 // month 30 days
+        MONTH_SECS:2592000, // month 30 days
+
+        'min':60,
+        'min5':300,
+        'min15':900,
+        'hour':3600,
+        'day':86400,
+        'week':604800,
+        'month':2592000 // month 30 days
     };
+
+
 
 }
 
@@ -119,31 +131,20 @@ ZN.Model.prototype = {
                 };
                 var type = item.type;
 
+                /*
+
                 if(!timeseries[type].series[item.interval]) timeseries[type].series[item.interval] = [];
                 timeseries[type].series[item.interval].push(item.count);
 
                 if(!timeseries[type].count[item.interval]) timeseries[type].count[item.interval] = 0;
                 timeseries[type].count[item.interval] += item.count;
-                /*
-                switch(item.type_id){
-                    case 'c':
-                        if(!timeseries.c.series[item.interval]) timeseries.c.series[item.interval] = [];
-                        timeseries.c.series[item.interval].push(item.count);
-
-                        if(!timeseries.c.count[item.interval]) timeseries.c.count[item.interval] = 0;
-                        timeseries.c.count[item.interval] += item.count;
-                        //analytics.clsData.push(analyticObj);
-
-                        //if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
-                        //this.analytics.clsCount[item.interval]+=item.count;
-
-                        break;
-                    case 'u':
-
-                        break;
-
-                }
                 */
+
+                if(!timeseries[type][item.interval]) timeseries[type][item.interval] = {series:[],count:0,max:0};
+                timeseries[type][item.interval].series.push(item.count);
+                timeseries[type][item.interval].count += item.count;
+                timeseries[type][item.interval].max = Math.max(timeseries[type][item.interval].max,item.count);
+
             }
             else{
                 console.log('no project:', projectName);
