@@ -31,7 +31,7 @@ ZN.App = function () {
     this.paths = [];
     this.frameDurations = [];
 
-    this.debug = true;
+    this.debug = false;
 
 
 }
