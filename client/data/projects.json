@@ -1,8 +1,29 @@
 [
     {
-        "name":"cancer_cells",
-        "display_name":"",
-        "created_at":""
+        "name": "milky_way_project",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "galaxy_zoo",
+        "display_name": "",
+        "created_at": ""
+    },
+
+    {
+        "name": "condor",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "worms",
+        "display_name": "",
+        "created_at": ""
+    },
+    {
+        "name": "solar_stormwatch",
+        "display_name": "",
+        "created_at": ""
     }
 
 

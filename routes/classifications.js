@@ -346,7 +346,8 @@ exports.updateTimeSeries = function(req, res) {
     bars[MIN_SECS] = 60, bars[MIN_15_SECS] = 60, bars[HOUR_SECS] = 24, bars[DAY_SECS] = 30;
 
     from = Math.max(from,to-interval*bars[interval.toString()]);
-    var series = [{type:'c',interval:interval,from:from,to:to},
+    var series = [
+        {type:'c',interval:interval,from:from,to:to},
         {type:'u',interval:interval,from:from,to:to}
     ];
 
@@ -439,13 +440,16 @@ function updateTimeSeriesIntervals(res,analyticsArray){
 
         });
 
+        var unixNow = parseInt(new Date().valueOf()/1000);
+        console.log('unixNow',unixNow);
+
         // create mysql inserts
         // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9);
 
         var inserts = [];
         _.each(projects,function(project){
             _.each(project.values,function(item){
-                inserts.push("('"+dataType+"','"+project.key+"','"+interval+"',FROM_UNIXTIME('"+ item.unixtime+"'),'"+item.value+"',NOW())");
+                inserts.push("('"+dataType+"','"+project.key+"','"+interval+"',FROM_UNIXTIME('"+ item.unixtime+"'),'"+item.value+"',FROM_UNIXTIME('"+unixNow+"'))");
             });
         });
 
@@ -456,13 +460,36 @@ function updateTimeSeriesIntervals(res,analyticsArray){
             function (err, rows, fields) {
 
             if (err) throw err;
-            if (analyticsArray.length > 0) {
-                updateTimeSeriesIntervals(res, analyticsArray);
-            }
-            else {
-                //res.send(rows);
-                deleteTimeSeriesIntervals(res,dataType,interval);
-            }
+
+
+            // delete previous data
+
+            var maxTime = 0;
+            // find last update time
+            connection.query("SELECT UNIX_TIMESTAMP(updated) AS time FROM timeseries ORDER BY updated DESC LIMIT 1",function(err, rows, fields) {
+
+                if(err) throw err;
+                maxTime = rows[0].time;
+                console.log('maxTime: ', maxTime,'type',dataType,'interval',interval);
+
+                // delete interval records before last update
+                var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
+
+                console.log(query);
+                connection.query(query, function(err, rows, fields) {
+
+                        if(err) throw err;
+                        if (analyticsArray.length > 0) {
+                            updateTimeSeriesIntervals(res, analyticsArray);
+                        }
+                        else{
+                            res.send(rows);
+                        }
+
+                    });
+            });
+
+
 
         });
 
@@ -470,6 +497,7 @@ function updateTimeSeriesIntervals(res,analyticsArray){
 
 }
 
+/*
 function deleteTimeSeriesIntervals(res,type,interval){
 
     var maxTime = 0;
@@ -481,9 +509,10 @@ function deleteTimeSeriesIntervals(res,type,interval){
         console.log('maxTime: ', maxTime,'type',type,'interval',interval);
 
         // delete interval records before last update
-        connection.query("DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+type+"' AND `interval`='"+interval+"'",
-            function(err, rows, fields) {
+        var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+type+"' AND `interval`='"+interval+"'";
 
+        console.log(query);
+        connection.query(query,function(err, rows, fields) {
             if(err) throw err;
             res.send(rows);
 
@@ -491,6 +520,7 @@ function deleteTimeSeriesIntervals(res,type,interval){
     });
 
 }
+*/
 
 exports.getAnalytics = function(req, res) {
 

@@ -15,6 +15,11 @@ ZN.Project = function () {
         clsData:[]
 
     };
+
+    this.timeseries = {
+        c:{series:{},count:{}},
+        u:{series:{},count:{}}
+    };
     this.shapes=[];
 
 
@@ -148,10 +153,10 @@ ZN.Project.prototype = {
 
             // find bounds
             var x, y, ox= 0, oy=0, mx=0, my=0,
-                minx=Number.MAX_VALUE
-                miny=Number.MAX_VALUE,
-                maxx=-Number.MAX_VALUE,
-                maxy=-Number.MAX_VALUE;
+                minx=10e6, //Number.MAX_VALUE,
+                miny=10e6,//Number.MAX_VALUE,
+                maxx=-10e6,//Number.MAX_VALUE,
+                maxy=-10e6;//Number.MAX_VALUE;
 
             _.each(segsAbs,function(seg){
                 switch(seg[0]){

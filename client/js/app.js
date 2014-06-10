@@ -156,18 +156,31 @@ ZN.App.prototype = {
     },
     assetsLoaded:function(data){
         this.model.setStyles(data);
-        this.startApp();
-        //this.loadProjectAnalytics();
+        //this.startApp();
+        this.loadTimeSeries([3600]);
 
     },
 
-    loadProjectAnalytics:function () {
+    loadProjectAnalytics:function() {
         var url = this.apiUrl+"analytics";
         this.loadUrl(url, "json",this.analyticsLoaded);
 
     },
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
+        this.startApp();
+        //this.loadClassification();
+    },
+
+
+    loadTimeSeries:function(intervals) {
+        var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
+        this.loadUrl(url, "json",this.timeSeriesLoaded);
+
+    },
+    timeSeriesLoaded:function(data){
+        this.model.parseTimeSeries(data);
+
         this.startApp();
         //this.loadClassification();
     },
@@ -320,6 +333,7 @@ ZN.App.prototype = {
 
                 // shape trails
 
+                /*
                 _.each(shape.trail.shapes,function(trailShape,si){
 
                     trailShape.opacity *=0.985;//(trailShape);
@@ -338,6 +352,7 @@ ZN.App.prototype = {
                         //shape.children[c].x-=0.3;
                     }
                 }
+                */
                 // shape rules
 
                 if(shape.animation){
@@ -351,7 +366,7 @@ ZN.App.prototype = {
                                 if(parseInt(anim.angle)%5 ==0){
                                     if(project.name=='galaxy_zoo' && ind==6){
                                         //console.log('anim x,y',shape.x,shape.y);
-                                        shape.addTrailShape();
+                                        //shape.addTrailShape();
                                     }
                                     //shape.addTrailShape();
 

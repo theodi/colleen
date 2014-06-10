@@ -1,19 +1,21 @@
 {
     "project":"milky_way_project",
-    "scale":0.1,
-    "x":-400,
-    "y":290,
-    "rotation":290,
-    "fills":["#951114","#951114"],
-    "vis_threshold":4,
+    "scale":0.5,
+    "x":-500,
+    "y":-300,
+    "rotation":0,
+    "_fills":["#951114","#951114"],
 
     "shapes":[
-        { "id":"0","rotation":0,"opacity":0.9, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.1,0.5]}]},
-        { "id":"1","rotation":10,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.3,0.5]}]},
-        { "id":"2","rotation":0,"opacity":0.7, "animation":[{"type":"translate_circular","radius":50,"angle":0 ,"speed":[0.6,0.8]}]},
-        { "id":"3","rotation":45,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.1,0.5]}]},
-        { "id":"4","rotation":20,"opacity":0.85, "animation":[{"type":"translate_circular","radius":60,"angle":0 ,"speed":[0.4,0.5]}]},
-        { "id":"5","rotation":0,"opacity":0.75, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.3,0.8]}]},
-        { "id":"6","rotation":0,"opacity":0.8, "animation":[{"type":"translate_circular","radius":150,"angle":0 ,"speed":[0.1,0.5]}]},
-        { "id":"7","rotation":0,"opacity":0.8, "animation":[{"type":"translate_circular","radius":100,"angle":0 ,"speed":[0.3,0.4]}]}]
+
+        { "id":"1","rotation":0,"opacity":0.8, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.3,0.5]}]},
+        { "id":"2","rotation":0,"opacity":0.7, "animation":[{"type":"series","radius":50,"angle":0 ,"speed":[0.6,0.8]}]},
+        { "id":"3","rotation":0,"opacity":0.8, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.1,0.5]}]},
+        { "id":"4","rotation":0,"opacity":0.85, "animation":[{"type":"series","radius":60,"angle":0 ,"speed":[0.4,0.5]}]},
+        { "id":"5","rotation":0,"opacity":0.75, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.3,0.8]}]},
+        { "id":"6","rotation":0,"opacity":0.8, "animation":[{"type":"series","radius":150,"angle":0 ,"speed":[0.1,0.5]}]},
+        { "id":"7","rotation":0,"opacity":0.8, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.3,0.4]}]},
+        { "id":"8","rotation":0,"opacity":0.9, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.1,0.5]}]},
+        { "id":"9","rotation":0,"opacity":0.9, "animation":[{"type":"series","radius":100,"angle":0 ,"speed":[0.1,0.5]}]}
+    ]
 }
