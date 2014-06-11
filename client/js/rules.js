@@ -54,12 +54,12 @@ ZN.Rules.prototype = {
                 if(project.animation){
                     _.each(project.animation,function(anim){
                         switch(anim.type){
-                            case "rotate_data":
-                                this.rotateData(project, project,anim);
+                            case "rotate":
+                                this.rotateRule(project, project,anim);
                                 break;
 
-                            case "scale_data":
-                                this.scaleData(project, project,anim);
+                            case "scale":
+                                this.scaleRule(project, project,anim);
                                 break;
                         }
                     },this);
@@ -71,15 +71,23 @@ ZN.Rules.prototype = {
 
                         switch(anim.type){
 
-                            case "rotate_data":
-                                this.rotateData(project,shape,anim);
+                            case "rotate":
+                                this.rotateRule(project,shape,anim);
                                 break;
 
-                            case "scale_data":
-                                this.scaleData(project,shape,anim);
+                            case "scale":
+                                this.scaleRule(project,shape,anim);
                                 break;
 
-                            case "translate_circular":
+                            case "opacity":
+                                this.opacityRule(project,shape,anim);
+                                break;
+
+                            case "colour":
+                                this.colourRule(project,shape,anim);
+                                break;
+
+                            case "translate_circular_test":
                                 var r = anim.radius;
 
                                 if(parseInt(anim.angle)%5 ==0){
@@ -117,7 +125,7 @@ ZN.Rules.prototype = {
 
                                 break;
 
-                            case "scale":
+                            case "scale_test":
 
                                 //anim.time = (anim.time+frameTime/1000)%anim.duration[0];
                                 anim.time = (anim.time+frameTime/1000);
@@ -252,7 +260,7 @@ ZN.Rules.prototype = {
         return n;
     },
 
-    rotateData: function(project, obj, anim){
+    rotateRule: function(project, obj, anim){
         obj.duration = anim.duration[0];
 
         this.updateAnimTime(anim,obj.duration);
@@ -263,7 +271,7 @@ ZN.Rules.prototype = {
 
     },
 
-    scaleData: function(project, obj, anim){
+    scaleRule: function(project, obj, anim){
 
         obj.duration = anim.duration[0];
 
@@ -278,7 +286,7 @@ ZN.Rules.prototype = {
 
     },
 
-    opacityData: function(project, obj, anim){
+    opacityRule: function(project, obj, anim){
 
         obj.duration = anim.duration[0];
 
@@ -286,18 +294,68 @@ ZN.Rules.prototype = {
         var n = this.getSeriesValue(project, obj, anim);
 
         // set scale values from anim rule range and normalised value
-        var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-        var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
-        obj.sx = sx;
-        obj.sy = sy;
+        var op = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+
+        obj.opacity = op;
+
 
     },
 
-    /*
-     cx, cy = rotation center
-     x,y = current x,y
-     nx, ny = new coordinates
-     */
+    colourRule: function(project, obj, anim){
+
+        obj.duration = anim.duration[0];
+
+        this.updateAnimTime(anim,obj.duration);
+        var n = this.getSeriesValue(project, obj, anim);
+
+        var fillScale = chroma.scale(anim.fills);
+
+
+        // set scale values from anim rule range and normalised value
+        var col = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+        obj.fill = fillScale(col).hex();
+
+
+    },
+
+    circularRule:function(project, obj, anim){
+
+        obj.duration = anim.duration[0];
+
+        this.updateAnimTime(anim,obj.duration);
+        var n = this.getSeriesValue(project, obj, anim);
+
+        var r = anim.radius;
+
+        // speed
+        var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/frameTime;
+        var speedMin = anim.speed[0]*10.0/frameTime;
+        anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
+
+        if(anim.angle>360){
+            anim.angle %= 360;
+
+        }
+
+        // set radius
+        var ry = r;//shape.bounds.height()/2-shape.height/2;
+        var rx = r;//shape.bounds.width()/2-shape.width/2;
+        var rad = (Math.PI / 180)*anim.angle;
+
+        // position
+        var x = rx * Math.cos(rad);
+        var y = ry * Math.sin(rad);
+        shape.x = shape.initial.x +x;
+        shape.y = shape.initial.y +y;
+
+    },
+
+
+/*
+cx, cy = rotation center
+x,y = current x,y
+nx, ny = new coordinates
+*/
     rotateAroundPoint: function (cx, cy, x, y, angle) {
         var radians = (Math.PI / 180) * angle,
             cos = Math.cos(radians),
