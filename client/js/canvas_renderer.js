@@ -85,7 +85,7 @@ ZN.CanvasRenderer.prototype = {
 
         _.each(projects,function(project,index){
 
-            var ps = project.scale;
+            var psx = project.sx, psy = project.sy;
 
             var px = project.x+cx, py = project.y+cy,
                 pr = project.rotation;
@@ -94,7 +94,7 @@ ZN.CanvasRenderer.prototype = {
             this.ctx.save();
             this.ctx.translate(px,py);
             this.ctx.rotate(pr*Math.PI/180);
-            this.ctx.scale(ps,ps);
+            this.ctx.scale(psx,psy);
 
             _.each(project.shapes,function(shape,ind){
 

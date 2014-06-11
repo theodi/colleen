@@ -1,21 +1,24 @@
 {
     "project":"milky_way_project",
-    "scale":0.5,
+    "sx":0.5,"sy":0.5,
     "x":-500,
     "y":-300,
     "rotation":0,
     "_fills":["#951114","#951114"],
+    "animation":[
+        {"type":"rotate_data","data":"hour","rotation":[0,10],"duration":[360.0,2.0], "time":0},
+        {"type":"scale_data","data":"hour","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[1200.0,2.0], "time":0}],
 
     "shapes":[
 
-        { "id":"1","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","x":[0.8,1.5],"y":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
-        { "id":"2","rotation":0,"opacity":0.7, "animation":[{"type":"scale_data","data":"hour","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[6.0,2.0], "time":0}]},
-        { "id":"3","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[2.0,2.0], "time":0}]},
-        { "id":"4","rotation":0,"opacity":0.85, "animation":[{"type":"scale_data","data":"hour","x":[0.5,1.5],"y":[0.5,1.5] ,"duration":[120.0,2.0], "time":0}]},
-        { "id":"5","rotation":0,"opacity":0.75, "animation":[{"type":"scale_data","data":"min","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
-        { "id":"6","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
-        { "id":"7","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"min","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
-        { "id":"8","rotation":0,"opacity":0.9, "animation":[{"type":"rotate_data","data":"hour","rotate":[1.0,1.1],"duration":[8.0,2.0], "time":0}]},
-        { "id":"9","rotation":0,"opacity":0.9, "animation":[{"type":"scale_data","data":"hour","x":[0.8,1.2],"y":[0.8,1.2] ,"duration":[8.0,2.0], "time":0}]}
+        { "id":"1","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.8,1.5],"y":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
+        { "id":"2","rotation":0,"opacity":0.7, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[6.0,2.0], "time":0}]},
+        { "id":"3","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[2.0,2.0], "time":0}]},
+        { "id":"4","rotation":0,"opacity":0.85, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.5,1.5],"y":[0.5,1.5] ,"duration":[120.0,2.0], "time":0}]},
+        { "id":"5","rotation":0,"opacity":0.75, "animation":[{"type":"scale_data","data":"min","fn":"id","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
+        { "id":"6","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
+        { "id":"7","rotation":0,"opacity":0.8, "animation":[{"type":"scale_data","data":"min","fn":"id","x":[0.95,1.1],"y":[0.95,1.1] ,"duration":[8.0,2.0], "time":0}]},
+        { "id":"8","rotation":0,"opacity":0.9, "animation":[{"type":"rotate_data","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,2.0], "time":0}]},
+        { "id":"9","rotation":0,"opacity":0.9, "animation":[{"type":"scale_data","data":"hour","fn":"id","x":[0.8,1.2],"y":[0.8,1.2] ,"duration":[8.0,2.0], "time":0}]}
     ]
 }

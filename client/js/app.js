@@ -3,6 +3,7 @@ var ZN = ZN || { };
 ZN.App = function () {
 
     this.model = null;
+    this.rules = null;
 
     this.xhr = null;
     this.timeoutTime = 60 * 1000;
@@ -42,12 +43,17 @@ ZN.App.prototype = {
     init:function(){
         this.model = new ZN.Model();
         this.model.init();
-        this.loadConfig();
+        this.rules = new ZN.Rules();
+        this.rules.init(this,this.model);
 
         var rules = this.getParameterByName("rules");
         if(rules!=""){
             this.ruleFile += "_" + rules;
         }
+
+        this.loadConfig();
+
+
 
     },
 
@@ -271,20 +277,7 @@ ZN.App.prototype = {
 
     update:function(){
         var self = this;
-        this.lastTime = this.curTime;
-        this.curTime = (new Date()).valueOf();
-        var frame = this.curTime - this.lastTime;
-        this.frameTime = Math.max(frame,50);
-        this.frameDurations.push(frame);
-        if(this.frameDurations.length>10) this.frameDurations.shift();
-
-        var sum = this.frameDurations.reduce(function(prev, cur, index, array){
-            return prev + cur;
-        });
-        var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
-        if(this.debug){
-            $("#diagnostics").html(fps);
-        }
+        this.updateFps();
 
         /*
         // load new classifications
@@ -305,260 +298,46 @@ ZN.App.prototype = {
             }
         }
         */
-        var timeoutFps = 30;
+
+        var frameTimeTarget = 33; // ms
+
+        var t0 = new Date().valueOf();
+        this.rules.update(frameTimeTarget);//this.frameTime);
+        this.renderer.render();
+        var t1 = new Date().valueOf();
+        var dt = t1-t0;
+
+
+
+        var timeout = Math.max(frameTimeTarget-dt,0);
+        timeout = Math.min(timeout,frameTimeTarget);
 
         setTimeout(function() {
             requestAnimationFrame(function(){self.update()});
 
-        }, 1000 / timeoutFps);
-
-
-
-        this.execRules();
-        this.renderer.render();
+        }, timeout);
 
 
     },
 
-    execRules: function(){
+    updateFps:function(){
+        this.lastTime = this.curTime;
+        this.curTime = (new Date()).valueOf();
+        var frame = this.curTime - this.lastTime;
+        this.frameTime = frame;//Math.max(frame,33);
+        this.frameDurations.push(frame);
+        if(this.frameDurations.length>10) this.frameDurations.shift();
+
+        var sum = this.frameDurations.reduce(function(prev, cur, index, array){
+            return prev + cur;
+        });
+        var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
+        if(this.debug){
+            $("#diagnostics").html(fps);
+        }
 
-        var projects = this.model.projects;
-        var intervals = this.model.intervals;
-
-        _.each(projects,function(project,index){
-
-            // project rules
-            //project.rotation = (project.rotation+1)%360;
-
-            _.each(project.shapes,function(shape,ind){
-
-                // shape trails
-
-                /*
-                _.each(shape.trail.shapes,function(trailShape,si){
-
-                    trailShape.opacity *=0.985;//(trailShape);
-
-
-                },this);
-
-                _.remove(shape.trail.shapes, function(trailShape) {
-                    return trailShape.opacity < 0.05;
-                });
-
-
-                if(typeof shape.parentId==="undefined"){
-                    shape.x -=0.3;
-                    for(var c=0;c<shape.children.length;c++){
-                        //shape.children[c].x-=0.3;
-                    }
-                }
-                */
-                // shape rules
-
-                if(shape.animation){
-                    _.each(shape.animation,function(anim){
-
-                        switch(anim.type){
-
-                            case "translate_circular":
-                                var r = anim.radius;
-
-                                if(parseInt(anim.angle)%5 ==0){
-                                    if(project.name=='galaxy_zoo' && ind==6){
-                                        //console.log('anim x,y',shape.x,shape.y);
-                                        //shape.addTrailShape();
-                                    }
-                                    //shape.addTrailShape();
-
-                                }
-
-                                // speed
-                                var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/this.frameTime;
-                                var speedMin = anim.speed[0]*10.0/this.frameTime;
-                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
-
-                                if(anim.angle>360){
-                                    anim.angle %= 360;
-
-                                }
-
-
-                                // set radius
-                                var ry = r;//shape.bounds.height()/2-shape.height/2;
-                                var rx = r;//shape.bounds.width()/2-shape.width/2;
-                                var rad = (Math.PI / 180)*anim.angle;
-
-                                // position
-                                var x = rx * Math.cos(rad);
-                                var y = ry * Math.sin(rad);
-                                shape.x = shape.initial.x +x;
-                                shape.y = shape.initial.y +y;
-
-
-
-                                break;
-
-                            case "scale":
-
-                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
-                                anim.time = (anim.time+this.frameTime/1000);
-                                if(!anim.data){
-                                    anim.data=1.0;
-                                }
-
-                                if(anim.time>anim.duration[0]) {
-                                    anim.time = -Math.random()*2 -0.5;
-                                    anim.data= Math.random()*0.7+0.3;
-
-                                }
-                                if(anim.time>0){
-                                    var n = anim.time/anim.duration[0];
-                                    n = n>0.5?1-n:n;
-                                    n*=2;
-                                    var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-                                    var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
-                                    shape.sx = sx*anim.data;
-                                    shape.sy = sy*anim.data;
-                                }
-
-                                break;
-
-
-                            case "scale_data":
-
-                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
-                                anim.time = (anim.time+this.frameTime/1000);
-                                var duration = anim.duration[0];
-                                var interval = this.model.intervals[anim.data];
-                                var type = 'c';
-                                // project data series and max value
-                                var series = project.timeseries[type][interval].series;
-                                var valueMax = project.timeseries[type][interval].max;
-
-                                if(anim.time>duration) {
-                                    anim.time -=duration;
-
-                                }
-
-                                var seriesIndex = anim.time*series.length/duration;
-                                // get value in series corresponding to current time
-                                var valueA = series[Math.floor(seriesIndex)];
-                                var valueB = series[Math.ceil(seriesIndex)];
-
-                                // get normalised value
-                                var n = valueA/valueMax;
-
-                                // set scale values from anim rule range and normalised value
-                                var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-                                var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
-                                shape.sx = sx;
-                                shape.sy = sy;
-
-
-                                break;
-
-
-                            case "rotate_data":
-
-                                //anim.time = (anim.time+this.frameTime/1000)%anim.duration[0];
-                                anim.time = (anim.time+this.frameTime/1000);
-                                var duration = anim.duration[0];
-                                var interval = this.model.intervals[anim.data];
-                                var type = 'c';
-                                // project data series and max value
-                                var series = project.timeseries[type][interval].series;
-                                var valueMax = project.timeseries[type][interval].max;
-
-                                if(anim.time>duration) {
-                                    anim.time -=duration;
-
-                                }
-
-                                var seriesIndex = anim.time*series.length/duration;
-                                // get value in series corresponding to current time
-                                var valueA = series[Math.floor(seriesIndex)];
-                                var valueB = series[Math.ceil(seriesIndex)];
-
-                                /*
-                                //(valueB-valueA)/(seriesIndex)
-
-                                // get normalised value
-                                var n = valueA/valueMax;
-
-                                // set scale values from anim rule range and normalised value
-                                //var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-                                //var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
-                                shape.rotation = sx;
-                                */
-
-
-
-                                break;
-
-                            case "translate_bounce_bounds":
-
-                                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
-                                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
-
-                                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
-                                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
-
-                                shape.x+=shape.vx;
-                                shape.y+=shape.vy;
-
-                                break;
-
-                            case "translate_linear":
-                            /*
-                                var r = anim.radius;
-
-                                // speed
-                                var speedRnd = anim.speed[1]-anim.speed[0];
-                                var speedMin = anim.speed[0];
-                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
-
-                                // set radius
-                                var ry = shape.bounds.height()/2-shape.height/2;
-                                var rx = shape.bounds.width()/2-shape.width/2;
-                                var rad = (Math.PI / 180)*anim.angle;
-
-                                // position
-                                var x = rx * Math.cos(rad);
-                                var y = ry * Math.sin(rad);
-                                shape.x = shape.initial.x +x;
-                                shape.y = shape.initial.y +y;
-
-
-                                break;
-                                */
-                        }
-
-
-                    },this);
-                }
-
-
-
-
-            },this);
-
-        },this);
     },
 
-    /*
-     cx, cy = rotation center
-     x,y = current x,y
-     nx, ny = new coordinates
-     */
-    rotateAroundPoint: function (cx, cy, x, y, angle) {
-        var radians = (Math.PI / 180) * angle,
-            cos = Math.cos(radians),
-            sin = Math.sin(radians),
-            nx = (cos * (x - cx)) - (sin * (y - cy)) + cx,
-            ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
-        return [nx, ny];
-    },
 
 
     getParameterByName:function(name){
