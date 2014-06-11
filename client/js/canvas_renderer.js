@@ -61,12 +61,15 @@ ZN.CanvasRenderer.prototype = {
         var size={};
         size.width = $("#"+this.containerId).width();
         size.height = $("#"+this.containerId).height();
+
+
         return size;
     },
 
     render:function(){
 
         var csz = this.getCanvasSize();
+
         var cx = csz.width/ 2, cy = csz.height/2;
 
         // Store the current transformation matrix
@@ -79,6 +82,11 @@ ZN.CanvasRenderer.prototype = {
         // Restore the transform
         this.ctx.restore();
 
+        var globalScale = csz.width/ZN.config.assetBB.width;
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.translate(cx,cy);
+        this.ctx.scale(globalScale,globalScale);
+
 
         var projects = this.model.projects;
 
@@ -87,7 +95,7 @@ ZN.CanvasRenderer.prototype = {
 
             var ps = project.scale;
 
-            var px = project.x+cx, py = project.y+cy,
+            var px = project.x/*+cx*/, py = project.y/*+cy*/,
                 pr = project.rotation;
 
             // project transform
