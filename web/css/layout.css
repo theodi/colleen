@@ -175,7 +175,7 @@ ul#nav li.current a { color: ##EFB173; }
 (min-resolution: 192dpi) {
 
 	#hero { 
-		background: #fff url(img/hero-bg_@2X.png); 
+		background: #fff; 
 		background-size: 200px 200px;
 	}
   
