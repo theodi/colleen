@@ -34,6 +34,7 @@ ZN.App = function () {
     this.debug = false;
 
 
+
 }
 
 ZN.App.prototype = {
