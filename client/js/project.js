@@ -17,8 +17,8 @@ ZN.Project = function () {
     };
 
     this.timeseries = {
-        c:{series:{},count:{}},
-        u:{series:{},count:{}}
+        c:{/*series:{},count:{},max:{}*/},
+        u:{/*series:{},count:{},max:{}*/}
     };
     this.shapes=[];
 
@@ -26,8 +26,9 @@ ZN.Project = function () {
     // graphics
     this.x = 0;
     this.y = 0;
-    this.scale = 0.9;
+    this.sx = 0.9, sy = 0.9;
     this.rotation = 0.0;
+    this.duration = 1.0;
 
 
 }
@@ -58,7 +59,7 @@ ZN.Project.prototype = {
         //this.shapes = data.shapes;
 
         _.each(data,function(value,key){
-            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean'){
+            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' || key=="animation"){
                 this[key] = value;
             }
         },this);
@@ -253,6 +254,7 @@ ZN.Shape = function () {
     this.opacity = 1.0;
     this.width=0;
     this.height=0;
+    this.duration = 1.0;
 
     this.bounds = null;
     this.boundsPath = null;
