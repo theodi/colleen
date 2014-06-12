@@ -71,6 +71,10 @@ ZN.Rules.prototype = {
 
                         switch(anim.type){
 
+                            case "translate":
+                                this.translateRule(project,shape,anim);
+                                break;
+
                             case "rotate":
                                 this.rotateRule(project,shape,anim);
                                 break;
@@ -86,6 +90,12 @@ ZN.Rules.prototype = {
                             case "colour":
                                 this.colourRule(project,shape,anim);
                                 break;
+
+                            case "circle":
+                                this.circleRule(project,shape,anim);
+                                break;
+
+
 
                             case "translate_circular_test":
                                 var r = anim.radius;
@@ -206,7 +216,7 @@ ZN.Rules.prototype = {
     updateAnimTime:function(anim,duration){
         var frameTime = this.frameTime;
         anim.time = (anim.time+frameTime/1000);
-        if(anim.time>duration) {
+        if(anim.time>=duration) {
             anim.time -=duration;
 
         }
@@ -227,7 +237,7 @@ ZN.Rules.prototype = {
         var seriesIndex = anim.time*series.length/duration;
         // get value in series corresponding to current time
         var valueA = series[Math.floor(seriesIndex)];
-        var valueB = series[Math.ceil(seriesIndex)];
+        var valueB = series[Math.ceil(seriesIndex)%series.length];
 
         var tween = "id", n=0;
         if(anim.tween){
@@ -260,6 +270,30 @@ ZN.Rules.prototype = {
         return n;
     },
 
+    translateRule: function(project, obj, anim){
+
+        obj.duration = anim.duration[0];
+
+        this.updateAnimTime(anim,obj.duration);
+        var n = this.getSeriesValue(project, obj, anim);
+
+        var x=0,y=0;
+        switch(anim.dir){
+            case "x":
+                x = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                break;
+            case "y":
+                y = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                break;
+
+        }
+
+        obj.x = obj.initial.x +x;
+        obj.y = obj.initial.y +y;
+
+    },
+
+
     rotateRule: function(project, obj, anim){
         obj.duration = anim.duration[0];
 
@@ -279,8 +313,8 @@ ZN.Rules.prototype = {
         var n = this.getSeriesValue(project, obj, anim);
 
         // set scale values from anim rule range and normalised value
-        var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-        var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
+        var sx = anim.sx[0]+ (anim.sx[1]-anim.sx[0])*n;
+        var sy = anim.sy[0]+ (anim.sy[1]-anim.sy[0])*n;
         obj.sx = sx;
         obj.sy = sy;
 
@@ -318,7 +352,7 @@ ZN.Rules.prototype = {
 
     },
 
-    circularRule:function(project, obj, anim){
+    circleRule:function(project, obj, anim){
 
         obj.duration = anim.duration[0];
 
@@ -327,26 +361,29 @@ ZN.Rules.prototype = {
 
         var r = anim.radius;
 
-        // speed
-        var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/frameTime;
-        var speedMin = anim.speed[0]*10.0/frameTime;
-        anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
+        var incDegrees = anim.deg_per_sec[0]+ (anim.deg_per_sec[1]-anim.deg_per_sec[0])*n;
+        incDegrees *= this.frameTime/1000;
 
-        if(anim.angle>360){
-            anim.angle %= 360;
+        if(isNaN(incDegrees)){//(isNaN(anim.angle)){
+            return;
+        }
+        anim.angle += incDegrees;
+
+        if(anim.angle>=360){
+            anim.angle -= 360;
 
         }
 
         // set radius
-        var ry = r;//shape.bounds.height()/2-shape.height/2;
-        var rx = r;//shape.bounds.width()/2-shape.width/2;
+        var ry = r;
+        var rx = r;
         var rad = (Math.PI / 180)*anim.angle;
 
         // position
         var x = rx * Math.cos(rad);
         var y = ry * Math.sin(rad);
-        shape.x = shape.initial.x +x;
-        shape.y = shape.initial.y +y;
+        obj.x = obj.initial.x +x;
+        obj.y = obj.initial.y +y;
 
     },
 
