@@ -37,25 +37,7 @@ ZN.Project.prototype = {
     constructor:ZN.Project,
 
 
-    setProps: function(props){
-        for (var prop in props) {
-            if (props.hasOwnProperty(prop)) {
-                var value = props[prop];
-                switch(prop){
-                    case "classification_count":
-                        this.classificationCount = value;
-
-                        break;
-                    default:
-                        this[prop] = value;
-                }
-            }
-        }
-
-    },
-
-
-    setStyles:function(data){
+    setRules:function(data){
         //this.shapes = data.shapes;
 
         _.each(data,function(value,key){

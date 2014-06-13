@@ -213,6 +213,7 @@ ZN.Rules.prototype = {
         },this);
     },
 
+
     updateAnimTime:function(anim,duration){
         var frameTime = this.frameTime;
         anim.time = (anim.time+frameTime/1000);
@@ -221,6 +222,7 @@ ZN.Rules.prototype = {
 
         }
     },
+
 
     getSeriesValue: function(project, obj, anim){
         var duration = obj.duration;
@@ -386,6 +388,11 @@ ZN.Rules.prototype = {
         obj.y = obj.initial.y +y;
 
     },
+
+    updateFocusProject: function(){
+
+    },
+
 
 
 /*

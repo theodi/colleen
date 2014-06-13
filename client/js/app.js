@@ -81,7 +81,7 @@ ZN.App.prototype = {
 	    var url = 'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.config.dataSource;
-        this.loadProjects();
+        this.loadProjectRules();
 
     },
 
@@ -144,6 +144,7 @@ ZN.App.prototype = {
 
     },
 
+    /*
     loadProjects:function () {
         var url = "data/projects.json";
         this.loadUrl(url, "json",this.projectsLoaded);
@@ -153,15 +154,16 @@ ZN.App.prototype = {
         this.model.initProjects(data);
         this.loadAssets();
     },
+    */
 
-    loadAssets:function () {
+    loadProjectRules:function () {
         var url = "data/"+this.ruleFile+".json";
 
-        this.loadUrl(url, "json",this.assetsLoaded);
+        this.loadUrl(url, "json",this.projectRulesLoaded);
 
     },
-    assetsLoaded:function(data){
-        this.model.setStyles(data);
+    projectRulesLoaded:function(data){
+        this.model.initProjects(data);
         //this.startApp();
         this.loadTimeSeries([60,3600]);
 
