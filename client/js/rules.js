@@ -21,6 +21,8 @@ ZN.Rules.prototype = {
         var projects = this.model.projects;
         var SECS = this.model.SECS;
 
+        //this.updateFocusProject();
+
         _.each(projects,function(project,index){
 
             // project rules
@@ -390,9 +392,56 @@ ZN.Rules.prototype = {
 
     },
 
+
+    // Project rules
+
     updateFocusProject: function(){
 
+        if(this.app.curTime>this.model.lastChangeFocus+this.model.changeFocusTime){
+            this.setFocusProject();
+        }
+
     },
+
+    setFocusProject: function(){
+
+        var fp = this.model.focusProject;
+
+        if(fp!=null){
+            fp.setPropsFromBackground();
+        }
+
+        this.model.lastChangeFocus = (new Date()).valueOf();
+        this.model.changeFocusTime = (Math.random()*10+10)*1000; // 5 to 10 secs
+
+        var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
+        var scale = 0.9;
+
+        this.model.focusProject = project;
+
+        project.setFocus({x:0,y:0,sx:scale,sy:scale});
+
+
+    },
+
+    initProjectLocations: function(){
+
+        var projects = this.model.projects;
+        var w = ZN.config.assetBB.width;
+        var h = ZN.config.assetBB.height;
+
+        _.each(projects,function(project){
+            var px = (Math.random()-0.5)*w;
+            var py = (Math.random()-0.5)*h;
+
+            var scale = Math.random()*0.1+0.05;
+
+            project.setBackground({x:px,y:py,sx:scale,sy:scale});
+
+        });
+    },
+
+
 
 
 

@@ -16,6 +16,8 @@ ZN.Model = function () {
 
     this.focusProject = null;
     this.focusList = [];
+    this.lastChangeFocus = 0;
+    this.changeFocusTime = 0;
 
 
     this.SECS = {
@@ -27,9 +29,6 @@ ZN.Model = function () {
         'WEEK':604800,
         'MONTH':2592000 // month 30 days
     };
-
-
-
 
 }
 
@@ -117,8 +116,21 @@ ZN.Model.prototype = {
          */
     },
 
-    parseTimeSeries: function(data){
+    parseTimeSeries: function(seriesData){
 
+        var data = seriesData.data;
+        var intervals = seriesData.intervals;
+
+        // clear timeseries arrays
+        _.each(this.projects,function(project,index){
+            _.each(intervals,function(interval){
+                project.timeseries['c'][interval] = {series:[],count:0,max:0};
+                project.timeseries['u'][interval] = {series:[],count:0,max:0};
+
+            },this);
+        },this);
+
+        // populate timeseries arrays
         _.each(data,function(item,index){
             var projectName = item.p;
             var project = this.projectDict[projectName];
@@ -134,15 +146,6 @@ ZN.Model.prototype = {
                 };
                 var type = item.type;
 
-                /*
-
-                if(!timeseries[type].series[item.interval]) timeseries[type].series[item.interval] = [];
-                timeseries[type].series[item.interval].push(item.count);
-
-                if(!timeseries[type].count[item.interval]) timeseries[type].count[item.interval] = 0;
-                timeseries[type].count[item.interval] += item.count;
-                */
-
                 if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
                 timeseries[type][interval].series.push(count);
                 timeseries[type][interval].count += count;
@@ -154,10 +157,11 @@ ZN.Model.prototype = {
             }
 
 
-
         },this);
 
         /*
+        Update Analytics
+
         _.each(this.projects,function(project,index){
             _.each(this.analytics.clsCount,function(value,key){
                 if(project.analytics.clsCount[key]){

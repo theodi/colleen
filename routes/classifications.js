@@ -559,21 +559,25 @@ exports.getTimeSeriesIntervals = function(req, res) {
     console.log('getTimeSeries');
     var intervalsStr = req.params.intervals; // secs
     var intervals = intervalsStr.split(',');
+    var intervalQueries = [], invervalValues = [];
 
 
     _.each(intervals,function(interval,index){
         if(!isNaN(interval)){
-            intervals[index] = "`interval` = '"+interval+"'";
+            intervalQueries.push("`interval` = '"+parseInt(interval)+"'");
+            invervalValues.push(parseInt(interval));
         }
     });
-    var whereStr = " WHERE " + intervals.join(" OR ");
+    var whereStr = " WHERE " + intervalQueries.join(" OR ");
     console.log(whereStr);
 
     //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
     connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,`count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
 
         if(err) throw err;
-        res.send(rows);
+
+        intervalStr = intervals.join(',');
+        res.send({intervals:invervalValues, data:rows});
 
     });
 

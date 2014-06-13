@@ -30,12 +30,42 @@ ZN.Project = function () {
     this.rotation = 0.0;
     this.duration = 1.0;
 
+    // default transform
+    this.initial={
+        x:0,y:0,sx:1.0,sy:1.0,rotation:0
+    };
+
+    // transform for background
+    this.bg={
+        x:0,y:0,sx:1.0,sy:1.0,rotation:0
+    };
+
 
 }
 
 ZN.Project.prototype = {
     constructor:ZN.Project,
 
+    setBackground:function(props){
+        for(var key in props){
+            this[key] = props[key];
+            this.bg[key] = props[key];
+            this.initial[key] = props[key];
+        }
+    },
+
+    setFocus:function(props){
+        for(var key in props){
+            this[key] = props[key];
+            this.initial[key] = props[key];
+        }
+    },
+
+    setPropsFromBackground:function(){
+        for(var key in this.bg){
+            this[key] = this.bg[key];
+        }
+    },
 
     setRules:function(data){
         //this.shapes = data.shapes;
@@ -244,7 +274,7 @@ ZN.Shape = function () {
     this.children=[];
     this.parent=null;
     this.initial={
-        x:0,y:0,fill:0,rotation:0,opacity:0,d:""
+        x:0,y:0,sx:1.0,sy:1.0,fill:0,rotation:0,opacity:0,d:""
     };
     this.trail = null;
 

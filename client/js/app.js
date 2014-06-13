@@ -198,7 +198,16 @@ ZN.App.prototype = {
         this.initRenderer();
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
+
+        /*
+        // init project positions
+        this.rules.initProjectLocations();
+        // set focus project
+        this.rules.setFocusProject();
+         */
+
         this.update();
+
     },
 
     initInterface:function(){
