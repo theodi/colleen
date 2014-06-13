@@ -16,6 +16,7 @@ var WNU_DB_NAME = dbConfig['database'];
 //var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
 
 var MIN_SECS = 60,
+    MIN_5_SECS = 300,
     MIN_15_SECS = 900,
     HOUR_SECS = 3600,
     DAY_SECS = 86400,
@@ -343,7 +344,7 @@ exports.updateTimeSeries = function(req, res) {
     }
 
     var bars={};
-    bars[MIN_SECS] = 60, bars[MIN_15_SECS] = 60, bars[HOUR_SECS] = 24, bars[DAY_SECS] = 30;
+    bars[MIN_SECS] = 60, bars[MIN_5_SECS] = 60, bars[MIN_15_SECS] = 60, bars[HOUR_SECS] = 24, bars[DAY_SECS] = 30;
 
     from = Math.max(from,to-interval*bars[interval.toString()]);
     var series = [
@@ -568,7 +569,9 @@ exports.getTimeSeriesIntervals = function(req, res) {
     var whereStr = " WHERE " + intervals.join(" OR ");
     console.log(whereStr);
 
-    connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
+    //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
+    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,`count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
+
         if(err) throw err;
         res.send(rows);
 

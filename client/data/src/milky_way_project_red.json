@@ -1,6 +1,7 @@
 {
     "name":"milky_way_project",
-    "scale":0.1,
+    "sx":0.1,
+    "sy":0.1,
     "x":-400,
     "y":290,
     "rotation":290,

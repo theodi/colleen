@@ -1,6 +1,7 @@
 {
     "name":"cancer_cells",
     "fills":["#ff0000","#000000"],
-    "scale":1.0,
+    "sx":1.0,
+    "sy":1.0,
     "shapes":[]
 }

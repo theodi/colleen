@@ -164,8 +164,9 @@ ZN.App.prototype = {
     },
     projectRulesLoaded:function(data){
         this.model.initProjects(data);
-        //this.startApp();
-        this.loadTimeSeries([60,3600]);
+        var SECS = this.model.SECS;
+
+        this.loadTimeSeries([SECS.MIN, SECS.MIN5, SECS.MIN15, SECS.HOUR, SECS.DAY]);
 
     },
 

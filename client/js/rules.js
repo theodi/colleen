@@ -19,7 +19,7 @@ ZN.Rules.prototype = {
 
         this.frameTime = frameTime;
         var projects = this.model.projects;
-        var intervals = this.model.intervals;
+        var SECS = this.model.SECS;
 
         _.each(projects,function(project,index){
 
@@ -97,7 +97,7 @@ ZN.Rules.prototype = {
 
 
 
-                            case "translate_circular_test":
+                            case "translate_circular_rnd":
                                 var r = anim.radius;
 
                                 if(parseInt(anim.angle)%5 ==0){
@@ -135,7 +135,7 @@ ZN.Rules.prototype = {
 
                                 break;
 
-                            case "scale_test":
+                            case "scale_rnd":
 
                                 //anim.time = (anim.time+frameTime/1000)%anim.duration[0];
                                 anim.time = (anim.time+frameTime/1000);
@@ -226,7 +226,8 @@ ZN.Rules.prototype = {
 
     getSeriesValue: function(project, obj, anim){
         var duration = obj.duration;
-        var interval = this.model.intervals[anim.data];
+        var dataStr = anim.data.toUpperCase();
+        var interval = this.model.SECS[dataStr];
         var dataType = 'c';
         if(anim.dataType){
             type = anim.dataType;

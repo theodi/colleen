@@ -3,7 +3,7 @@ var express = require('express'),
  
 var app = express();
 
-app.use('/', express.static(__dirname +'/web'));
+app.use('/', express.static(__dirname +'/client'));
 
 app.configure(function () {
 	app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */

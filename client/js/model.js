@@ -14,26 +14,20 @@ ZN.Model = function () {
     };
     // [<type>][<interval>] = {series:[],count:0,max:0}
 
-    this.intervals = {
-        MIN_SECS:60,
-        MIN_5_SECS:300,
-        MIN_15_SECS:900,
-        HOUR_SECS:3600,
-        DAY_SECS:86400,
-        WEEK_SECS:604800,
-        MONTH_SECS:2592000, // month 30 days
-
-        'min':60,
-        'min5':300,
-        'min15':900,
-        'hour':3600,
-        'day':86400,
-        'week':604800,
-        'month':2592000 // month 30 days
-    };
-
     this.focusProject = null;
     this.focusList = [];
+
+
+    this.SECS = {
+        'MIN':60,
+        'MIN5':300,
+        'MIN15':900,
+        'HOUR':3600,
+        'DAY':86400,
+        'WEEK':604800,
+        'MONTH':2592000 // month 30 days
+    };
+
 
 
 
@@ -126,15 +120,17 @@ ZN.Model.prototype = {
     parseTimeSeries: function(data){
 
         _.each(data,function(item,index){
-            var projectName = item.project;
+            var projectName = item.p;
             var project = this.projectDict[projectName];
             if(project){
+                var interval = item.i;
+                var count = item.c;
 
                 var timeseries = project.timeseries;
                 var seriesObj = {
                     time:item.time,
-                    count:item.count,
-                    interval:item.interval
+                    count:count,
+                    interval:interval
                 };
                 var type = item.type;
 
@@ -147,10 +143,10 @@ ZN.Model.prototype = {
                 timeseries[type].count[item.interval] += item.count;
                 */
 
-                if(!timeseries[type][item.interval]) timeseries[type][item.interval] = {series:[],count:0,max:0};
-                timeseries[type][item.interval].series.push(item.count);
-                timeseries[type][item.interval].count += item.count;
-                timeseries[type][item.interval].max = Math.max(timeseries[type][item.interval].max,item.count);
+                if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
+                timeseries[type][interval].series.push(count);
+                timeseries[type][interval].count += count;
+                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count);
 
             }
             else{

@@ -1,6 +1,7 @@
 {
     "name":"condor",
-    "scale":0.08,
+    "sx":0.08,
+    "sy":0.08,
     "x":270,
     "y":260,
     "rotation":0,
