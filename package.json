@@ -9,6 +9,8 @@
     "lodash": "*",
     "xml2js": "*",
     "parse-database-url": "*",
+    "request":"*",
+    "cron":"*",
     "grunt": "~0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "0.5.x",
