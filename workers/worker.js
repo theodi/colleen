@@ -12,6 +12,9 @@ var WNU_DB_URL = process.env.WNU_DB_URL;
 // parse dbname out of connection string
 //var WNU_DB_NAME = dbConfig['database'];
 
+/*---------------------------------------------------------------------------*/
+
+// Constants and globals
 
 var MIN_SECS = 60,
     MIN_5_SECS = 300,
@@ -24,8 +27,20 @@ var MIN_SECS = 60,
 var seriesLength={};
 seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60, seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
 
+var gProjectList = [], gProjectQueue = [], gSeriesQueue = [];
+
+
+/*---------------------------------------------------------------------------*/
+
+// MySQL connection
+
+
 var connection;
-var projectList = [], projectQueue = [], seriesQueue = [];
+var gSeriesTable = "timeseries_test";
+var gClsTable = "classifications_test"
+var gProjectTable = "projects"
+
+
 
 console.log('WNU_DB_URL',WNU_DB_URL);
 function connect(){
@@ -64,43 +79,14 @@ process.on('SIGTERM', function () {
 
 
 
-// Cron
+/*---------------------------------------------------------------------------*/
 
-var CronJob = require('cron').CronJob;
-new CronJob('*/2 * * * * *', function(){
-    var date = new Date();
-    console.log("date:", date, date.valueOf());
+// Load projects to capture from zoon API
+// ./data/projects.json
 
-}, null, false);//, "UTC");
-
-
-
- setInterval(function(){
-    console.log("date:", new Date())
- },1000*60);
-
-
-/*
-function testQuery(){
-    connect();
-    connection.connect(function(err) {              // The server is either down
-        if(err) {                                     // or restarting (takes a while sometimes).
-            console.log('error when connecting to db:', err);
-        }
-        else{
-            connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows) {
-
-                if(err) throw err;
-                maxTimeUnix = rows[0].time;
-                console.log("maxTimeUnix",maxTimeUnix);
-                disconnect();
-            });
-        }
-    });
+function startWorker(){
+    loadProjects();
 }
-*/
-
-
 
 function loadProjects(){
 
@@ -108,22 +94,54 @@ function loadProjects(){
 
     fs.readFile(__dirname + filename, 'utf8', function (err, data) {
         if (err) {
-            console.log('Error, loadProjects: ' + err);
+            console.log('Error loading projects.json: ' + err);
             return;
         }
 
-        projectList = JSON.parse(data);
+        gProjectList = JSON.parse(data);
 
-        console.log(projectList);
-        //loadJSON(nextJson);
-        updateTimeSeries();
+        console.log(gProjectList);
+
+        //startScheduler();
+        startUpdateTimeSeries();
 
 
     });
 }
 
+// start worker
+startWorker();
+
+/*---------------------------------------------------------------------------*/
+
+// Scheduling
+
+// Cron
+
+//var CronJob = require('cron').CronJob;
+//new CronJob('*/2 * * * * *', function(){
+//    var date = new Date();
+//    console.log("date:", date, date.valueOf());
+//
+//}, null, false);//, "UTC");
+
+
+function startScheduler(){
+    var dt = 2*60*1000;
+    setInterval(function(){
+        console.log("date:", new Date());
+    },dt);
+}
+
+
+
+/*---------------------------------------------------------------------------*/
+
+// Fetch classification data from zoon API, insert into classification table
+
+
 function startFetch(){
-    projectQueue = _.clone(projectList);
+    gProjectQueue = _.clone(gProjectList);
     //['galaxy_zoo','milky_way'];//['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm'];
 
     connect();
@@ -139,32 +157,30 @@ function startFetch(){
 }
 
 function fetchNext(){
-    if(projectQueue.length>0){
-        var projectId = projectQueue.shift();
+    if(gProjectQueue.length>0){
+        var projectId = gProjectQueue.shift();
         fetchProjectData(projectId);
 
     }
     else{
-        exitFetch();
+        endFetch();
     }
 }
 
-
-
-function exitFetch(){
-    disconnect();
+function endFetch(){
+    startUpdateTimeSeries();
+    //disconnect();
 }
 
 function fetchProjectData(projectId){
 
-    console.log("projectId",projectId);
-    var clsTable = 'classifications_test';
+    console.log("fetchProjectData",projectId);
 
-    //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+clsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
-    connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM projects WHERE name='"+projectId+"'",function(err, rows) {
+    //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
+    connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
 
         if(err) {
-            exitFetch();
+            endFetch();
             throw err;
 
         }
@@ -247,27 +263,27 @@ function fetchProjectData(projectId){
                     var insertStr = inserts.join(',');
                     //console.log(insertStr);
 
-                    connection.query("REPLACE INTO "+clsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
+                    connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
                         function (err, rows) {
 
                             if (err) {
                                 throw err;
                             }
-                            setProjectsUpdate(projectId, maxDateMs);
+                            setProjectsUpdateTime(projectId, maxDateMs);
 
-                            //fetchNext();
+
 
                         });
                 }
                 else{ // end if(data.length>0){
-                    //fetchNext();
-                    setProjectsUpdate(projectId, maxDateMs);
+
+                    setProjectsUpdateTime(projectId, maxDateMs);
                 }
 
             }
             else{ // end if (!error && response.statusCode == 200) {
                 console.log('fetchProjectData request error',error);//,response.statusCode);
-                exitFetch();
+                endFetch();
             }
 
         }); // close request
@@ -275,14 +291,13 @@ function fetchProjectData(projectId){
 
 }
 
-function setProjectsUpdate(projectId,updateMs){
+function setProjectsUpdateTime(projectId,updateMs){
 
-    //var isoStr = (new Date(updateMs)).toISOString();
     var unixTime = parseInt(updateMs/1000);
     console.log('update date',projectId,new Date(unixTime*1000));
-    connection.query("UPDATE projects SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'",function (err, rows) {
+    connection.query("UPDATE "+gProjectTable+" SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
-            console.log('setProjectsUpdate error',err);
+            console.log('setProjectsUpdateTime error',err);
             throw err;
         }
 
@@ -315,21 +330,46 @@ function fetchProjectDataTest(){
 
 }
 
+/*
+ function testQuery(){
+ connect();
+ connection.connect(function(err) {              // The server is either down
+ if(err) {                                     // or restarting (takes a while sometimes).
+ console.log('error when connecting to db:', err);
+ }
+ else{
+ connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows) {
 
-function updateTimeSeries() {
+ if(err) throw err;
+ maxTimeUnix = rows[0].time;
+ console.log("maxTimeUnix",maxTimeUnix);
+ disconnect();
+ });
+ }
+ });
+ }
+ */
+
+/*---------------------------------------------------------------------------*/
+
+// Update time-series
+
+function startUpdateTimeSeries(){
 
 
     connect();
+
     connection.connect(function(err) {
         if(err) {
             console.log('Worker: error when connecting to db:', err);
+            //throw err;
         }
         else{
             var intervals = [HOUR_SECS];
-            seriesQueue = [];
-            _.each(projectList,function(project){
+            gSeriesQueue = [];
+            _.each(gProjectList,function(project){
                 _.each(intervals,function(interval){
-                    seriesQueue.push(
+                    gSeriesQueue.push(
                         {type:'c',interval:interval, project:project},
                         {type:'u',interval:interval, project:project}
                     );
@@ -338,18 +378,17 @@ function updateTimeSeries() {
             });
             updateNextTimeSeries();
 
-
         }
     });
+
 }
 
 function updateNextTimeSeries(){
-    if (seriesQueue.length > 0){
-        var series = seriesQueue.shift();
-        updateTimeSeriesInterval(series);
+    if (gSeriesQueue.length > 0){
+        var series = gSeriesQueue.shift();
+        updateTimeSeries(series);
     }
     else{
-        //res.send(rows);
         endUpdateTimeSeries();
     }
 
@@ -360,7 +399,7 @@ function endUpdateTimeSeries() {
     console.log('endUpdateTimeSeries');
 }
 
-function updateTimeSeriesInterval(series){
+function updateTimeSeries(series){
 
     var interval = series.interval; // seconds
     var dataType = series.type;
@@ -371,19 +410,18 @@ function updateTimeSeriesInterval(series){
 
     var projectUpdatedUnix = 0,seriesMax = 0;
 
-    connection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `projects` WHERE `name`='"+projectId+"'",function (err, rows) {
+    connection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
             console.log('updateTimeSeriesInterval error',err);
-            throw err;
+
         }
         //projectUpdatedMs = rows[0].time *1000;
         projectUpdatedUnix = rows[0].time;
         to = projectUpdatedUnix;
 
-        var seriesTable = "timeseries_test";
-        var clsTable = "classifications_test"
 
-        connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+seriesTable+" WHERE project='"+projectId+"' AND `type_id`='"+dataType+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
+
+        connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE project='"+projectId+"' AND `type_id`='"+dataType+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
             if (err) {
                 console.log('updateTimeSeriesInterval error',err);
                 throw err;
@@ -410,139 +448,144 @@ function updateTimeSeriesInterval(series){
                 updateNextTimeSeries();
             }
             else{
-                var dataQuery = "";
-                switch(dataType){
-                    case "c":
-                        dataQuery = "COUNT(*) AS count";
-                        break;
-                    case "u":
-                        dataQuery = "COUNT(DISTINCT user_id) as count";
-                        break;
-                    default:
-                        //res.send([]);
-                        return;
-                }
+                updateTimeSeriesInterval(series,from,to);
 
-                /*
-                var query = "SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
-                    "FROM "+clsTable+" WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
-                    "GROUP BY time,project";
-                    */
-                var query = "SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
-                    "FROM "+clsTable+" WHERE project='"+projectId+"' AND created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
-                    "GROUP BY time";
-                console.log("query",query);
-                connection.query(query, function(err, rows, fields) {
-                    if(err) throw err;
-                    _.map(rows,function(item){
-                        //console.log("time bucket",item.time);
-                        item.time = parseFloat(item.time)*interval + from;
-                        //console.log('date',item.date,'count',item.count,"time",item.time);
-                    });
-
-                    var minTimeMs = from*1000;
-                    var nBars = (to-from)/interval;
-                    console.log('nBars',nBars);
-                    var projects = {};
-
-                    var projectsObj = _.countBy(rows,'project');
-
-                    // create date series
-                    _.each(projectsObj,function(val,project){
-
-                        var values = [];
-                        for(var i=0;i<nBars;i++){
-
-                            var unixtime = from+interval*i;
-                            values.push({"unixtime":unixtime,"value":0});
-                            //console.log('unixtime',unixtime);
-                        }
-
-                        var series = {
-                            key: project,
-                            values: values
-                        };
-                        projects[project] = series;
-                    });
-
-                    // add counts to date series
-                    _.each(rows,function(row){
-
-                        var series = projects[row.project];
-                        var item = _.find(series.values,{'unixtime':row.time});
-                        //console.log('unixtime',row.time);
-                        if(item){
-                            item.value = row.count;
-                        }
-                        //console.log('row.date',row.date);
-
-
-
-                    });
-
-                    var unixNow = parseInt(new Date().valueOf()/1000);
-                    //console.log('unixNow',unixNow);
-
-                    // create mysql inserts
-                    // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9);
-
-                    var inserts = [];
-                    _.each(projects,function(project){
-                        _.each(project.values,function(item){
-                            inserts.push("('"+dataType+"','"+project.key+"','"+interval+"',FROM_UNIXTIME('"+ item.unixtime+"'),'"+item.value+"',FROM_UNIXTIME('"+unixNow+"'))");
-                        });
-                    });
-
-                    var insertStr = inserts.join(',');
-                    //console.log(insertStr);
-
-                    connection.query("INSERT INTO "+seriesTable+" (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`) VALUES" +insertStr,
-                        function (err, rows) {
-
-                            if (err) throw err;
-
-
-                            // delete excess series data
-
-                            // find last item in series
-                            var lastItemTime = 0;
-                            var offset = seriesLength[interval] -1;
-
-                            connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+seriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`='"+interval+"' ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
-
-                                if(err) throw err;
-                                // if rows to delete
-                                if(rows[0]){
-                                    lastItemTime = rows[0].time;
-                                    console.log('lastItemTime: ', lastItemTime,'type',dataType,'interval',interval);
-
-                                    // delete records past series length
-                                    var query = "DELETE FROM "+seriesTable+" WHERE `datetime` > FROM_UNIXTIME('"+lastItemTime+"') AND `project`='"+projectId+"' AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
-
-                                    console.log(query);
-                                    connection.query(query, function(err, rows, fields) {
-
-                                        if(err) throw err;
-                                        updateNextTimeSeries();
-
-                                    });
-                                }
-                                else{
-                                    updateNextTimeSeries();
-                                }
-                            });
-
-
-
-                        });
-
-                });
             } // close if(to-from<interval){
-        }); // close connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+seriesTable+"
+        }); // close connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+"
     }); // close connection.query("SELECT UNIX_TIMESTAMP(`updated`)
 
 }
 
+function updateTimeSeriesInterval(series, from, to){
+
+    var interval = series.interval; // seconds
+    var dataType = series.type;
+    var projectId = series.project;
+
+    var dataQuery = "";
+    switch(dataType){
+        case "c":
+            dataQuery = "COUNT(*) AS count";
+            break;
+        case "u":
+            dataQuery = "COUNT(DISTINCT user_id) as count";
+            break;
+        default:
+            //res.send([]);
+            return;
+    }
+
+    var query = "SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
+        "FROM "+gClsTable+" WHERE project='"+projectId+"' AND created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
+        "GROUP BY time";
+    console.log("query",query);
+    connection.query(query, function(err, rows, fields) {
+        if(err) throw err;
+        _.map(rows,function(item){
+            //console.log("time bucket",item.time);
+            item.time = parseFloat(item.time)*interval + from;
+            //console.log('date',item.date,'count',item.count,"time",item.time);
+        });
+
+        var minTimeMs = from*1000;
+        var nBars = (to-from)/interval;
+        console.log('test nBars',nBars);
+
+
+            var values = [];
+            for(var i=0;i<nBars;i++){
+
+                var unixtime = from+interval*i;
+                values.push({"unixtime":unixtime,"value":0});
+                //console.log('unixtime',unixtime);
+            }
+
+
+        // add counts to date series
+        _.each(rows,function(row){
+
+            var item = _.find(values,{'unixtime':row.time});
+            //console.log('unixtime',row.time);
+            if(item){
+                item.value = row.count;
+            }
+
+        });
+
+        var unixNow = parseInt(new Date().valueOf()/1000);
+        //console.log('unixNow',unixNow);
+
+        // create mysql inserts
+        // INSERT INTO tbl_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9);
+
+        var inserts = [];
+        _.each(values,function(item){
+            inserts.push("('"+dataType+"','"+projectId+"','"+interval+"',FROM_UNIXTIME('"+ item.unixtime+"'),'"+item.value+"',FROM_UNIXTIME('"+unixNow+"'))");
+        });
+
+
+        var insertStr = inserts.join(',');
+        //console.log(insertStr);
+
+        connection.query("INSERT INTO "+gSeriesTable+" (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`) VALUES" +insertStr,
+            function (err, rows) {
+
+                if(err){
+                    console.log('Insert Error, updateTimeSeriesInterval', err);
+                    throw err;
+                }
+
+                removeTimeSeriesItems(series);
+
+            });
+
+    });
+}
+
+
+function removeTimeSeriesItems(series){
+
+    var interval = series.interval; // seconds
+    var dataType = series.type;
+    var projectId = series.project;
+
+    // delete excess series data
+
+    // find last item in series
+    var lastItemTime = 0;
+    var offset = seriesLength[interval] -1;
+
+    connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`='"+interval+"' ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
+
+        if(err) throw err;
+        // if rows to delete
+        if(rows[0]){
+            lastItemTime = rows[0].time;
+            console.log('test lastItemTime: ', lastItemTime,'type',dataType,'interval',interval);
+
+            // delete records past series length
+            var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project`='"+projectId+"' AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
+
+            console.log(query);
+            connection.query(query, function(err, rows) {
+
+                if(err) throw err;
+                updateNextTimeSeries();
+
+            });
+
+        }
+        else{
+            updateNextTimeSeries();
+        }
+    });
+
+
+}
+
+/*---------------------------------------------------------------------------*/
+
+// Insert zoon API projects into projects table
 
 function getZooonAPIProjects(){
 
@@ -582,7 +625,7 @@ function getZooonAPIProjects(){
                         var insertStr = inserts.join(',');
                         console.log(insertStr);
 
-                        connection.query("INSERT IGNORE INTO projects (`id`,`name`,`display_name`) VALUES" +insertStr,
+                        connection.query("INSERT IGNORE INTO "+gProjectTable+" (`id`,`name`,`display_name`) VALUES" +insertStr,
                             function (err, rows) {
                                 if (err) {
                                     throw err;
@@ -600,9 +643,3 @@ function getZooonAPIProjects(){
     });
 }
 
-
-//getZoonTest();
-
-//startFetch();
-
-loadProjects();
