@@ -118,7 +118,7 @@ function loadProjects(callback){
 }
 
 // start worker
-// startWorker();
+startWorker();
 
 /*---------------------------------------------------------------------------*/
 
@@ -135,9 +135,9 @@ function loadProjects(callback){
 
 
 function startScheduler(){
-    var dt = 2*60*1000;
+    var dt = 20*1000;
     setInterval(function(){
-        //console.log("Start fetch, date:", new Date());
+        console.log("Start fetch, date:", new Date());
         //startFetch();
     },dt);
 }
@@ -628,7 +628,7 @@ function testUpdateTimeSeries(){
 
 }
 
-loadProjects(testUpdateTimeSeries);
+// loadProjects(testUpdateTimeSeries);
 
 /*---------------------------------------------------------------------------*/
 
