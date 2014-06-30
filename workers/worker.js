@@ -41,7 +41,7 @@ var gEventEmitter = new events.EventEmitter();
 // MySQL connection
 
 
-var connection;
+var connection = null;
 var gSeriesTable = "timeseries_test";
 var gClsTable = "classifications_test"
 var gProjectTable = "projects"
@@ -54,6 +54,26 @@ function connect(){
         disconnect();
     }
     connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000'); // Recreate the connection, since the old one cannot be reused.
+
+    /*
+    connection.connect(function(err) {              // The server is either down
+        if(err) {                                     // or restarting (takes a while sometimes).
+            console.log('error when connecting to db:', err);
+            setTimeout(connect, 2000); // We introduce a delay before attempting to reconnect,
+        }                                     // to avoid a hot loop, and to allow our node script to
+    });
+
+                                        // process asynchronous requests in the meantime.
+    // If you're also serving http, display a 503 error.
+    connection.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            connect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+    */
 }
 
 function disconnect(){
@@ -196,12 +216,12 @@ function fetchProjectData(projectId){
         var fromMs, toMs, maxDateMs, maxDataDateMs = 0;
         var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
-        var intervalMs = 25*60*60*1000; // 6 hour in ms
+        var intervalMs = 24*60*60*1000; // 24 hour in ms
         var projectUpdated = rows[0].time;
         if(projectUpdated==null){
 
             fromMs = 1399939200000; // midnight 13 May 2014
-            //(new Date()).valueOf() - monthMs;
+            //fromMs = (new Date()).valueOf() - monthMs;
             console.log("projectUpdated is NULL",projectUpdated);
         }
         else{
@@ -581,7 +601,7 @@ function testUpdateTimeSeries(){
     gProjectTable = "projects";
     gClsTable = "classifications";
     gSeriesTable = "timeseries_test";
-    var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,10,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
+    var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,0,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
     var classificationInterval = 15*60; // secs
 
     var updateCount = 0, nUpdates = 60;
@@ -590,7 +610,10 @@ function testUpdateTimeSeries(){
     // Initial run time: 181.74 secs. 2784 rows.
     // Update minutes only: 35.767 secs
 
-    connect();
+    //connect();
+
+
+        //if(err) {}
     //connection.query("TRUNCATE "+gSeriesTable,function(err, rows) {
     //    console.log("Truncate timeseries");
 
@@ -598,23 +621,33 @@ function testUpdateTimeSeries(){
         //var intervalObj =  setInterval(function(){
 
         var testUpdateTimeSeriesLoop = function(){
-            console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime);
+            console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
             var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
             connect();
-            connection.query(query,function(err, rows) {
+            connection.connect(function(err) {
+                console.log("UPDATE query",query);
+                connection.query(query,function(err, rows) {
 
-                classificationTime += classificationInterval;
+                    classificationTime += classificationInterval;
 
-                updateCount +=1;
-                if(updateCount >= nUpdates){
-                    //clearInterval(intervalObj);
-                    gEventEmitter.removeListener('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
-                    console.log("End testUpdateTimeSeries");
-                }
-                else{
+                    updateCount +=1;
+                    //disconnect();
+
+
                     setTimeout(startUpdateTimeSeries,5*1000);
-                }
+
+                    /*
+                    if(updateCount >= nUpdates){
+                        //clearInterval(intervalObj);
+                        gEventEmitter.removeListener('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
+                        console.log("End testUpdateTimeSeries");
+                    }
+                    else{
+                        setTimeout(startUpdateTimeSeries,5*1000);
+                    }
+                    */
+                });
             });
         };
 
@@ -623,8 +656,6 @@ function testUpdateTimeSeries(){
         testUpdateTimeSeriesLoop();
 
 
-
-    //});
 
 }
 
