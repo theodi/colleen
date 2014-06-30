@@ -118,7 +118,7 @@ function loadProjects(callback){
 }
 
 // start worker
-startWorker();
+// startWorker();
 
 /*---------------------------------------------------------------------------*/
 
@@ -581,10 +581,10 @@ function testUpdateTimeSeries(){
     gProjectTable = "projects";
     gClsTable = "classifications";
     gSeriesTable = "timeseries_test";
-    var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,0,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
-    var classificationInterval = 60; // secs
+    var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,10,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
+    var classificationInterval = 15*60; // secs
 
-    var updateCount = 0, nUpdates = 10;
+    var updateCount = 0, nUpdates = 60;
 
     // projects: ["andromeda","bat_detective","cyclone_center","galaxy_zoo","milky_way","planet_four","sea_floor","serengeti"]
     // Initial run time: 181.74 secs. 2784 rows.
@@ -613,14 +613,14 @@ function testUpdateTimeSeries(){
                     console.log("End testUpdateTimeSeries");
                 }
                 else{
-                    setTimeout(startUpdateTimeSeries,20*1000);
+                    setTimeout(startUpdateTimeSeries,5*1000);
                 }
             });
         };
 
         gEventEmitter.on('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
 
-        startUpdateTimeSeries();
+        testUpdateTimeSeriesLoop();
 
 
 
@@ -628,7 +628,7 @@ function testUpdateTimeSeries(){
 
 }
 
-// loadProjects(testUpdateTimeSeries);
+ loadProjects(testUpdateTimeSeries);
 
 /*---------------------------------------------------------------------------*/
 
