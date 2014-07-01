@@ -498,30 +498,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
 
 }
 
-/*
-function deleteTimeSeriesIntervals(res,type,interval){
-
-    var maxTime = 0;
-    // find last update time
-    connection.query("SELECT UNIX_TIMESTAMP(updated) AS time FROM timeseries ORDER BY updated DESC LIMIT 1",function(err, rows, fields) {
-
-        if(err) throw err;
-        maxTime = rows[0].time;
-        console.log('maxTime: ', maxTime,'type',type,'interval',interval);
-
-        // delete interval records before last update
-        var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+type+"' AND `interval`='"+interval+"'";
-
-        console.log(query);
-        connection.query(query,function(err, rows, fields) {
-            if(err) throw err;
-            res.send(rows);
-
-        });
-    });
-
-}
-*/
 
 exports.getAnalytics = function(req, res) {
 
@@ -572,7 +548,7 @@ exports.getTimeSeriesIntervals = function(req, res) {
     console.log(whereStr);
 
     //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
-    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,`count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
+    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
 
         if(err) throw err;
 
@@ -583,6 +559,36 @@ exports.getTimeSeriesIntervals = function(req, res) {
 
 }
 
+
+exports.getTimeSeriesBetweenDates = function(req, res) {
+
+    // 2013/03/01 to 2013/04/01 2013/03/29
+    // localhost:5000/timeseries/from/1362096000/to/1364774400
+
+    // 2013/03/30 23:00 to 2013/04/01
+    // localhost:5000/timeseries/from/1364684400/to/1364774400
+
+    var from = parseInt(req.params.from); // unix timestamp
+    var to = parseInt(req.params.to); // unix timestamp
+    //var interval = parseInt(req.params.interval); // secs
+
+    if(isNaN(to) || isNaN(from)){
+        res.send([]);
+        return;
+    }
+
+    var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
+        + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
+    //console.log(query);
+    connection.query(query,function(err, rows) {
+
+        if(err) throw err;
+
+        res.send({from:from, to:to, data:rows});
+
+    });
+
+}
 
 
 exports.cleanUp = function() {

@@ -136,7 +136,7 @@ function loadProjects(callback){
 }
 
 // start worker
-// startWorker();
+ startWorker();
 
 /*---------------------------------------------------------------------------*/
 
@@ -392,7 +392,7 @@ function testFetchData(){
 
 }
 
-loadProjects(testFetchData);
+//loadProjects(testFetchData);
 //fetchProjectDataTest();
 
 /*---------------------------------------------------------------------------*/

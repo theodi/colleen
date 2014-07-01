@@ -24,6 +24,8 @@ ZN.App = function () {
     this.classificationDelay = 0;
     this.classificationLoadCount = 0;
 
+    this.timeSeriesRequestInterval = 2*60*1000; // in ms
+
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
     this.rendererType = "canvas"; //"snap";//"raphael" //
@@ -206,6 +208,9 @@ ZN.App.prototype = {
         this.rules.setFocusProject();
          */
 
+        var self = this;
+        setTimeout(function(){self.loadIncTimeSeries()}, this.timeSeriesRequestInterval);
+
         this.update();
 
     },
@@ -256,6 +261,21 @@ ZN.App.prototype = {
             }
             */
         }
+
+
+    },
+
+    loadIncTimeSeries:function() {
+        var from = this.model.maxSeriesTime + 1;
+        var to = this.curTime/1000;
+        var url = this.apiUrl+"timeseries/from/"+from+"/to/"+to;
+        this.loadUrl(url, "json",this.incTimeSeriesLoaded);
+
+    },
+    incTimeSeriesLoaded:function(data){
+        this.model.incrementTimeSeries(data);
+        var self = this;
+        setTimeout(function(){self.loadIncTimeSeries()}, this.timeSeriesRequestInterval);
 
 
     },
