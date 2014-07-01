@@ -40,12 +40,10 @@ var gEventEmitter = new events.EventEmitter();
 
 // MySQL connection
 
-
 var connection = null;
 var gSeriesTable = "timeseries_test";
-var gClsTable = "classifications_test"
-var gProjectTable = "projects"
-
+var gClsTable = "classifications_test";
+var gProjectTable = "projects";
 
 
 console.log('WNU_DB_URL',WNU_DB_URL);
@@ -170,8 +168,9 @@ function startScheduler(){
 
 
 function startFetch(){
+
+    gTimer = new Date().valueOf();
     gProjectQueue = _.clone(gProjectList);
-    //['galaxy_zoo','milky_way'];//['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm'];
 
     connect();
     connection.connect(function(err) {
@@ -197,8 +196,12 @@ function fetchNext(){
 }
 
 function endFetch(){
-    startUpdateTimeSeries();
-    //disconnect();
+    //startUpdateTimeSeries();
+
+    var dt = (new Date().valueOf() - gTimer)/1000;
+    console.log('endFetchData. Time taken (s):',dt);
+    gEventEmitter.emit('endFetchData');
+
 }
 
 function fetchProjectData(projectId){
@@ -216,7 +219,7 @@ function fetchProjectData(projectId){
         var fromMs, toMs, maxDateMs, maxDataDateMs = 0;
         var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
-        var intervalMs = 24*60*60*1000; // 24 hour in ms
+        var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
         if(projectUpdated==null){
 
@@ -240,7 +243,7 @@ function fetchProjectData(projectId){
         //disconnect();
         //return;
 
-        var perPage = 10000;
+        var perPage = 100;
         var options = {
             //url: 'http://event.zooniverse.org/classifications/'+projectId+'?from=1399939200000&to=1400025600000&per_page=200&page=1',
             url: 'http://event.zooniverse.org/classifications/'+projectId,
@@ -254,7 +257,10 @@ function fetchProjectData(projectId){
         request(options, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body);
-                //console.log(data);
+                //console.log('Classifications:',data);
+                //console.log('Classifications, data:',data);
+                console.log('Classifications, data[0]:',data[0]);
+                console.log('Classifications, data.length:',data.length);
 
                 if(data.length>0){
                     var fields = ['id','created_at','user_id','project','country_code','region','city_name','latitude','longitude'];
@@ -324,7 +330,9 @@ function setProjectsUpdateTime(projectId,updateMs){
 
     var unixTime = parseInt(updateMs/1000);
     console.log('update date',projectId,new Date(unixTime*1000));
-    connection.query("UPDATE "+gProjectTable+" SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'",function (err, rows) {
+    var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'";
+    console.log(query);
+    connection.query(query,function (err, rows) {
         if (err) {
             console.log('setProjectsUpdateTime error',err);
             throw err;
@@ -343,7 +351,8 @@ function fetchProjectDataTest(){
     var options = {
         //url: 'http://event.zooniverse.org/classifications/galaxy_zoo?from=1399939200000&to=1400025600000&per_page=2&page=1',
         url: 'http://event.zooniverse.org/classifications/galaxy_zoo',
-        qs:{'from':1399939200000, 'to':1400025600000,'per_page':3,'page':1},
+        //qs:{'from':1399939200000, 'to':1400025600000,'per_page':10000,'page':1},
+        qs:{'from':1399948200000, 'to':1399949100000,'per_page':10,'page':1},
         headers: {
             'Accept': 'application/vnd.zooevents.v1+json'
         }
@@ -351,14 +360,40 @@ function fetchProjectDataTest(){
 
     request(options, function(error, response, body) {
         if (!error && response.statusCode == 200) {
-            var info = JSON.parse(body);
-            console.log(info);
+            var data = JSON.parse(body);
+            console.log(data);
+            console.log('data[0]',data[0]);
+            console.log('data.length',data.length);
 
         }
     });
 
 }
 
+function testFetchData(){
+
+    console.log("Start testFetchData");
+    gProjectTable = "projects_test";
+    gClsTable = "classifications";
+
+    var updateCount = 0;
+
+    // projects: ["andromeda","bat_detective","cyclone_center","galaxy_zoo","milky_way","planet_four","sea_floor","serengeti"]
+
+    var testFetchDataLoop = function(){
+        console.log("testFetchData:", new Date(),"updateCount",updateCount);
+        updateCount +=1;
+        setTimeout(startFetch,5*1000);
+    };
+
+    gEventEmitter.on('endFetchData', testFetchDataLoop);
+
+    testFetchDataLoop();
+
+}
+
+loadProjects(testFetchData);
+//fetchProjectDataTest();
 
 /*---------------------------------------------------------------------------*/
 
@@ -598,8 +633,8 @@ function removeTimeSeriesItems(series){
 function testUpdateTimeSeries(){
 
     console.log("Start testUpdateTimeSeries");
-    gProjectTable = "projects";
-    gClsTable = "classifications";
+    gProjectTable = "projects_test";
+    gClsTable = "classifications_test";
     gSeriesTable = "timeseries_test";
     var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,0,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
     var classificationInterval = 15*60; // secs
@@ -610,56 +645,44 @@ function testUpdateTimeSeries(){
     // Initial run time: 181.74 secs. 2784 rows.
     // Update minutes only: 35.767 secs
 
-    //connect();
 
+    var testUpdateTimeSeriesLoop = function(){
+        console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
+        var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
-        //if(err) {}
-    //connection.query("TRUNCATE "+gSeriesTable,function(err, rows) {
-    //    console.log("Truncate timeseries");
+        connect();
+        connection.connect(function(err) {
+            console.log("UPDATE query",query);
+            connection.query(query,function(err, rows) {
 
-        //var dt = 20*1000;
-        //var intervalObj =  setInterval(function(){
+                classificationTime += classificationInterval;
 
-        var testUpdateTimeSeriesLoop = function(){
-            console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
-            var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
+                updateCount +=1;
+                //disconnect();
 
-            connect();
-            connection.connect(function(err) {
-                console.log("UPDATE query",query);
-                connection.query(query,function(err, rows) {
+                setTimeout(startUpdateTimeSeries,5*1000);
 
-                    classificationTime += classificationInterval;
-
-                    updateCount +=1;
-                    //disconnect();
-
-
+                /*
+                if(updateCount >= nUpdates){
+                    //clearInterval(intervalObj);
+                    gEventEmitter.removeListener('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
+                    console.log("End testUpdateTimeSeries");
+                }
+                else{
                     setTimeout(startUpdateTimeSeries,5*1000);
-
-                    /*
-                    if(updateCount >= nUpdates){
-                        //clearInterval(intervalObj);
-                        gEventEmitter.removeListener('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
-                        console.log("End testUpdateTimeSeries");
-                    }
-                    else{
-                        setTimeout(startUpdateTimeSeries,5*1000);
-                    }
-                    */
-                });
+                }
+                */
             });
-        };
+        });
+    };
 
-        gEventEmitter.on('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
+    gEventEmitter.on('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
 
-        testUpdateTimeSeriesLoop();
-
-
+    testUpdateTimeSeriesLoop();
 
 }
 
- loadProjects(testUpdateTimeSeries);
+//loadProjects(testUpdateTimeSeries);
 
 /*---------------------------------------------------------------------------*/
 
