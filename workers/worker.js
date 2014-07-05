@@ -126,7 +126,7 @@ function startWorker(){
                 console.log('Worker: error SET GLOBAL time_zone:', err);
             }
             console.log('SET GLOBAL time_zone');
-            //loadProjects(startScheduler);
+            loadProjects(startScheduler);
         });
 
     });
