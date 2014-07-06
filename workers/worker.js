@@ -115,6 +115,7 @@ process.on('SIGTERM', function () {
 
 function startWorker(){
 
+    /*
     // SET GLOBAL time_zone = '+00:00';
     connect();
     connection.connect(function(err) {
@@ -130,8 +131,9 @@ function startWorker(){
         });
 
     });
+    */
 
-    //loadProjects(startScheduler);
+    loadProjects(startScheduler);
 }
 
 function loadProjects(callback){
