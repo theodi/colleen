@@ -269,7 +269,7 @@ function fetchProjectData(projectId){
         if(projectUpdated==null){
 
 
-            fromMs = 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
+            fromMs = 1398902400000;// 2014/05/01 // 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
             //fromMs = (new Date()).valueOf() - monthMs;
             console.log("projectUpdated is NULL",projectUpdated);
         }
@@ -295,7 +295,7 @@ function fetchProjectData(projectId){
             url: 'http://event.zooniverse.org/classifications/'+projectId,
             //qs:{'from':fromMs, 'to':toMs},//,'per_page':perPage,'page':1},
             qs:{'from':fromMs, 'to':toMs,'per_page':perPage,'page':0},
-            timeout:10*1000,
+            timeout:20*1000,
             headers: {
                 'Accept': 'application/vnd.zooevents.v1+json'
             }
@@ -367,7 +367,8 @@ function fetchProjectData(projectId){
             }
             else{ // end if (!error && response.statusCode == 200) {
                 console.log('fetchProjectData request error',error);//,response.statusCode);
-                endFetch();
+                //endFetch();
+                removeClassifications(projectId, maxDateMs);
             }
 
         }); // close request
