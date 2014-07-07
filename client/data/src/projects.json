@@ -1,30 +1,17 @@
 [
     {
-        "name": "milky_way_project",
-        "display_name": "",
-        "created_at": ""
+        "name": "milky_way_project"
     },
     {
-        "name": "galaxy_zoo",
-        "display_name": "",
-        "created_at": ""
-    },
-
-    {
-        "name": "condor",
-        "display_name": "",
-        "created_at": ""
+        "name": "galaxy_zoo"
     },
     {
-        "name": "worms",
-        "display_name": "",
-        "created_at": ""
+        "name": "condor"
     },
     {
-        "name": "solar_stormwatch",
-        "display_name": "",
-        "created_at": ""
+        "name": "worms"
+    },
+    {
+        "name": "solar_stormwatch"
     }
-
-
 ]
