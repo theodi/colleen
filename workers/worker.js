@@ -181,8 +181,8 @@ function startLoop(){
 
 function startScheduler(){
 
-    gProjectTable = "projects_test";
-    gClsTable = "classifications";
+    gProjectTable = "projects";
+    gClsTable = "classifications_test";
     gSeriesTable = "timeseries_test";
 
 
@@ -456,7 +456,7 @@ function fetchProjectDataTest(){
 function testFetchData(){
 
     console.log("Start testFetchData");
-    gProjectTable = "projects_test";
+    gProjectTable = "projects";
     gClsTable = "classifications";
 
     var updateCount = 0;
@@ -716,7 +716,7 @@ function removeTimeSeriesItems(series){
 function testUpdateTimeSeries(){
 
     console.log("Start testUpdateTimeSeries");
-    gProjectTable = "projects_test";
+    gProjectTable = "projects";
     gClsTable = "classifications_test";
     gSeriesTable = "timeseries_test";
     var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,0,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
