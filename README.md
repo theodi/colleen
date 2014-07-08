@@ -72,6 +72,7 @@ Many have helped us. We will name them in time.
 
         $ supervisor -n exit -w client/data/src -e json,svg client/util/compile_assets.js
 
+1. Visit app in browser at http://localhost:5000/index.html
 
 ###production on heroku
 1. Create an account at heroku.com
