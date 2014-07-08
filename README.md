@@ -68,6 +68,11 @@ Many have helped us. We will name them in time.
 
 1. Visit app in browser at http://localhost:5000/chart.html
 
+1. For animation dev, run this in a separate console window to auto compile changes to the JSON and SVG files
+
+        $ supervisor -n exit -w client/data/src -e json,svg client/util/compile_assets.js
+
+
 ###production on heroku
 1. Create an account at heroku.com
 1. In a terminal window from the project root directory run the following two commands and you should a response like the one below (but it will be a different url of the form word1-word2-number.herokuapp.com which we'll refer to as YOURAPPNAME from here):
