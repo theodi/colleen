@@ -343,7 +343,7 @@ function fetchProjectData(projectId){
                     }
 
                     var insertStr = inserts.join(',');
-                    //console.log(insertStr);
+                    //console.log("julie-oo-look",insertStr);
 
                     connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
                         function (err, rows) {
