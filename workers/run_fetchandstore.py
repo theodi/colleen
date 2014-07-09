@@ -8,7 +8,7 @@ sched = Scheduler()
 sched.start()
 
 sched.add_interval_job(fetchandstore.thewholeshebang, minutes=1)
-s
+
 while True:
     pass
 
