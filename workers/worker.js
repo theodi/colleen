@@ -265,7 +265,7 @@ function fetchProjectData(projectId){
         var fromMs, toMs, maxDateMs, maxDataDateMs = 0;
         var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
-        var intervalMs = 30*60*1000; // 15 mins in ms
+        var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
         if(projectUpdated==null){
 
@@ -369,7 +369,7 @@ function fetchProjectData(projectId){
             else{ // end if (!error && response.statusCode == 200) {
                 console.log('fetchProjectData request error',error);//,response.statusCode);
                 //endFetch();
-                removeClassifications(projectId, maxDateMs);
+                removeClassifications(projectId, fromMs);
             }
 
         }); // close request
