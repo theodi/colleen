@@ -148,9 +148,10 @@ function loadProjects(callback){
 
         gProjectList = JSON.parse(data);
 
+        console.log('Num projects:', gProjectList.length);
         console.log(gProjectList);
 
-        callback.call();
+        //callback.call();
 
 
     });
@@ -182,7 +183,7 @@ function startLoop(){
 function startScheduler(){
 
     gProjectTable = "projects";
-    gClsTable = "classifications_test";
+    gClsTable = "classifications";
     gSeriesTable = "timeseries_test";
 
 
