@@ -151,7 +151,7 @@ function loadProjects(callback){
         console.log('Num projects:', gProjectList.length);
         console.log(gProjectList);
 
-        //callback.call();
+        callback.call();
 
 
     });
