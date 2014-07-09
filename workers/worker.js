@@ -251,7 +251,7 @@ function endFetch(){
 
 function fetchProjectData(projectId){
 
-    //console.log("fetchProjectData",projectId);
+    console.log("fetchProjectData",projectId);
 
     //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
     connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
