@@ -2,10 +2,11 @@
 // https://github.com/mikeal/request
 var request = require('request');
 var _ = require('lodash');
-var mysql      = require('mysql');
+var mysql = require('mysql');
 var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
+
 // config files take precedence over command-line arguments and environment variables 
 nconf.file({ file:
        'config/' + process.env.NODE_ENV + '.json'
@@ -20,7 +21,8 @@ nconf.defaults({
 	projects_table_name: 'projects',
 	classifications_table_name: 'classifications',
         timeseries_table_name: 'timeseries',
-        cls_expire_after_x_days: 7
+        cls_expire_after_x_days: 7,
+        default_project_updated_time:1402704000000
 });
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
 
@@ -71,6 +73,7 @@ var connection = null;
 var gProjectTable = nconf.get("projects_table_name");
 var gClsTable = nconf.get("classifications_table_name");
 var gSeriesTable = nconf.get("timeseries_table_name");
+var gDefaultProjectUpdatedTime = nconf.get("default_project_updated_time");
 
 console.log('NODE_ENV is',nconf.get('NODE_ENV'));
 console.log('projects_list is',nconf.get('projects_list'));
@@ -79,8 +82,7 @@ function connect(){
     if(connection!=null){
         disconnect();
     }
-    connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000'); // Recreate the connection, since the old one cannot be reused.
-
+    connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000');
 
 }
 
@@ -117,31 +119,13 @@ process.on('SIGTERM', function () {
 
 
 
-/*---------------------------------------------------------------------------*/
-
-// Load projects to fetch from zoon event API
-// ./data/projects.json
-
-/*
-function startWorker(){
-    //    loadProjects(startScheduler); kass, uncomment this
-}
-
-    loadProjects = function (callback){
-
-	//this function doesn't do anything. the projects list is now 
-	//loaded via a require on a file specified in a config variable
-	         callback.call();
-
-}
-*/
-
-// start worker
-startScheduler();
 
 /*---------------------------------------------------------------------------*/
 
 // Scheduling
+
+// start worker
+startScheduler();
 
 
 function startScheduler(){
@@ -202,7 +186,6 @@ function fetchNext(){
 }
 
 function endFetch(){
-    //startUpdateTimeSeries();
 
     var dt = (new Date().valueOf() - gTimer)/1000;
     console.log('endFetchData. Time taken (s):',dt);
@@ -224,8 +207,14 @@ function fetchProjectData(projectId){
 
         }
 
+        if(rows[0]==null){
+            console.log('fetchProjectData, not in database',projectId);
+            fetchNext();
+            return;
+        }
 
-        var fromMs, toMs, maxDateMs, maxDataDateMs = 0;
+
+        var fromMs, toMs;
         var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
         var intervalMs = 15*60*1000; // 15 mins in ms
@@ -233,7 +222,8 @@ function fetchProjectData(projectId){
         if(projectUpdated==null){
 
 
-            fromMs = 1402704000000; // 2014/06/14 // 1401580800000; //2014/06/01 // 1398902400000;// 2014/05/01 // 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
+            fromMs = gDefaultProjectUpdatedTime;
+            // 2014/06/14 // 1401580800000; //2014/06/01 // 1398902400000;// 2014/05/01 // 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
             //fromMs = (new Date()).valueOf() - monthMs;
             console.log("projectUpdated is NULL",projectUpdated);
         }
@@ -242,99 +232,107 @@ function fetchProjectData(projectId){
             //console.log("projectUpdated",projectUpdated);
 
         }
-        toMs = fromMs + intervalMs; // curMs;//
+        toMs = fromMs + intervalMs;
         toMs = Math.min(curMs,toMs);
 
-        maxDateMs = toMs;
 
 
-        console.log(projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs));
+        // request
+        fetchRequest(projectId,fromMs,toMs);
 
-        //disconnect();
-        //return;
-
-        var perPage = 5000; // 5000
-        var options = {
-            //url: 'http://event.zooniverse.org/classifications/'+projectId+'?from=1399939200000&to=1400025600000&per_page=200&page=1',
-            url: 'http://event.zooniverse.org/classifications/'+projectId,
-            //qs:{'from':fromMs, 'to':toMs},//,'per_page':perPage,'page':1},
-            qs:{'from':fromMs, 'to':toMs,'per_page':perPage,'page':0},
-            timeout:20*1000,
-            headers: {
-                'Accept': 'application/vnd.zooevents.v1+json'
-            }
-        };
-
-        request(options, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var data = JSON.parse(body);
-                console.log('Classifications, data.length:',data.length);
-
-                if(data.length>0){
-                    var fields = ['id','created_at','user_id','project','country_code','region','city_name','latitude','longitude'];
-                    var inserts = [];
-                    _.each(data,function(record){
-                        var values=[];
-                        _.each(fields, function(field,index){
-                            var value = 'NULL';
-                            if(field=='project'){
-                                value = "'"+projectId+"'";
-                            }
-                            else if(record[field]){
-                                value = connection.escape(record[field]);//"'"+connection.escape(record[field])+"'";
-                            }
-                            values.push(value);
-                        });
-                        // get last date from data
-                        var createdDate = new Date(record['created_at']);
-                        //console.log('createdMs',createdDate);
-                        var createdMs = createdDate.valueOf();
-                        if(createdMs>maxDataDateMs){
-                            maxDataDateMs = createdMs;
-                        }
-
-                        var valuesStr = values.join(",");
-                        inserts.push("("+valuesStr+")");
-
-                    });
-
-                    if(data.length==perPage){
-                        maxDateMs = maxDataDateMs;
-                        console.log('maxDataDateMs',maxDataDateMs);
-                    }
-
-                    var insertStr = inserts.join(',');
-                    //console.log(insertStr);
-
-                    connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
-                        function (err, rows) {
-
-                            if (err) {
-                                throw err;
-                            }
-                            //setProjectsUpdateTime(projectId, maxDateMs);
-                            removeClassifications(projectId, maxDateMs);
-
-
-
-                        });
-                }
-                else{ // end if(data.length>0){
-
-                    //setProjectsUpdateTime(projectId, maxDateMs);
-                    removeClassifications(projectId, maxDateMs);
-                }
-
-            }
-            else{ // end if (!error && response.statusCode == 200) {
-                console.log('fetchProjectData request error',error);//,response.statusCode);
-                //endFetch();
-                removeClassifications(projectId, fromMs);
-            }
-
-        }); // close request
     });
 
+}
+
+function fetchRequest(projectId,fromMs,toMs){
+
+    console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs));
+
+    var maxDateMs = toMs, maxDataDateMs = 0;
+
+    var perPage = 5000; // 5000
+    var options = {
+        url: 'http://event.zooniverse.org/classifications/'+projectId,
+        qs:{'from':fromMs, 'to':toMs,'per_page':perPage,'page':0},
+        timeout:20*1000,
+        headers: {
+            'Accept': 'application/vnd.zooevents.v1+json'
+        }
+    };
+
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var data = JSON.parse(body);
+            console.log('Classifications, data.length:',data.length);
+
+            if(data.length>0){
+                var fields = ['id','created_at','user_id','project','country_code','region','city_name','latitude','longitude'];
+                var inserts = [];
+                _.each(data,function(record){
+                    var values=[];
+                    _.each(fields, function(field,index){
+                        var value = 'NULL';
+                        if(field=='project'){
+                            value = "'"+projectId+"'";
+                        }
+                        else if(field=='created_at'){
+                            var date = new Date(record[field]);
+                            value = "FROM_UNIXTIME('"+parseInt(date.valueOf()/1000)+"')";
+                            //console.log('record[field]',record[field],'value',value,'date',date);
+                        }
+                        else if(record[field]){
+                            value = connection.escape(record[field]);
+                        }
+                        values.push(value);
+                    });
+                    // get last date from data
+                    var createdDate = new Date(record['created_at']);
+                    //console.log('createdMs',createdDate);
+                    var createdMs = createdDate.valueOf();
+                    if(createdMs>maxDataDateMs){
+                        maxDataDateMs = createdMs;
+                    }
+
+                    var valuesStr = values.join(",");
+                    inserts.push("("+valuesStr+")");
+
+                });
+
+                if(data.length==perPage){
+                    maxDateMs = maxDataDateMs;
+                    console.log('maxDataDateMs',maxDataDateMs);
+                }
+
+                var insertStr = inserts.join(',');
+                //console.log(insertStr);
+
+                connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
+                    function (err, rows) {
+
+                        if (err) {
+                            console.log('fetchRequest, insert failed',err);
+                            throw err;
+                        }
+
+                        removeClassifications(projectId, maxDateMs);
+
+
+                    });
+            }
+            else{
+
+
+                removeClassifications(projectId, maxDateMs);
+            }
+
+        }
+        else{ // end if (!error && response.statusCode == 200) {
+            console.log('fetchProjectData request error',error);//,response.statusCode);
+            //endFetch();
+            removeClassifications(projectId, fromMs);
+        }
+
+    }); // close request
 }
 
 function removeClassifications(projectId,updateMs){
@@ -503,6 +501,12 @@ function updateTimeSeries(series){
         if (err) {
             console.log('updateTimeSeriesInterval error',err);
 
+        }
+
+        if(rows[0]==null){
+            console.log('updateTimeSeries, project not in database:', projectId);
+            updateNextTimeSeries();
+            return;
         }
         //projectUpdatedMs = rows[0].time *1000;
         projectUpdatedUnix = rows[0].time;
@@ -687,7 +691,6 @@ function testUpdateTimeSeries(){
     // Initial run time: 181.74 secs. 2784 rows.
     // Update minutes only: 35.767 secs
 
-
     var testUpdateTimeSeriesLoop = function(){
         console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
         var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
@@ -698,22 +701,10 @@ function testUpdateTimeSeries(){
             connection.query(query,function(err, rows) {
 
                 classificationTime += classificationInterval;
-
                 updateCount +=1;
-                //disconnect();
 
                 setTimeout(startUpdateTimeSeries,5*1000);
 
-                /*
-                if(updateCount >= nUpdates){
-                    //clearInterval(intervalObj);
-                    gEventEmitter.removeListener('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
-                    console.log("End testUpdateTimeSeries");
-                }
-                else{
-                    setTimeout(startUpdateTimeSeries,5*1000);
-                }
-                */
             });
         });
     };
