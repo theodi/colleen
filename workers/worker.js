@@ -7,12 +7,15 @@ var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
 
-// config files take precedence over command-line arguments and environment variables 
+
+// config files take precedence over command-line arguments and environment variables
 nconf.file({ file:
-       'config/' + process.env.NODE_ENV + '.json'
-     })
-     .argv()
-     .env();
+    'config/' + process.env.NODE_ENV + '.json'
+})
+    .argv()
+    .env();
+
+
 // provide sensible defaults in case the above don't
 nconf.defaults({
 	timeout: 5000,
@@ -22,17 +25,15 @@ nconf.defaults({
 	classifications_table_name: 'classifications',
         timeseries_table_name: 'timeseries',
         cls_expire_after_x_days: 7,
-        default_project_updated_time:1402704000000
+        default_project_updated_time:1402704000000,
+        classifications_per_page:5000
 });
+
+
+
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
 
-//var parseDbUrl = require('parse-database-url');
 
-var WNU_DB_URL = process.env.WNU_DB_URL;
-//var dbConfig = parseDbUrl(WNU_DB_URL);
-
-// parse dbname out of connection string
-//var WNU_DB_NAME = dbConfig['database'];
 
 /*---------------------------------------------------------------------------*/
 
@@ -74,15 +75,18 @@ var gProjectTable = nconf.get("projects_table_name");
 var gClsTable = nconf.get("classifications_table_name");
 var gSeriesTable = nconf.get("timeseries_table_name");
 var gDefaultProjectUpdatedTime = nconf.get("default_project_updated_time");
+var gClassificationsPerPage = nconf.get("classifications_per_page");
 
 console.log('NODE_ENV is',nconf.get('NODE_ENV'));
 console.log('projects_list is',nconf.get('projects_list'));
 console.log('WNU_DB_URL',WNU_DB_URL);
+
 function connect(){
     if(connection!=null){
         disconnect();
     }
     connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000');
+    return connection;
 
 }
 
@@ -125,7 +129,7 @@ process.on('SIGTERM', function () {
 // Scheduling
 
 // start worker
-startScheduler();
+//startScheduler();
 
 
 function startScheduler(){
@@ -246,11 +250,11 @@ function fetchProjectData(projectId){
 
 function fetchRequest(projectId,fromMs,toMs){
 
-    console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs));
+    console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs),"perPage",gClassificationsPerPage);
 
     var maxDateMs = toMs, maxDataDateMs = 0;
 
-    var perPage = 5000; // 5000
+    var perPage = gClassificationsPerPage; // 5000
     var options = {
         url: 'http://event.zooniverse.org/classifications/'+projectId,
         qs:{'from':fromMs, 'to':toMs,'per_page':perPage,'page':0},
@@ -779,5 +783,9 @@ function getZooonAPIProjects(){
 
 module.exports.gProjectList = gProjectList;
 module.exports.nconf = nconf;
+module.exports.fetchRequest = fetchRequest;
+
+module.exports.startScheduler = startScheduler;
 //module.exports.connect = connect;
-exports.connection = connection;
+module.exports.connection = connection;
+module.exports.connect = connect;
