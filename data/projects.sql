@@ -1,55 +1,24 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 3408
+#
+# http://www.sequelpro.com/
+# http://code.google.com/p/sequel-pro/
+#
+# Host: 127.0.0.1 (MySQL 5.1.44)
+# Database: zoon
+# Generation Time: 2014-06-27 15:28:16 +0000
+# ************************************************************
 
---
--- Database: `zoon`
---
 
--- --------------------------------------------------------
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `analytics`
---
-
-CREATE TABLE IF NOT EXISTS `analytics` (
-  `type_id` varchar(1) NOT NULL DEFAULT '',
-  `project` varchar(255) NOT NULL,
-  `interval` varchar(1) NOT NULL,
-  `country` varchar(2) DEFAULT '',
-  `count` int(10) unsigned NOT NULL DEFAULT '0',
-  `updated` datetime DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `timeseries`
---
-CREATE TABLE IF NOT EXISTS `timeseries` (
-  `type_id` varchar(1) NOT NULL DEFAULT '',
-  `project` varchar(255) NOT NULL DEFAULT '',
-  `interval` int(10) unsigned NOT NULL,
-  `datetime` datetime NOT NULL,
-  `count` int(10) unsigned NOT NULL,
-  `updated` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `classifications`
---
-
-CREATE TABLE IF NOT EXISTS `classifications` (
-  `id` int(11) unsigned NOT NULL,
-  `created_at` datetime NOT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `project` varchar(255) NOT NULL,
-  `country` varchar(2) DEFAULT NULL,
-  `region` varchar(10) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `latitude` decimal(8,5) DEFAULT NULL,
-  `longitude` decimal(8,5) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Dump of table projects
 # ------------------------------------------------------------
@@ -98,3 +67,9 @@ UNLOCK TABLES;
 
 
 
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
