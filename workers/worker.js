@@ -1,18 +1,27 @@
-
 // https://github.com/mikeal/request
 var request = require('request');
 var _ = require('lodash');
 var mysql      = require('mysql');
 var fs = require('fs');
 var events = require('events');
-
-//var parseDbUrl = require('parse-database-url');
-
-var WNU_DB_URL = process.env.WNU_DB_URL;
-//var dbConfig = parseDbUrl(WNU_DB_URL);
-
-// parse dbname out of connection string
-//var WNU_DB_NAME = dbConfig['database'];
+var nconf = require('nconf');
+// config files take precedence over command-line arguments and environment variables 
+nconf.file({ file:
+       'config/' + process.env.NODE_ENV + '.json'
+     })
+     .argv()
+     .env();
+// provide sensible defaults in case the above don't
+nconf.defaults({
+	timeout: 5000,
+        loop_interval: 20000,
+        projects_list: '../data/projects.json',
+	projects_table_name: 'projects',
+	classifications_table_name: 'classifications',
+        timeseries_table_name: 'timeseries',
+        cls_expire_after_x_days: 7
+});
+var WNU_DB_URL = nconf.get('WNU_DB_URL');
 
 /*---------------------------------------------------------------------------*/
 
@@ -29,25 +38,33 @@ var MIN_SECS = 60,
 var seriesLength={};
 seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60, seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
 
+console.log("seriesLength is ", seriesLength);
+console.log("timeout is", nconf.get("timeout"));
+
 var gProjectList = [], gProjectQueue = [], gSeriesQueue = [];
+
+gProjectList = require(nconf.get("projects_list"));
+
+console.log('gProjectList is ', gProjectList);
 
 var gIntervals = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
 var gTimer = 0;
 
 var gEventEmitter = new events.EventEmitter();
 
-var gClsArchiveTime = DAY_SECS*7;
+var gClsArchiveTime = DAY_SECS*nconf.get("cls_expire_after_x_days");;
 
 /*---------------------------------------------------------------------------*/
 
 // MySQL connection
 
 var connection = null;
-var gSeriesTable = "timeseries";
-var gClsTable = "classifications";
-var gProjectTable = "projects";
+var gProjectTable = nconf.get("projects_table_name");
+var gClsTable = nconf.get("classifications_table_name");
+var gSeriesTable = nconf.get("timeseries_table_name");
 
-
+console.log('NODE_ENV is',nconf.get('NODE_ENV'));
+console.log('projects_list is',nconf.get('projects_list'));
 console.log('WNU_DB_URL',WNU_DB_URL);
 function connect(){
     if(connection!=null){
@@ -55,26 +72,8 @@ function connect(){
     }
     connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000'); // Recreate the connection, since the old one cannot be reused.
 
-    /*
-    connection.connect(function(err) {              // The server is either down
-        if(err) {                                     // or restarting (takes a while sometimes).
-            console.log('error when connecting to db:', err);
-            setTimeout(connect, 2000); // We introduce a delay before attempting to reconnect,
-        }                                     // to avoid a hot loop, and to allow our node script to
-    });
-
-                                        // process asynchronous requests in the meantime.
-    // If you're also serving http, display a 503 error.
-    connection.on('error', function(err) {
-        console.log('db error', err);
-        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-            connect();                         // lost due to either server restart, or a
-        } else {                                      // connnection idle timeout (the wait_timeout
-            throw err;                                  // server variable configures this)
-        }
-    });
-    */
 }
+
 
 function disconnect(){
     console.log('Worker: Checking for open DB connections');
@@ -114,46 +113,15 @@ process.on('SIGTERM', function () {
 // ./data/projects.json
 
 function startWorker(){
-
-    /*
-    // SET GLOBAL time_zone = '+00:00';
-    connect();
-    connection.connect(function(err) {
-        if(err) {
-            console.log('Worker: error startWorker:', err);
-        }
-        connection.query("SET GLOBAL time_zone = '+00:00'",function(err, rows) {
-            if(err) {
-                console.log('Worker: error SET GLOBAL time_zone:', err);
-            }
-            console.log('SET GLOBAL time_zone');
-            loadProjects(startScheduler);
-        });
-
-    });
-    */
-
-    loadProjects(startScheduler);
+    //    loadProjects(startScheduler); kass, uncomment this
 }
 
-function loadProjects(callback){
+    loadProjects = function (callback){
 
-    var filename = '/../data/projects.json';
+	//this function doesn't do anything. the projects list is now 
+	//loaded via a require on a file specified in a config variable
+	         callback.call();
 
-    fs.readFile(__dirname + filename, 'utf8', function (err, data) {
-        if (err) {
-            console.log('Error loading projects.json: ' + err);
-            return;
-        }
-
-        gProjectList = JSON.parse(data);
-
-        console.log(gProjectList);
-
-        callback.call();
-
-
-    });
 }
 
 // start worker
@@ -163,17 +131,8 @@ function loadProjects(callback){
 
 // Scheduling
 
-// Cron
-
-//var CronJob = require('cron').CronJob;
-//new CronJob('*/2 * * * * *', function(){
-//    var date = new Date();
-//    console.log("date:", date, date.valueOf());
-//
-//}, null, false);//, "UTC");
-
 function startLoop(){
-    var dt = 20*1000;
+    var dt = nconf.get("loop_interval");
     setInterval(function(){
         console.log("Start fetch, date:", new Date());
     },dt);
@@ -181,12 +140,10 @@ function startLoop(){
 
 function startScheduler(){
 
-    gProjectTable = "projects";
-    gClsTable = "classifications_test";
-    gSeriesTable = "timeseries_test";
 
 
-    var timeout = 5*1000;
+
+    var timeout = nconf.get("timeout_in_ms");
     var updateCount = 0;
 
     var fetchDataTimeout = function(){
@@ -249,18 +206,24 @@ function endFetch(){
 
 }
 
+var getProjectUpdatedTime = function(projectId){
+
+    connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
+       if(err) {
+          throw err;
+       }
+       return rows[0].time;
+	});
+}
+exports.getProjectUpdatedTime = getProjectUpdatedTime;
+	
+
 function fetchProjectData(projectId){
 
     //console.log("fetchProjectData",projectId);
 
     //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
-    connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
 
-        if(err) {
-            endFetch();
-            throw err;
-
-        }
         var fromMs, toMs, maxDateMs, maxDataDateMs = 0;
         var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
@@ -304,9 +267,6 @@ function fetchProjectData(projectId){
         request(options, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body);
-                //console.log('Classifications:',data);
-                //console.log('Classifications, data:',data);
-                //console.log('Classifications, data[0]:',data[0]);
                 console.log('Classifications, data.length:',data.length);
 
                 if(data.length>0){
@@ -372,9 +332,9 @@ function fetchProjectData(projectId){
             }
 
         }); // close request
-    });
-
 }
+
+
 
 function removeClassifications(projectId,updateMs){
 
@@ -456,8 +416,6 @@ function fetchProjectDataTest(){
 function testFetchData(){
 
     console.log("Start testFetchData");
-    gProjectTable = "projects";
-    gClsTable = "classifications";
 
     var updateCount = 0;
 
@@ -540,6 +498,7 @@ function updateTimeSeries(series){
 
     var projectUpdatedUnix = 0,seriesMax = 0;
 
+    // refactor: following should be encapsulated in function
     connection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
             console.log('updateTimeSeriesInterval error',err);
@@ -827,3 +786,7 @@ function getZooonAPIProjects(){
     });
 }
 
+module.exports.gProjectList = gProjectList;
+module.exports.nconf = nconf;
+//module.exports.connect = connect;
+exports.connection = connection;

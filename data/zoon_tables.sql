@@ -50,3 +50,11 @@ CREATE TABLE IF NOT EXISTS `classifications` (
   `longitude` decimal(8,5) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` varchar(32) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `display_name` varchar(255) NOT NULL DEFAULT '',
+  `updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
