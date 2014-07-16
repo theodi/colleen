@@ -7,6 +7,11 @@ var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
 
+// if testing then want to make sure we are using testing db
+if (process.env.NODE_ENV == 'test') {
+    nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
+}
+
 // config files take precedence over command-line arguments and environment variables 
 nconf.file({ file:
        'config/' + process.env.NODE_ENV + '.json'
@@ -25,14 +30,6 @@ nconf.defaults({
         default_project_updated_time:1402704000000
 });
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
-
-//var parseDbUrl = require('parse-database-url');
-
-var WNU_DB_URL = process.env.WNU_DB_URL;
-//var dbConfig = parseDbUrl(WNU_DB_URL);
-
-// parse dbname out of connection string
-//var WNU_DB_NAME = dbConfig['database'];
 
 /*---------------------------------------------------------------------------*/
 
