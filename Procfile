@@ -1,2 +1,2 @@
 web: $WEB
-worker: node workers/worker.js
+worker: node workers/run_worker.js
