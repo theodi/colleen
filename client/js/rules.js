@@ -28,6 +28,26 @@ ZN.Rules.prototype = {
             // project rules
             //project.rotation = (project.rotation+1)%360;
 
+            if(project.animation){
+                _.each(project.animation,function(anim){
+                    switch(anim.type){
+                        case "rotate":
+                            this.rotateRule(project, project,anim);
+                            break;
+
+                        case "scale":
+                            this.scaleRule(project, project,anim);
+                            break;
+
+                        case "nbody":
+                            this.nbodyRule(project,anim);
+                            break;
+                    }
+                },this);
+            }
+
+
+
             _.each(project.shapes,function(shape,ind){
 
                 // shape trails
@@ -53,19 +73,7 @@ ZN.Rules.prototype = {
                  }
                  */
 
-                if(project.animation){
-                    _.each(project.animation,function(anim){
-                        switch(anim.type){
-                            case "rotate":
-                                this.rotateRule(project, project,anim);
-                                break;
 
-                            case "scale":
-                                this.scaleRule(project, project,anim);
-                                break;
-                        }
-                    },this);
-                }
                 // shape rules
 
                 if(shape.animation){
@@ -439,6 +447,20 @@ ZN.Rules.prototype = {
             project.setBackground({x:px,y:py,sx:scale,sy:scale});
 
         });
+    },
+
+    nbodyRule: function(project,anim){
+
+        var nbody = null;
+        if(project.nbody==null){
+            nbody = new ZN.NBodyChoreo();
+            project.nbody = nbody;
+            nbody.init();
+            var orbitIndex = nbody.getOrbitIndex(anim.orbit);
+            nbody.setOrbit(orbitIndex);
+
+
+        }
     },
 
 

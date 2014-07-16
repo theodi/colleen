@@ -10,6 +10,10 @@
         {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
         {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
 
+    "animation":[
+        {"type":"nbody","orbit":"D(9,4) - Nine on a bear","duration":[360.0,700.0], "time":0}],
+
+
     "shapes":[
 
         { "_comment":"Scale X and Y",

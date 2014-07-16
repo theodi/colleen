@@ -4,6 +4,7 @@ ZN.App = function () {
 
     this.model = null;
     this.rules = null;
+    this.nbody = null;
 
     this.xhr = null;
     this.timeoutTime = 60 * 1000;

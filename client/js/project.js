@@ -22,7 +22,6 @@ ZN.Project = function () {
     };
     this.shapes=[];
 
-
     // graphics
     this.x = 0;
     this.y = 0;
@@ -39,6 +38,11 @@ ZN.Project = function () {
     this.bg={
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
+
+    // nbody object
+    this.nbody = null;
+
+
 
 
 }
