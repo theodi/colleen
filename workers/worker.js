@@ -25,7 +25,7 @@ nconf.defaults({
 	classifications_table_name: 'classifications',
         timeseries_table_name: 'timeseries',
         cls_expire_after_x_days: 7,
-        default_project_updated_time:1402704000000,
+        default_project_updated_time: Date.UTC(2014,5,1,0,0,0),
         classifications_per_page:5000
 });
 
