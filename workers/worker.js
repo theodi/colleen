@@ -136,6 +136,8 @@ process.on('SIGTERM', function () {
 
 function startScheduler(){
 
+    console.log(new Date(gDefaultProjectUpdatedTime));
+    return;
   
     var timeout = nconf.get("timeout");
     var updateCount = 0;
