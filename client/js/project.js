@@ -247,8 +247,20 @@ ZN.Project.prototype = {
 
 
         },this);
-    }
 
+
+        // add animation rules applied to multiple shapes
+        _.each(data.shape_animation,function(shapeAnim){
+            var anims = shapeAnim.animation;
+            var shapeIds = shapeAnim.shape_ids;
+            _.each(shapeIds, function(id){
+                var animsClone = _.cloneDeep(anims);
+                var shape = _.find(this.shapes, {"id":id});
+                shape.animation = shape.animation.concat(animsClone);
+
+            },this);
+        },this);
+    }
 
 }
 

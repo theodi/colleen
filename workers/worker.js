@@ -67,7 +67,7 @@ var gTimer = 0;
 var gEventEmitter = new events.EventEmitter();
 
 var gClsArchiveTime = DAY_SECS*60;
-var gLatency = 10000; // query up to N ms behind current time
+var gLatency = 60000; // query up to N ms behind current time
 
 /*---------------------------------------------------------------------------*/
 
