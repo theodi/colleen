@@ -39,9 +39,6 @@ ZN.Rules.prototype = {
                             this.scaleRule(project, project,anim);
                             break;
 
-                        case "nbody":
-                            this.nbodyRule(project,anim);
-                            break;
                     }
                 },this);
             }
@@ -448,23 +445,6 @@ ZN.Rules.prototype = {
 
         });
     },
-
-    nbodyRule: function(project,anim){
-
-        var nbody = null;
-        if(project.nbody==null){
-            nbody = new ZN.NBodyChoreo();
-            project.nbody = nbody;
-            nbody.init();
-            var orbitIndex = nbody.getOrbitIndex(anim.orbit);
-            nbody.setOrbit(orbitIndex);
-
-
-        }
-    },
-
-
-
 
 
 /*

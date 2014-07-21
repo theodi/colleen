@@ -39,8 +39,7 @@ ZN.Project = function () {
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
 
-    // nbody object
-    this.nbody = null;
+
 
 
 
