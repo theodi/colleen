@@ -23,7 +23,7 @@ nconf.file({ file:
 
 // provide sensible defaults in case the above don't
 nconf.defaults({
-	timeout: 30000,
+	timeout: 5000,
         loop_interval: 20000,
         projects_list: '../data/projects.json',
 	projects_table_name: 'projects',
