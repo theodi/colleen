@@ -23,7 +23,7 @@ nconf.file({ file:
 
 // provide sensible defaults in case the above don't
 nconf.defaults({
-	timeout: 5000,
+	timeout: 30000,
         loop_interval: 20000,
         projects_list: '../data/projects.json',
 	projects_table_name: 'projects',
@@ -67,6 +67,7 @@ var gTimer = 0;
 var gEventEmitter = new events.EventEmitter();
 
 var gClsArchiveTime = DAY_SECS*60;
+var gLatency = 10000; // query up to N ms behind current time
 
 /*---------------------------------------------------------------------------*/
 
@@ -135,9 +136,6 @@ process.on('SIGTERM', function () {
 
 
 function startScheduler(){
-
-    console.log(new Date(gDefaultProjectUpdatedTime));
-    return;
   
     var timeout = nconf.get("timeout");
     var updateCount = 0;
@@ -223,7 +221,7 @@ function fetchProjectData(projectId){
 
 
         var fromMs, toMs;
-        var curMs = (new Date()).valueOf();
+        var curMs = (new Date()).valueOf() - gLatency;
         var monthMs = MONTH_SECS * 1000;// a month in ms
         var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
