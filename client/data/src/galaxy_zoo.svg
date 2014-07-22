@@ -1,43 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="960.333px" height="540.001px" viewBox="0 0 960.333 540.001" enable-background="new 0 0 960.333 540.001"
-	 xml:space="preserve">
-<path id="i9" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M-151.81,387.078
-	c2.415,21.105,0.378,40.479,1.571,60.713c23.069,0.078,48.254,2.352,67.609-1.437c-2.312-18.681,5.763-44.024,2.619-63.39
-	C-103.33,384.975-129.375,384.15-151.81,387.078z"/>
-<rect id="i9" x="-239.337" y="313.661" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="246" height="208"/>
-<path id="i8" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M230.675-273.149
-	c0.557,10.624-0.16,17.681,1.379,24.821c141.609-8.27,296.805-1.5,437.121,2.758c-1.287-8.826-3.502-16.723-5.516-24.821
-	C511.669-275.055,378.845-278,230.675-273.149z"/>
-<rect id="i8" x="100.663" y="-329.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="698" height="134"/>
-<path id="i7" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M331.337-208.339
-	c1.314,10.635,5.145,18.757,4.137,31.715c12.857-0.932,23.975-3.603,38.609-2.758c-0.742-11.209-3.98-19.922-5.516-30.337
-	C354.819-209.208,347.571-207.945,331.337-208.339z"/>
-<rect id="i7" x="256.663" y="-286.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="188" height="154"/>
-<path id="i6" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M266.526-226.266
-	c-1.414,14.283,2.406,23.333,4.137,34.473c12.949,0.539,21.963-2.857,34.475-2.758c-1.57-11.759-3.65-23.01-4.137-35.852
-	C290.96-227.573,274.921-230.74,266.526-226.266z"/>
-<rect id="i6" x="216.663" y="-284.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="178" height="152"/>
-<path id="i5" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M-451.954,327.876
-	c-0.861,23.52,0.617,34.106,4.645,62.631c82.954,0.269,168.722,0.267,253.931,3.435c-2.943-24.028,4.655-47.747,0.5-63.131
-	C-280.352,324.194-367.278,330.889-451.954,327.876z"/>
-<rect id="i5" x="-545.337" y="299.661" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="1014" height="120"/>
-<path id="i4" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M-473.08-93.727
-	c0.108,26.417,6.134,50.562,2.889,78.267c147.938,9.016,287.914-2.716,436.823,8.827c1.104-31.061-6.941-90.638-7.781-91.012
-	C-183.091-91.037-332.353-103.498-473.08-93.727z"/>
-<rect id="i4" x="-501.337" y="-262.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="490" height="398"/>
-<path id="i3" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M71.423,188.879
-	c2.233,21.297,2.103,50.566,4.194,67.663c52.581-3.188,121.22,2.637,173.792-0.74c-1.005-24.645-2.618-44.921-2.814-67.636
-	C176.959,190.627,131.25,185.151,71.423,188.879z"/>
-<rect id="i3" x="-63.337" y="19.661" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="388" height="264"/>
-<path id="i2" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M-464.565,51.902
-	c-0.408,13.939-2.477,29.377-0.746,41.385c325.839,3.26,844.904-1.639,941.494-6.732c0.254-13.213,2.805-33.037,0.674-40.008
-	C132.337,42.42-321.482,53.273-464.565,51.902z"/>
-<rect id="i2" x="-523.337" y="-30.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="1116" height="214"/>
-<path id="i1" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" d="M-63.433,171.685
-	c115.895-4.41,271.553,8.18,383.674,4.342c0.508-60.317,12.928-147.565,1.996-213.943C199.571-27.728,61.415-43.65-63.188-35.45
-	L-63.433,171.685z"/>
-<rect id="i1" x="-77.337" y="-394.339" fill="none" stroke="#FE0000" stroke-miterlimit="10" width="546" height="816"/>
+	 viewBox="0 0 960.3 540" enable-background="new 0 0 960.3 540" xml:space="preserve">
+<path id="i9" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M-151.8,387.1
+	c2.4,21.1,0.4,40.5,1.6,60.7c23.1,0.1,48.3,2.4,67.6-1.4c-2.3-18.7,5.8-44,2.6-63.4C-103.3,385-129.4,384.1-151.8,387.1z"/>
+<path id="i8" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M230.7-273.1
+	c0.6,10.6-0.2,17.7,1.4,24.8c141.6-8.3,296.8-1.5,437.1,2.8c-1.3-8.8-3.5-16.7-5.5-24.8C511.7-275.1,378.8-278,230.7-273.1z"/>
+<path id="i7" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M331.3-208.3
+	c1.3,10.6,5.1,18.8,4.1,31.7c12.9-0.9,24-3.6,38.6-2.8c-0.7-11.2-4-19.9-5.5-30.3C354.8-209.2,347.6-207.9,331.3-208.3z"/>
+<path id="i6" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M266.5-226.3
+	c-1.4,14.3,2.4,23.3,4.1,34.5c12.9,0.5,22-2.9,34.5-2.8c-1.6-11.8-3.6-23-4.1-35.9C291-227.6,274.9-230.7,266.5-226.3z"/>
+<path id="i5" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M-452,327.9
+	c-0.9,23.5,0.6,34.1,4.6,62.6c83,0.3,168.7,0.3,253.9,3.4c-2.9-24,4.7-47.7,0.5-63.1C-280.4,324.2-367.3,330.9-452,327.9z"/>
+<path id="i4" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M-473.1-93.7
+	c0.1,26.4,6.1,50.6,2.9,78.3c147.9,9,287.9-2.7,436.8,8.8c1.1-31.1-6.9-90.6-7.8-91C-183.1-91-332.4-103.5-473.1-93.7z"/>
+<path id="i3" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M71.4,188.9
+	c2.2,21.3,2.1,50.6,4.2,67.7c52.6-3.2,121.2,2.6,173.8-0.7c-1-24.6-2.6-44.9-2.8-67.6C177,190.6,131.2,185.2,71.4,188.9z"/>
+<path id="i2" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M-464.6,51.9
+	c-0.4,13.9-2.5,29.4-0.7,41.4c325.8,3.3,844.9-1.6,941.5-6.7c0.3-13.2,2.8-33,0.7-40C132.3,42.4-321.5,53.3-464.6,51.9z"/>
+<path id="i1" opacity="0.84" fill="none" stroke="#000000" stroke-miterlimit="10" enable-background="new    " d="M-63.4,171.7
+	c115.9-4.4,271.6,8.2,383.7,4.3c0.5-60.3,12.9-147.6,2-213.9C199.6-27.7,61.4-43.7-63.2-35.5L-63.4,171.7z"/>
 </svg>
