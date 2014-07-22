@@ -1,23 +1,11 @@
 [
     {
-        "name": "bat_detective"
-    },
-    {
-        "name": "cyclone_center"
-    },
-    {
-        "name": "galaxy_zoo"
+        "name": "asteroid"
     },
     {
         "name": "milky_way_project"
     },
     {
-        "name": "planet_four"
-    },
-    {
-        "name": "sea_floor_explorer"
-    },
-    {
-        "name": "snapshot_serengeti"
+        "name": "sunspot"
     }
 ]
