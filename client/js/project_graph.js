@@ -22,7 +22,7 @@ ZN.ProjectGraph.prototype = {
         // Break it into rows to start
         var csvRows    = csvString.split(/\n/);
         // Take off the first line to get the headers, then split that into an array
-        //var csvHeaders = csvRows.shift().split(';');
+        var csvHeaders = csvRows.shift().split(';');
 
         // Loop through remaining rows
         for(var rowIndex = 0; rowIndex < csvRows.length; rowIndex++){
