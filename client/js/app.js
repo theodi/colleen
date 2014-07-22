@@ -25,7 +25,7 @@ ZN.App = function () {
     this.classificationDelay = 0;
     this.classificationLoadCount = 0;
 
-    this.timeSeriesRequestInterval = 2*60*1000; // in ms
+    this.timeSeriesRequestInterval = 60*1000; // in ms
 
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
@@ -268,8 +268,14 @@ ZN.App.prototype = {
 
     loadIncTimeSeries:function() {
         var from = this.model.maxSeriesTime + 1;
-        var to = this.curTime/1000;
+
+        // archived
+        var to = from+this.timeSeriesRequestInterval/1000;
+        // realtime
+        //var to = this.curTime/1000;
+
         var url = this.apiUrl+"timeseries/from/"+from+"/to/"+to;
+        console.log('loadIncTimeSeries',url);
         this.loadUrl(url, "json",this.incTimeSeriesLoaded);
 
     },

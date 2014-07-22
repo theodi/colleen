@@ -527,9 +527,16 @@ function updateTimeSeries(series){
                 throw err;
             }
             if(rows[0]){
-                console.log('seriesMax',rows[0]);
+                //console.log('seriesMax',rows[0]);
                 seriesMax = rows[0].time;
                 from = seriesMax+interval;
+                // if timeseries ahead of projects updated, use projects updated as max date
+                /*
+                if(from>=to){
+                    from = to-interval;
+                    console.log('Timeseries ahead of Projects updated.','seriesMax:',seriesMax,'timeseries from:',from, 'to:',to);
+                }
+                */
                 console.log('from seriesMax', from);
             }
             else{
@@ -682,14 +689,16 @@ function removeTimeSeriesItems(series){
 
 }
 
-function testUpdateTimeSeries(){
+function updateTimeSeriesFromArchive(){
 
     console.log("Start testUpdateTimeSeries");
     gProjectTable = "projects";
-    gClsTable = "classifications_test";
-    gSeriesTable = "timeseries_test";
-    var classificationTime = parseInt(new Date(Date.UTC(2013,2,10,0,0,0))/1000); // 2013/03/10 // 2014-05-14 00:00:00
-    var classificationInterval = 15*60; // secs
+    gClsTable = "classifications_archive";
+    gSeriesTable = "timeseries";
+    var seriesInitTable = "timeseries_archive";
+    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,0,0,0))/1000);
+    var classificationInterval = 60; // secs
+    var timeout = classificationInterval*1000;
 
     var updateCount = 0, nUpdates = 60;
 
@@ -697,7 +706,7 @@ function testUpdateTimeSeries(){
     // Initial run time: 181.74 secs. 2784 rows.
     // Update minutes only: 35.767 secs
 
-    var testUpdateTimeSeriesLoop = function(){
+    var updateTimeSeriesLoop = function(){
         console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
         var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
@@ -709,19 +718,41 @@ function testUpdateTimeSeries(){
                 classificationTime += classificationInterval;
                 updateCount +=1;
 
-                setTimeout(startUpdateTimeSeries,5*1000);
+                var dt = (new Date().valueOf() - gTimer);
+                timeout = classificationInterval*1000 - dt;
+                timeout = Math.max(timeout,0);
+                console.log('updateTimeSeriesLoop timeout:',timeout/1000);
+
+                setTimeout(startUpdateTimeSeries,timeout);
+
 
             });
         });
     };
 
-    gEventEmitter.on('endUpdateTimeSeries', testUpdateTimeSeriesLoop);
+    gEventEmitter.on('endUpdateTimeSeries', updateTimeSeriesLoop);
 
-    testUpdateTimeSeriesLoop();
+    //updateTimeSeriesLoop();
+
+    // truncate timeseries
+    connect();
+    connection.connect(function(err) {
+        var query = "TRUNCATE "+ gSeriesTable;
+        console.log(query);
+        connection.query(query,function(err, rows) {
+
+            // copy initial series table
+
+            connection.query("INSERT "+gSeriesTable+" SELECT * FROM "+seriesInitTable,function(err2, rows2) {
+                console.log('Copy timerseries');
+                updateTimeSeriesLoop();
+            });
+        })
+    });
+
 
 }
 
-//loadProjects(testUpdateTimeSeries);
 
 /*---------------------------------------------------------------------------*/
 
@@ -788,6 +819,7 @@ module.exports.nconf = nconf;
 module.exports.fetchRequest = fetchRequest;
 
 module.exports.startScheduler = startScheduler;
-//module.exports.connect = connect;
+module.exports.updateTimeSeriesFromArchive = updateTimeSeriesFromArchive;
+
 module.exports.connection = connection;
 module.exports.connect = connect;

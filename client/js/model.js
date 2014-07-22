@@ -157,7 +157,7 @@ ZN.Model.prototype = {
 
             }
             else{
-                console.log('no project:', projectName);
+                //console.log('no project:', projectName);
             }
 
 
@@ -187,7 +187,6 @@ ZN.Model.prototype = {
 
                 var timeseries = project.timeseries;
 
-
                 if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
                 var series = timeseries[type][interval];
 
@@ -205,9 +204,11 @@ ZN.Model.prototype = {
                     timeseries[type][interval].max = _.max(timeseries[type][interval].series);
                 }
 
+                console.log('incTimeSeries',type,interval,count,time);
+
             }
             else{
-                console.log('no project:', projectName);
+                //console.log('no project:', projectName);
             }
 
 
