@@ -22,7 +22,7 @@ ZN.ProjectGraph.prototype = {
         // Break it into rows to start
         var csvRows    = csvString.split(/\n/);
         // Take off the first line to get the headers, then split that into an array
-        //var csvHeaders = csvRows.shift().split(';');
+        var csvHeaders = csvRows.shift().split(',');
 
         // Loop through remaining rows
         for(var rowIndex = 0; rowIndex < csvRows.length; rowIndex++){
@@ -67,6 +67,93 @@ ZN.ProjectGraph.prototype = {
         return graph;
 
     },
+
+    createSpringyGraph: function(data){
+
+        var graph = this.createSpringyGraphFromEdgeCSV(data);
+        var params = {
+            graph: graph,
+            stiffness: 10,
+            repulsion: 400,
+            damping: 0.3 // 0.5
+        };
+        this.initSpringyGraph(params);
+    },
+
+
+    initSpringyGraph: function(params){
+
+        var graph = this.graph = params.graph || new Springy.Graph();
+        var stiffness = params.stiffness || 400.0;
+        var repulsion = params.repulsion || 400.0;
+        var damping = params.damping || 0.5;
+        var minEnergyThreshold = params.minEnergyThreshold || 0.00001;
+
+        var canvasW = ZN.config.assetBB.width;
+        var canvasH = ZN.config.assetBB.height;
+
+        var layout = this.layout = new Springy.Layout.ForceDirected(graph, stiffness, repulsion, damping, minEnergyThreshold);
+
+        // calculate bounding box of graph layout.. with ease-in
+        var currentBB = layout.getBoundingBox();
+        var targetBB = {bottomleft: new Springy.Vector(-2, -2), topright: new Springy.Vector(2, 2)};
+
+        // auto adjusting bounding box
+        Springy.requestAnimationFrame(function adjust() {
+            targetBB = layout.getBoundingBox();
+            // current gets 20% closer to target every iteration
+            currentBB = {
+                bottomleft: currentBB.bottomleft.add( targetBB.bottomleft.subtract(currentBB.bottomleft)
+                    .divide(10)),
+                topright: currentBB.topright.add( targetBB.topright.subtract(currentBB.topright)
+                    .divide(10))
+            };
+
+            Springy.requestAnimationFrame(adjust);
+        });
+
+        // convert to/from screen coordinates
+        var toScreen = function(p) {
+            var size = currentBB.topright.subtract(currentBB.bottomleft);
+            var sx = p.subtract(currentBB.bottomleft).divide(size.x).x * canvasW;
+            var sy = p.subtract(currentBB.bottomleft).divide(size.y).y * canvasH;
+            return new Springy.Vector(sx, sy);
+        };
+
+        var fromScreen = function(s) {
+            var size = currentBB.topright.subtract(currentBB.bottomleft);
+            var px = (s.x / canvasW) * size.x + currentBB.bottomleft.x;
+            var py = (s.y / canvasH) * size.y + currentBB.bottomleft.y;
+            return new Springy.Vector(px, py);
+        };
+
+        var renderer = this.renderer = new Springy.Renderer(layout,
+            function clear() {
+                //ctx.clearRect(0,0,canvasW,canvasH);
+            },
+            function drawEdge(edge, p1, p2) {
+                var x1 = toScreen(p1).x;
+                var y1 = toScreen(p1).y;
+                var x2 = toScreen(p2).x;
+                var y2 = toScreen(p2).y;
+                /*
+                var direction = new Springy.Vector(x2-x1, y2-y1);
+                var normal = direction.normal().normalise();
+
+                var from = graph.getEdges(edge.source, edge.target);
+                var to = graph.getEdges(edge.target, edge.source);
+                */
+            },
+            function drawNode(node, p) {
+                var s = toScreen(p);
+
+            }
+        );
+
+        renderer.start();
+    },
+
+
 
     createD3GraphFromEdgeCSV: function(csvStr){
 
