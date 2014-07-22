@@ -1,0 +1,21 @@
+{
+    "project":"solar_stormwatch",
+    "scale":0.1,
+
+    "shapes":[
+        { "id":"1","rotation":-20, "animation":[{"type":"scale","x":[0.9,1.1],"y":[0.9,1.1] ,"duration":[1.0,2.0], "time":0}]},
+        { "id":"2","rotation":-2, "animation":[{"type":"scale","x":[0.9,1.1],"y":[1.1,1.5] ,"duration":[0.3,2.0], "time":0}]},
+        { "id":"3","rotation":-35, "animation":[{"type":"translate_circular","radius":70,"angle":0 ,"speed":[0.1,0.5]}]},
+        { "id":"4","rotation":-19, "animation":[{"type":"translate_circular","radius":80,"angle":90 ,"speed":[0.2,0.3]}]},
+        { "id":"5","rotation":-19, "animation":[{"type":"translate_circular","radius":100,"angle":180 ,"speed":[0.1,0.3]}]},
+        { "id":"6","rotation":-17, "animation":[{"type":"translate_circular","radius":60,"angle":0 ,"speed":[0.2,0.25]}]},
+        { "id":"7","rotation":-19, "animation":[{"type":"scale","x":[0.96,1.02],"y":[0.96,1.02] ,"duration":[3.0,2.0], "time":0}]},
+        { "id":"8","rotation":-20, "animation":[{"type":"scale","x":[0.97,1.06],"y":[0.97,1.06] ,"duration":[4.2,2.0], "time":0}]},
+        { "id":"9","rotation":-16, "animation":[{"type":"scale","x":[0.98,1.07],"y":[0.9,1.1] ,"duration":[5.5,2.0], "time":0}]},
+        { "id":"10","rotation":-11, "animation":[{"type":"scale","x":[0.98,1.05],"y":[0.98,1.05] ,"duration":[6.6,2.0], "time":0}]},
+        { "id":"11","rotation":-19, "animation":[{"type":"scale","x":[0.95,1.1],"y":[0.97,1.1] ,"duration":[8.0,2.0], "time":0}]},
+        { "id":"12","rotation":-13, "animation":[{"type":"scale","x":[0.97,1.03],"y":[0.97,1.03] ,"duration":[5.9,2.0], "time":0}]},
+        { "id":"13","rotation":-9, "animation":[{"type":"scale","x":[0.94,1.1],"y":[0.97,1.1] ,"duration":[4.0,2.0], "time":0}]}
+
+    ]
+}
