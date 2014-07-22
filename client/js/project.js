@@ -39,8 +39,7 @@ ZN.Project = function () {
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
 
-    // nbody object
-    this.nbody = null;
+
 
 
 
@@ -248,8 +247,20 @@ ZN.Project.prototype = {
 
 
         },this);
-    }
 
+
+        // add animation rules applied to multiple shapes
+        _.each(data.shape_animation,function(shapeAnim){
+            var anims = shapeAnim.animation;
+            var shapeIds = shapeAnim.shape_ids;
+            _.each(shapeIds, function(id){
+                var animsClone = _.cloneDeep(anims);
+                var shape = _.find(this.shapes, {"id":id});
+                shape.animation = shape.animation.concat(animsClone);
+
+            },this);
+        },this);
+    }
 
 }
 

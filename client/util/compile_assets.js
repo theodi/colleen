@@ -15,7 +15,7 @@ loadProjects();
 function loadProjects(){
 
     //'/../data/20140521_comp_01+bounds.svg';
-    var filename = '/../data/src/projects.json';
+    var filename = '/../data/src/client_projects.json';
     var path = '/../data/src/';
 
     fs.readFile(__dirname + filename, 'utf8', function (err, data) {
@@ -26,9 +26,9 @@ function loadProjects(){
 
         var projects = JSON.parse(data);
         _.each(projects,function(project){
-            console.log("Add project:",project.name);
-            jsonFiles.push(path+project.name+".json");
-            svgFiles.push(path+project.name+".svg");
+            console.log("Add project:",project);
+            jsonFiles.push(path+project+".json");
+            svgFiles.push(path+project+".svg");
 
         });
 
@@ -47,11 +47,6 @@ function loadJSON(filename){
         console.log("loadJSON:",filename);
         if(err){
             console.log('Error: ' + err);
-            /*
-            if(jsonFiles.length==0) return;
-            var nextJson = jsonFiles.shift();
-            loadJSON(nextJson);
-            */
             return;
         }
 
@@ -71,12 +66,6 @@ function parseSVG(filename,projectJson){
     fs.readFile(__dirname + filename, function(err, data) { // comp_01
         if(err){
             console.log('Error: ' + err);
-            /*
-            if(jsonFiles.length==0) return;
-
-            var nextJson = jsonFiles.shift();
-            loadJSON(nextJson);
-            */
             return;
 
         }
