@@ -30,7 +30,7 @@ nconf.defaults({
 	classifications_table_name: 'classifications',
         timeseries_table_name: 'timeseries',
         cls_expire_after_x_days: 7,
-        default_project_updated_time: Date.UTC(2014,5,1,0,0,0),
+        default_project_updated_time:1402704000000,
         classifications_per_page:5000
 });
 
@@ -136,6 +136,7 @@ process.on('SIGTERM', function () {
 
 
 function startScheduler(){
+
   
     var timeout = nconf.get("timeout");
     var updateCount = 0;
@@ -221,7 +222,7 @@ function fetchProjectData(projectId){
 
 
         var fromMs, toMs;
-        var curMs = (new Date()).valueOf() - gLatency;
+        var curMs = (new Date()).valueOf();
         var monthMs = MONTH_SECS * 1000;// a month in ms
         var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
