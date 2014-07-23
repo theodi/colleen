@@ -3,6 +3,10 @@ ZN.ProjectGraph = function () {
 
     this.app = null;
     this.model = null;
+    this.layout = null;
+    this.projectPoints = {};
+    this.currentBB = null;
+    this.targetBB = null;
 
 }
 
@@ -73,9 +77,9 @@ ZN.ProjectGraph.prototype = {
         var graph = this.createSpringyGraphFromEdgeCSV(data);
         var params = {
             graph: graph,
-            stiffness: 10,
+            stiffness: 50, // 10
             repulsion: 400,
-            damping: 0.3 // 0.5
+            damping: 0.2 // 0.5
         };
         this.initSpringyGraph(params);
     },
@@ -89,10 +93,46 @@ ZN.ProjectGraph.prototype = {
         var damping = params.damping || 0.5;
         var minEnergyThreshold = params.minEnergyThreshold || 0.00001;
 
+        var layout = this.layout = new Springy.Layout.ForceDirected(graph, stiffness, repulsion, damping, minEnergyThreshold);
+        layout._stop = false;
+
+        this.currentBB = layout.getBoundingBox();
+        this.targetBB = {bottomleft: new Springy.Vector(-2, -2), topright: new Springy.Vector(2, 2)};
+
+        /*
+        var t = this;
+        this.layout.start(function render() {
+            //t.clear();
+            var str= "";
+
+            t.layout.eachEdge(function(edge, spring) {
+                //t.drawEdge(edge, spring.point1.p, spring.point2.p);
+            });
+
+            t.layout.eachNode(function(node, point) {
+                //t.drawNode(node, point.p);
+
+                var s = toScreen(point.p);
+                //str+= s.x+","+s.y+"; ";
+            });
+            str+="currentBB"+ currentBB.bottomleft.x +", "+currentBB.bottomleft.y;
+
+            $("#diagnostics").html(str);
+
+        });//, this.onRenderStop, this.onRenderStart);
+        */
+
+
+    },
+
+
+    start: function(){
+
+
         var canvasW = ZN.config.assetBB.width;
         var canvasH = ZN.config.assetBB.height;
 
-        var layout = this.layout = new Springy.Layout.ForceDirected(graph, stiffness, repulsion, damping, minEnergyThreshold);
+        var layout = this.layout;
 
         // calculate bounding box of graph layout.. with ease-in
         var currentBB = layout.getBoundingBox();
@@ -127,30 +167,79 @@ ZN.ProjectGraph.prototype = {
             return new Springy.Vector(px, py);
         };
 
-        var renderer = this.renderer = new Springy.Renderer(layout,
-            function clear() {
-                //ctx.clearRect(0,0,canvasW,canvasH);
-            },
-            function drawEdge(edge, p1, p2) {
-                var x1 = toScreen(p1).x;
-                var y1 = toScreen(p1).y;
-                var x2 = toScreen(p2).x;
-                var y2 = toScreen(p2).y;
-                /*
-                var direction = new Springy.Vector(x2-x1, y2-y1);
-                var normal = direction.normal().normalise();
+        var t = this;
+        this.layout.start(function render() {
+            //t.clear();
+            var str= "";
 
-                var from = graph.getEdges(edge.source, edge.target);
-                var to = graph.getEdges(edge.target, edge.source);
-                */
-            },
-            function drawNode(node, p) {
-                var s = toScreen(p);
+            t.layout.eachNode(function(node, point) {
+                //t.drawNode(node, point.p);
 
-            }
-        );
+                var s = toScreen(point.p);
+                str+= s.x+","+s.y+"<br> ";
+                t.projectPoints[node.id] = {x:s.x-canvasW/2, y:s.y-canvasH/2};
+            });
+            str+="<br>currentBB"+ currentBB.bottomleft.x +", "+currentBB.bottomleft.y;
 
-        renderer.start();
+
+
+            $("#diagnostics").html(str);
+
+        });
+
+
+
+    },
+
+
+    update: function(){
+
+        var self = this;
+
+        var layout = this.layout;
+        if(layout._stop) return;
+
+        var canvasW = ZN.config.assetBB.width;
+        var canvasH = ZN.config.assetBB.height;
+
+        // auto-adjust bounding box;
+
+        targetBB = layout.getBoundingBox();
+        // current gets 20% closer to target every iteration
+        this.currentBB = {
+            bottomleft: this.currentBB.bottomleft.add( targetBB.bottomleft.subtract(this.currentBB.bottomleft)
+                .divide(10)),
+            topright: this.currentBB.topright.add( targetBB.topright.subtract(this.currentBB.topright)
+                .divide(10))
+        };
+
+
+        // simulation
+        layout.tick(0.03);
+
+        var str= "";
+
+        layout.eachNode(function(node, point) {
+
+            var p = point.p;
+            var size = self.currentBB.topright.subtract(self.currentBB.bottomleft);
+            var sx = p.subtract(self.currentBB.bottomleft).divide(size.x).x * canvasW;
+            var sy = p.subtract(self.currentBB.bottomleft).divide(size.y).y * canvasH;
+            var s = new Springy.Vector(sx, sy);
+
+            //str+= s.x+","+s.y+"<br> ";
+            self.projectPoints[node.id] = {x:s.x-canvasW/2, y:s.y-canvasH/2};
+        });
+        //str+="<br>currentBB"+ this.currentBB.bottomleft.x +", "+this.currentBB.bottomleft.y;
+        //$("#diagnostics").html(str);
+
+        // stop simulation when energy of the system goes below a threshold
+        if (layout.totalEnergy() < layout.minEnergyThreshold) {
+            layout._stop = true;
+
+        }
+
+
     },
 
 

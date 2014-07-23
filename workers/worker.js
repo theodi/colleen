@@ -141,7 +141,7 @@ function startScheduler(){
     var updateCount = 0;
 
     var fetchDataTimeout = function(){
-        console.log("testFetchData:", new Date(),"updateCount",updateCount);
+        console.log("Fetch Data:", new Date(),"updateCount",updateCount);
         updateCount +=1;
         setTimeout(startFetch,timeout);
     };

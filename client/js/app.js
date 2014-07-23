@@ -147,17 +147,6 @@ ZN.App.prototype = {
 
     },
 
-    /*
-    loadProjects:function () {
-        var url = "data/projects.json";
-        this.loadUrl(url, "json",this.projectsLoaded);
-
-    },
-    projectsLoaded:function(data){
-        this.model.initProjects(data);
-        this.loadAssets();
-    },
-    */
 
     loadProjectRules:function () {
         var url = "data/"+this.ruleFile+".json";
@@ -192,10 +181,21 @@ ZN.App.prototype = {
     },
     timeSeriesLoaded:function(data){
         this.model.parseTimeSeries(data);
-
-        this.startApp();
-        //this.loadClassification();
+        //this.startApp();
+        this.loadProjectGraph();
     },
+
+
+    loadProjectGraph:function () {
+        var url = "data/project_rels.csv";
+        this.loadUrl(url, "text", this.projectGraphLoaded);
+
+    },
+    projectGraphLoaded:function (data) {
+        this.model.initProjectGraph(data);
+        this.startApp();
+    },
+
 
     startApp:function(){
         this.initRenderer();
@@ -343,6 +343,7 @@ ZN.App.prototype = {
         var t0 = new Date().valueOf();
         this.rules.update(frameTimeTarget);//this.frameTime);
         this.renderer.render();
+        this.model.projectGraph.update();
         var t1 = new Date().valueOf();
         var dt = t1-t0;
 

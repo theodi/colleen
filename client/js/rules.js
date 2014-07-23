@@ -23,10 +23,20 @@ ZN.Rules.prototype = {
 
         //this.updateFocusProject();
 
+        var projectPoints = this.model.projectGraph.projectPoints;
+
         _.each(projects,function(project,index){
 
             // project rules
             //project.rotation = (project.rotation+1)%360;
+
+            var pt = projectPoints[project.name];
+            if(pt){
+                project.x = pt.x/2;
+                project.y = pt.y/2;
+                project.sx = 0.05;
+                project.sy = 0.05;
+            }
 
             if(project.animation){
                 _.each(project.animation,function(anim){
