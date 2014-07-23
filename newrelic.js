@@ -8,7 +8,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name : ['My Application'],
+  app_name : ['quiet-cove-8120.herokuapp.com'],
   /**
    * Your New Relic license key.
    */
