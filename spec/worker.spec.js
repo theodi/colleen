@@ -1,29 +1,6 @@
 worker = require ('../workers/worker.js');
-
-
-describe("Initialisation phase", function() {
-    xit("loads projects list from json file specified in config", function() {
-	    expect(worker.nconf.get('projects_list')).toEqual('../data/test_projects.json');
-            expect(worker.gProjectList).toEqual([ 'galaxy_zoo' ]);
-	    expect(worker.nconf.get('WNU_DB_URL')).toEqual('mysql://test:test@localhost/zoon_test');
-     });				 
-});
-
-describe("Database setup", function() {
-    xit("connects to the database", function() {
-	    //	    expect(worker.connection['state']).toEqual('disconnected');
-	        worker.connect();
-	    expect(worker.connection['state']).toEqual('connected');
-	    //	    worker.disconnect();
-	    //	    expect(worker.connection['state']).toEqual('disconnected');
-    });
-});
-
-describe("function getProjectUpdatedTime", function() {
-    xit("gets the latest update time for a project from the database", function() {
-	    expect(worker.getProjectUpdatedTime('milky_way')).toEqual('2014-05-14 00:00:00');
-    });
-});
+var parseDbURL = require('parse-database-url');
+var dbConfig = parseDbURL(worker.nconf.get('WNU_DB_URL'));
 
 
 
@@ -39,6 +16,19 @@ describe("function fetchRequest", function() {
 
     var requestStr = "";
     beforeEach(function(done) {
+	var exec = require('child_process').exec,
+	    child;
+	// drop and recreate all test tables before running test
+	var mysqlLoadCmd = 'mysql -h ' + dbConfig['host'] + ' -u ' + dbConfig['user'] + ' -p' + dbConfig['password'] + ' ' + dbConfig['database'] + ' < data/test_setup.sql';
+	console.log('mysqlLoadCmd is ', mysqlLoadCmd);
+	child = exec(mysqlLoadCmd,
+		     function (error, stdout, stderr) {
+			 console.log('stdout: ' + stdout);
+			 console.log('stderr: ' + stderr);
+			 if (error !== null) {
+			     console.log('exec error: ' + error);
+			 }
+		     });
         connection.connect(function(err) {
             if(err) {
                 console.log('Worker: error when connecting to db:', err);
@@ -74,11 +64,11 @@ describe("function fetchRequest", function() {
             });
 
 
-    });
+	});
+
 
     it("retrieves data from zoon and insert to classifications table", function(done) {
 
-        console.log('expect');
         expect(requestStr).toEqual(testStr);
 
         done();
