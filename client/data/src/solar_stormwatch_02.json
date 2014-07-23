@@ -1,6 +1,6 @@
 {
     "project":"solar_stormwatch",
-    "scale":0.6,
+    "scale":0.1,
 
     "shapes":[
         { "id":"1","rotation":-20, "animation":[{"type":"scale","x":[0.9,1.1],"y":[0.9,1.1] ,"duration":[1.0,2.0], "time":0}]},

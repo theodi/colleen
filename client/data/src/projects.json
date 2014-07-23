@@ -1,9 +1,11 @@
 [
     {
-        "name": "milky_way_project",
-        "display_name": "",
-        "created_at": ""
+        "name": "asteroid"
+    },
+    {
+        "name": "milky_way_project"
+    },
+    {
+        "name": "sunspot"
     }
-
-
 ]
