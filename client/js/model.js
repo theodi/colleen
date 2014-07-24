@@ -1,6 +1,7 @@
 ZN.Model = function () {
     this.projects = [];
     this.projectDict = {};
+    this.projectGraph = null;
     this.classifications = [];// classifications order by timestamp
     //this.classificationIds = {};
     this.analytics={
@@ -115,6 +116,12 @@ ZN.Model.prototype = {
 
         console.log('percent sum:',percentTotal);
          */
+    },
+
+    initProjectGraph: function(csvData){
+        this.projectGraph = new ZN.ProjectGraph();
+        this.projectGraph.createSpringyGraph(csvData);
+        //this.projectGraph.start();
     },
 
     parseTimeSeries: function(seriesData){

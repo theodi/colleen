@@ -21,7 +21,8 @@
     "grunt-contrib-watch": "~0.6.1",
     "jasmine-node": "2.0.0-beta4",
     "nconf": "~0.6.9",
-    "nock": "~0.42.1"
+    "nock": "~0.42.1",
+    "newrelic": "~1.8.1"
   },
   "engines": {	
     "node": "0.10.25",
