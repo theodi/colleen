@@ -256,6 +256,9 @@ ZN.Project.prototype = {
             _.each(shapeIds, function(id){
                 var animsClone = _.cloneDeep(anims);
                 var shape = _.find(this.shapes, {"id":id});
+                if(!shape.animation){
+                    shape.animation=[];
+                }
                 shape.animation = shape.animation.concat(animsClone);
 
             },this);

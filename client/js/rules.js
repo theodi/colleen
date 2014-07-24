@@ -28,8 +28,8 @@ ZN.Rules.prototype = {
         _.each(projects,function(project,index){
 
             // project rules
-            //project.rotation = (project.rotation+1)%360;
 
+            /*
             var pt = projectPoints[project.name];
             if(pt){
                 project.x = pt.x/2;
@@ -37,6 +37,7 @@ ZN.Rules.prototype = {
                 project.sx = 0.05;
                 project.sy = 0.05;
             }
+            */
 
             if(project.animation){
                 _.each(project.animation,function(anim){

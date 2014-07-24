@@ -4,3 +4,6 @@
 {"name":"newrelic","hostname":"juliefreeman.local","pid":47053,"level":30,"msg":"Starting New Relic for Node.js connection process.","time":"2014-07-24T12:57:18.208Z","v":0}
 {"name":"newrelic","hostname":"juliefreeman.local","pid":47053,"component":"new_relic_response","level":30,"msg":"Reporting to: https://rpm.newrelic.com/accounts/722819/applications/3462122","time":"2014-07-24T12:57:19.763Z","v":0}
 {"name":"newrelic","hostname":"juliefreeman.local","pid":47053,"component":"collector_api","level":30,"msg":"Connected to collector-127.newrelic.com:443 with agent run ID 1360818137.","time":"2014-07-24T12:57:19.763Z","v":0}
+{"name":"newrelic","hostname":"juliefreeman.local","pid":49679,"level":30,"msg":"Starting New Relic for Node.js connection process.","time":"2014-07-24T14:26:28.291Z","v":0}
+{"name":"newrelic","hostname":"juliefreeman.local","pid":49679,"component":"new_relic_response","level":30,"msg":"Reporting to: https://rpm.newrelic.com/accounts/722819/applications/3462122","time":"2014-07-24T14:26:29.852Z","v":0}
+{"name":"newrelic","hostname":"juliefreeman.local","pid":49679,"component":"collector_api","level":30,"msg":"Connected to collector-127.newrelic.com:443 with agent run ID 1361025153.","time":"2014-07-24T14:26:29.852Z","v":0}
