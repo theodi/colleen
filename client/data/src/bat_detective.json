@@ -1,9 +1,9 @@
 {
     "name":"bat_detective",
-    "sx":0.5,"sy":0.5,
-    "x":200,
-    "y":200,
-    "rotation":45,
+    "sx":0.6,"sy":0.6,
+    "x":0,
+    "y":0,
+    "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
     "_animation":[

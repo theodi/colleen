@@ -1,14 +1,8 @@
 {
     "name":"cyclone_center",
-<<<<<<< HEAD
-    "sx":0.2,"sy":0.2,
-    "x":-400,
-    "y":-400,
-=======
     "sx":0.3,"sy":0.3,
     "x":0,
     "y":0,
->>>>>>> client-dev
     "rotation":0,
     "_fills":["#F29525","#100BF4"],
     "_comment":"Project level animations",
@@ -16,11 +10,7 @@
         {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
         {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
 
-<<<<<<< HEAD
-    "shape_animation":[{"shape_ids":["i1","i1.1","i1.1.1","i1.1.1.1","i1.1.1.1.1","i1.1.1.1.1.1","i1.1.1.1.1.1.1"],"animation":
-=======
     "shape_animation":[{"shape_ids":["1","1.1","1.1.1","1.1.1.1","1.1.1.1.1","1.1.1.1.1.1","1.1.1.1.1.1.1"],"animation":
->>>>>>> client-dev
             [{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[30.0,120.0], "time":0}]
     }],
 
