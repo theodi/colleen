@@ -1,7 +1,8 @@
 {
     "name":"cyclone_center",
-    "sx":0.3,"sy":0.3,
-    "x":0,
+    "sx":0.2,
+    "sy":0.2,
+    "x":-400,
     "y":0,
     "rotation":0,
     "_fills":["#F29525","#100BF4"],

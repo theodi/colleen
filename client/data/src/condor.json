@@ -1,9 +1,9 @@
 {
     "name":"condor",
-    "sx":0.05,
-    "sy":0.05,
-    "x":270,
-    "y":260,
+    "sx":0.2,
+    "sy":0.2,
+    "x":400,
+    "y":-250,
     "rotation":0,
 
     "_fills":["#89605B","#141314"],
@@ -27,12 +27,12 @@
             "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
 
         { "_comment":"Scale long duration",
-            "id":"4","rotation":0,"opacity":0.85,
+            "id":"4","rotation":0,"opacity":1,
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
 
         { "_comment":"Colour",
-            "id":"5","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "id":"5","rotation":0,"opacity":1,
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#373335","#141314"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
@@ -48,7 +48,7 @@
         
         { "_comment":"Colour",
             "id":"9","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#373335","#141314"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"10","rotation":0,"opacity":0.8,
@@ -56,7 +56,7 @@
 
         { "_comment":"Colour",
             "id":"11","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#373335","#141314"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"12","rotation":0,"opacity":0.8,

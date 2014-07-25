@@ -1,9 +1,13 @@
 {
     "name":"sunspot",
-    "sx":0.05,
-    "sy":0.05,
-    "x":500,
-    "y":100,
+    "sx":0.2,
+    "sy":0.2,
+    "x":-400,
+    "y":200,
+    "rotation":0,
+    "_fills":[ ],
+    "_comment":"Project level animations",
+    "_animation":[ ],
 
     "shapes":[
         { "id":"1","rotation":-20, "animation":[{"type":"scale_rnd","x":[0.9,1.1],"y":[0.9,1.1] ,"duration":[1.0,2.0], "time":0}]},

@@ -1,10 +1,10 @@
 {
     "name":"bat_detective",
-    "sx":0.6,"sy":0.6,
+    "sx":0.2,"sy":0.2,
     "x":0,
-    "y":0,
+    "y":-250,
     "rotation":0,
-    "_fills":["#951114","#951114"],
+    "_fills":["#000","#fff"],
     "_comment":"Project level animations",
     "_animation":[
         {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
@@ -30,7 +30,7 @@
 
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#4F0E0E","170D33"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
@@ -44,9 +44,9 @@
             "id":"8","rotation":0,"opacity":0.9,
             "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,222.0], "time":0}]},
         
-        { "_comment":"Colour",
-            "id":"9","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+        { "_comment":"Rotation",
+            "id":"9","rotation":0,"opacity":0.9,
+            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,359],"duration":[20.0,222.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"10","rotation":0,"opacity":0.8,
