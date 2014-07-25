@@ -25,7 +25,7 @@
             "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
 
         { "_comment":"Scale long duration",
-            "id":"4","rotation":0,"opacity":0.85,
+            "id":"4","rotation":-6.0,"opacity":0.85,
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
 
         { "_comment":"Colour",
@@ -53,7 +53,7 @@
             "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
 
         { "_comment":"Circle",
-            "id":"11","rotation":0,"opacity":0.9,
+            "id":"11","rotation":5.0,"opacity":0.9,
             "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]}
     ]
 }

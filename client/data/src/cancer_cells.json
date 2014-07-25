@@ -13,7 +13,6 @@
 
     "shape_animation":
     [
-
     	{"shape_ids":["1","2","3","4","5","6","7","8","9","10"],"animation":
             [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#F900AD","8E026A"] ,"duration":[30.0,120.0], "time":0}]
     	},

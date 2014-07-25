@@ -2,7 +2,7 @@
     "name":"plankton",
     "sx":0.1,"sy":0.1,
     "x":400,
-    "y":-200,
+    "y":200,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
