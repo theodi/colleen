@@ -754,6 +754,38 @@ function updateTimeSeriesFromArchive(){
 
 }
 
+function singleTimeSeriesFromArchive(){
+
+    // all projects, Time taken (s): 230.483
+    console.log("Start singleTimeSeriesFromArchive");
+    gProjectTable = "projects";
+    gClsTable = "classifications_archive";
+    gSeriesTable = "timeseries";
+
+    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,18,0,0))/1000);
+
+    connect();
+    connection.connect(function (err) {
+        // truncate timeseries
+        var query = "TRUNCATE " + gSeriesTable;
+        console.log(query);
+        connection.query(query, function (err, rows) {
+
+            var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
+
+            console.log("UPDATE query",query);
+            connection.query(query,function(err, rows) {
+
+                startUpdateTimeSeries();
+
+
+            });
+        });
+
+    })
+
+}
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -821,6 +853,7 @@ module.exports.fetchRequest = fetchRequest;
 
 module.exports.startScheduler = startScheduler;
 module.exports.updateTimeSeriesFromArchive = updateTimeSeriesFromArchive;
+module.exports.singleTimeSeriesFromArchive = singleTimeSeriesFromArchive;
 
 module.exports.connection = connection;
 module.exports.connect = connect;
