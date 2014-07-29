@@ -16,13 +16,13 @@
         {"shape_ids":["1","1.1"],"animation":
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
-        {"shape_ids":["2","2.1","2.1.1"],"animation":
+        {"shape_ids":["2","2.1","2.2"],"animation":
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["4","4.1"],"animation":
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
-        {"shape_ids":["5","5.1","5.1.1","5.1.1.1"],"animation":
+        {"shape_ids":["5","5.1","5.2","5.3"],"animation":
             [{"type":"scale","dataType":"c","data":"min","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["7","7.1"],"animation":
@@ -48,7 +48,7 @@
         { "_comment":"Rotation",
             "id":"2.1","rotation":29.5},
         { "_comment":"Rotation",
-            "id":"2.1.1","rotation":43.7},
+            "id":"2.2","rotation":43.7},
         { "_comment":"Rotation",
             "id":"4","rotation":-3.5},
         { "_comment":"Rotation",
@@ -56,9 +56,9 @@
         { "_comment":"Rotation",
             "id":"5.1","rotation":-8.7},
         { "_comment":"Rotation",
-            "id":"5.1.1","rotation":-1.7},
+            "id":"5.2","rotation":-1.7},
         { "_comment":"Rotation",
-            "id":"5.1.1.1","rotation":6} 
+            "id":"5.3","rotation":6} 
 
     ]
 }
