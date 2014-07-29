@@ -1,8 +1,8 @@
 {
     "name":"planet_four",
-    "sx":0.25,"sy":0.25,
+    "sx":0.3,"sy":0.3,
     "x":-400,
-    "y":200,
+    "y":300,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
@@ -26,24 +26,16 @@
             "id":"2","rotation":0,"opacity":0.7,
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "time":0}]},
 
-        {  "_comment":"Scale min data",
-            "id":"3","rotation":0,"opacity":0.8,
-            "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
-
-        { "_comment":"Scale long duration",
-            "id":"4","rotation":0,"opacity":0.85,
-            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
-
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
             "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","#ff0"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
-            "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"opacity","data":"min","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
 
         { "_comment":"Translate",
             "id":"7","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"y","range":[-200,200] ,"duration":[1.0,12.0], "time":0}]}
+            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-200,200] ,"duration":[1.0,12.0], "time":0}]}
     ]
 }

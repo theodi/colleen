@@ -1,8 +1,8 @@
 {
     "name":"plankton",
-    "sx":0.7,"sy":0.7,
+    "sx":0.2,"sy":0.2,
     "x":400,
-    "y":-200,
+    "y":250,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
@@ -32,7 +32,7 @@
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["6","9"],"animation":
-            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]
+            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":50,"duration":[1.0,4.0], "time":0, "angle":0}]
         }
     ],
 
