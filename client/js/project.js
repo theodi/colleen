@@ -253,8 +253,22 @@ ZN.Project.prototype = {
         _.each(data.shape_animation,function(shapeAnim){
             var anims = shapeAnim.animation;
             var shapeIds = shapeAnim.shape_ids;
-            _.each(shapeIds, function(id){
+            var nShapes = shapeIds.length;
+
+            _.each(shapeIds, function(id, shapeIndex){
                 var animsClone = _.cloneDeep(anims);
+                _.each(animsClone, function(anim){
+                    if(anim.time_fn){
+                        switch(anim.time_fn){
+                            case "random":
+                                anim.time = Math.random()*anim.duration[0];
+                                break;
+                            case "index":
+                                anim.time = shapeIndex/nShapes*anim.duration[0];
+                                break;
+                        }
+                    }
+                });
                 var shape = _.find(this.shapes, {"id":id});
                 if(!shape.animation){
                     shape.animation=[];
@@ -263,6 +277,32 @@ ZN.Project.prototype = {
 
             },this);
         },this);
+
+
+        // add loop param to each animation
+        _.each(this.shapes,function(shape){
+            if(shape.animation){
+                _.each(shape.animation, function(anim){
+                    anim['loop'] = 0;
+                    anim['curDuration'] = anim.duration[0];
+
+                });
+
+            }
+        },this);
+
+
+        if(this.animation){
+            _.each(this.animation, function(anim){
+                anim['loop'] = 0;
+                anim['curDuration'] = anim.duration[0];
+
+            });
+
+        }
+
+
+
     }
 
 }

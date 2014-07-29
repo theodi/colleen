@@ -232,18 +232,58 @@ ZN.Rules.prototype = {
     },
 
 
-    updateAnimTime:function(anim,duration){
+    updateAnimTime:function(anim){
+
+        var endLoop = false;
         var frameTime = this.frameTime;
         anim.time = (anim.time+frameTime/1000);
-        if(anim.time>=duration) {
-            anim.time -=duration;
+        if(anim.time>=anim.curDuration) {
+            anim.time -=anim.curDuration;
+            anim.loop+=1;
+            endLoop = true;
 
         }
+        return endLoop;
+
+    },
+
+    getDuration:function(project,anim){
+
+        var duration = anim.duration[0];
+        if(anim.duration_data){
+
+
+            var dataType = 'c';
+            if(anim.dataType){
+                type = anim.dataType;
+            }
+
+            var dataStr = anim.duration_data.toUpperCase();
+            var interval = this.model.SECS[dataStr];
+            var series = project.timeseries[dataType][interval].series;
+            anim.loop %= series.length;
+
+            var valueMax = project.timeseries[dataType][interval].max;
+            var seriesIndex = anim.loop*series.length/series.length;
+
+            var value = series[Math.floor(seriesIndex)];
+            var n = value/valueMax;
+            duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
+            anim.curDuration = duration;
+
+        }
+        else{
+
+            anim.loop = 0;
+        }
+
+        return duration;
     },
 
 
+
     getSeriesValue: function(project, obj, anim){
-        var duration = obj.duration;
+        var duration = anim.curDuration;
         var dataStr = anim.data.toUpperCase();
         var interval = this.model.SECS[dataStr];
         var dataType = 'c';
@@ -252,6 +292,10 @@ ZN.Rules.prototype = {
         }
         // project data series and max value
         var series = project.timeseries[dataType][interval].series;
+        if(anim.series_len){
+            series = (project.timeseries[dataType][interval].series).slice(series.length-anim.series_len);
+        }
+
         var valueMax = project.timeseries[dataType][interval].max;
 
 
@@ -291,12 +335,21 @@ ZN.Rules.prototype = {
         return n;
     },
 
+    getNextSeriesValue: function(project, obj, anim){
+
+        var endLoop = this.updateAnimTime(anim);
+        if(endLoop){
+            var duration = this.getDuration(project,anim);
+        }
+
+        var n = this.getSeriesValue(project, obj, anim);
+        return n;
+
+    },
+
     translateRule: function(project, obj, anim){
 
-        obj.duration = anim.duration[0];
-
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         var x=0,y=0;
         switch(anim.dir){
@@ -316,10 +369,8 @@ ZN.Rules.prototype = {
 
 
     rotateRule: function(project, obj, anim){
-        obj.duration = anim.duration[0];
 
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         var rot = anim.rotation[0]+ (anim.rotation[1]-anim.rotation[0])*n;
         obj.rotation = rot;
@@ -328,10 +379,7 @@ ZN.Rules.prototype = {
 
     scaleRule: function(project, obj, anim){
 
-        obj.duration = anim.duration[0];
-
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         // set scale values from anim rule range and normalised value
         var sx = anim.sx[0]+ (anim.sx[1]-anim.sx[0])*n;
@@ -343,10 +391,7 @@ ZN.Rules.prototype = {
 
     opacityRule: function(project, obj, anim){
 
-        obj.duration = anim.duration[0];
-
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         // set scale values from anim rule range and normalised value
         var op = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
@@ -358,10 +403,8 @@ ZN.Rules.prototype = {
 
     colourRule: function(project, obj, anim){
 
-        obj.duration = anim.duration[0];
 
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         var fillScale = chroma.scale(anim.fills);
 
@@ -375,10 +418,8 @@ ZN.Rules.prototype = {
 
     circleRule:function(project, obj, anim){
 
-        obj.duration = anim.duration[0];
 
-        this.updateAnimTime(anim,obj.duration);
-        var n = this.getSeriesValue(project, obj, anim);
+        var n = this.getNextSeriesValue(project, obj, anim);
 
         var r = anim.radius;
 
