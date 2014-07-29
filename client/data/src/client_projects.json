@@ -1,4 +1,5 @@
 [
+<<<<<<< HEAD
   	"asteroid",
     "bat_detective",
     "cancer_cells",
@@ -8,5 +9,9 @@
     "planet_four",
     "plankton",
     "radio"
+=======
+
+    "milky_way"
+>>>>>>> client-dev
 
 ]

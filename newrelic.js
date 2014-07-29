@@ -8,11 +8,11 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name : ['quiet-cove-8120.herokuapp.com'],
+  app_name : [process.argv[1] + ' on ' + process.env.NODE_ENV],
   /**
    * Your New Relic license key.
    */
-  license_key : '3fa754227bbd72ec71b636f6bcfcf10a94b41e91',
+  license_key : '',
   logging : {
     /**
      * Level at which to log. 'trace' is most useful to New Relic when diagnosing

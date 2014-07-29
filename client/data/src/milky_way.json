@@ -11,19 +11,19 @@
         {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
 
 
-    "shape_animation":[{"shape_ids":["1","2"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]
+    "shape_animation":[{"shape_ids":["1","2","3"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time_fn":"index", "time":0}]
     }],
 
     "shapes":[
 
         { "_comment":"Scale X and Y",
             "id":"1","rotation":0,"opacity":0.8,
-            "animation":[{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
+            "animation":[{"type":"scale","dataType":"c","data":"min15","series_len":5,"fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
 
         { "_comment":"Scale X only",
             "id":"2","rotation":0,"opacity":0.7,
-            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "time":0}]},
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "duration_data":"hour","time":0}]},
 
         {  "_comment":"Scale min data",
             "id":"3","rotation":0,"opacity":0.8,
