@@ -31,7 +31,9 @@ ZN.App = function () {
 
     //this.paths = [];
     this.frameDurations = [];
+
     this.debug = true;
+    this.runProjectGraph = true;
 
 
 }
@@ -198,12 +200,14 @@ ZN.App.prototype = {
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
 
-        /*
+
         // init project positions
-        this.rules.initProjectLocations();
+        //this.rules.initProjectLocations();
         // set focus project
-        this.rules.setFocusProject();
-         */
+        if(this.runProjectGraph){
+            this.rules.setFocusProject();
+        }
+
 
         var self = this;
         setTimeout(function(){self.loadIncTimeSeries()}, this.timeSeriesRequestInterval);

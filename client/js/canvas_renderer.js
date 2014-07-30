@@ -84,7 +84,15 @@ ZN.CanvasRenderer.prototype = {
         var scale = csz.width/scx;
         this.ctx.setTransform(scale, 0, 0, scale, cx, cy);
 
-        var projects = this.model.projects;
+        var projects = this.model.projects.slice(0);
+
+        // move focus project to back of list
+        var fp = this.model.focusProject;
+        if(fp){
+            var index = _.indexOf(this.model.focusProject,fp);
+            projects.splice(index,1);
+            projects.push(fp);
+        }
 
         _.each(projects,function(project,index){
 

@@ -39,6 +39,9 @@ ZN.Project = function () {
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
 
+    // background scale animation
+    this.bgScaleAnim = {};
+
 
 
 
@@ -292,14 +295,19 @@ ZN.Project.prototype = {
         },this);
 
 
+        // project animations
         if(this.animation){
             _.each(this.animation, function(anim){
+                this['']=
                 anim['loop'] = 0;
                 anim['curDuration'] = anim.duration[0];
 
             });
 
         }
+
+        var duration = Math.random()*60.0+180.0;
+        this.bgScaleAnim = {"type":"scale","data":"day","sx":[0.02,0.2],"sy":[0.02,0.2],"tween":"linear","fn":"sqrt","duration":[duration,duration], "time":0, "curDuration":duration,"loop":0};
 
 
 
@@ -324,7 +332,7 @@ ZN.Shape = function () {
     this.opacity = 1.0;
     this.width=0;
     this.height=0;
-    this.duration = 1.0;
+    //this.duration = 1.0;
 
     this.bounds = null;
     this.boundsPath = null;
@@ -332,7 +340,7 @@ ZN.Shape = function () {
     this.children=[];
     this.parent=null;
     this.initial={
-        x:0,y:0,sx:1.0,sy:1.0,fill:0,rotation:0,opacity:0,d:""
+        x:0,y:0,sx:1.0,sy:1.0,fill:"0x000000",rotation:0,opacity:0,d:""
     };
     this.trail = null;
 

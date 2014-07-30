@@ -21,7 +21,10 @@ ZN.Rules.prototype = {
         var projects = this.model.projects;
         var SECS = this.model.SECS;
 
-        //this.updateFocusProject();
+        if(this.app.runProjectGraph){
+            this.updateFocusProject();
+        }
+        var focusProject = this.model.focusProject;
 
         var projectPoints = this.model.projectGraph.projectPoints;
 
@@ -29,15 +32,18 @@ ZN.Rules.prototype = {
 
             // project rules
 
-            /*
-            var pt = projectPoints[project.name];
-            if(pt){
-                project.x = pt.x/2;
-                project.y = pt.y/2;
-                project.sx = 0.05;
-                project.sy = 0.05;
+            if(this.app.runProjectGraph && project!=focusProject){
+
+                this.scaleRule(project,project,project.bgScaleAnim);
+                var pt = projectPoints[project.name];
+                if(pt){
+                    project.x = pt.x;
+                    project.y = pt.y;
+                    //project.sx = 0.05;
+                    //project.sy = 0.05;
+                }
             }
-            */
+
 
             if(project.animation){
                 _.each(project.animation,function(anim){
@@ -464,15 +470,15 @@ ZN.Rules.prototype = {
 
         var fp = this.model.focusProject;
 
-        if(fp!=null){
-            fp.setPropsFromBackground();
-        }
+        //if(fp!=null){
+        //    fp.setPropsFromBackground();
+        //}
 
         this.model.lastChangeFocus = (new Date()).valueOf();
-        this.model.changeFocusTime = (Math.random()*10+10)*1000; // 5 to 10 secs
+        this.model.changeFocusTime = (Math.random()*5+5)*1000;
 
         var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
-        var scale = 0.9;
+        var scale = 0.5;
 
         this.model.focusProject = project;
 
