@@ -28,6 +28,7 @@ ZN.Project = function () {
     this.sx = 0.9, sy = 0.9;
     this.rotation = 0.0;
     this.duration = 1.0;
+    this.opacity = 1.0;
 
     // default transform
     this.initial={

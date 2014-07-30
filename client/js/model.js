@@ -16,6 +16,7 @@ ZN.Model = function () {
     // [<type>][<interval>] = {series:[],count:0,max:0}
 
     this.focusProject = null;
+    this.lastFocusProject = null;
     this.focusList = [];
     this.lastChangeFocus = 0;
     this.changeFocusTime = 0;

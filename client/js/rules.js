@@ -462,7 +462,71 @@ ZN.Rules.prototype = {
 
         if(this.app.curTime>this.model.lastChangeFocus+this.model.changeFocusTime){
             this.setFocusProject();
+
+            var self = this;
+
+
+            var obj = {
+                t: 0.0
+            };
+
+            var fp = this.model.focusProject;
+            var lfp = this.model.lastFocusProject;
+
+            $(obj).animate({
+                t: 1.0 //I tried obj.t & t as well
+            }, {
+                duration: 2000,
+                easing: 'linear',
+                step: function(now) {
+                    fp.opacity = now;
+                    /*
+                     $("#wrapper").css({
+                     'background-position': now + "% 0%"
+                     });
+                     */
+                }
+            });
         }
+
+
+
+        // fade in
+        /*
+        var tweenMs = 2000.0;
+        var dt = this.app.curTime-this.model.lastChangeFocus;
+        var fp = this.model.focusProject;
+        var lfp = this.model.lastFocusProject;
+        if(dt<tweenMs){
+
+            var norm = dt/tweenMs;
+            var opacity = norm;//<0.5?0:(norm-0.5)*2.0;
+            fp.opacity = opacity;
+            if(lfp) lfp.opacity = opacity;
+
+        }
+        else{
+            fp.opacity = 1.0;
+            if(lfp) lfp.opacity = 1.0;
+        }
+
+
+        // fade out
+        var dt = (this.model.lastChangeFocus+this.model.changeFocusTime)- (this.app.curTime+tweenMs);
+        if(dt<tweenMs){
+
+            var norm = dt/tweenMs;
+            var opacity = norm;//<0.5?0:(norm-0.5)*2.0;
+            fp.opacity = opacity;
+            if(lfp) lfp.opacity = 1.0-opacity;
+
+        }
+        */
+
+
+
+
+
 
     },
 
@@ -470,9 +534,10 @@ ZN.Rules.prototype = {
 
         var fp = this.model.focusProject;
 
-        //if(fp!=null){
-        //    fp.setPropsFromBackground();
-        //}
+        if(fp!=null){
+            //fp.setPropsFromBackground();
+            this.model.lastFocusProject = fp;
+        }
 
         this.model.lastChangeFocus = (new Date()).valueOf();
         this.model.changeFocusTime = (Math.random()*5+5)*1000;
