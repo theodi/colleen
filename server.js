@@ -13,16 +13,16 @@ app.configure(function () {
 
 app.get('/classificationCount', classifications.getClassificationCount);
 app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
-app.get('/classifications/from/:from/to/:to/interval/:interval', classifications.getClassificationInterval);
+app.get('/classifications/from/:from/to/:to/interval/:interval', classifications.getClassificationInterval); // charts
 app.get('/classificationCount/latest/:seconds',classifications.getClassificationCountLatest);
-app.get('/updateAnalytics',classifications.updateAnalytics);
+//app.get('/updateAnalytics',classifications.updateAnalytics);
 //app.get('/updateTimeSeries',classifications.updateTimeSeries);
-app.get('/updateTimeSeries/from/:from/to/:to/interval/:interval', classifications.updateTimeSeries);
+//app.get('/updateTimeSeries/from/:from/to/:to/interval/:interval', classifications.updateTimeSeries);
 app.get('/analytics',classifications.getAnalytics);
 app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 app.get('/timeseries',classifications.getTimeSeries);
-app.get('/timeseries/intervals/:intervals',classifications.getTimeSeriesIntervals);
-app.get('/timeseries/from/:from/to/:to',classifications.getTimeSeriesBetweenDates);
+app.get('/timeseries/intervals/:intervals',classifications.getTimeSeriesIntervals); // client
+app.get('/timeseries/from/:from/to/:to',classifications.getTimeSeriesBetweenDates); // client
 
 
 app.get('/dbstats',classifications.getDBstats);
@@ -35,10 +35,6 @@ console.log('Listening on port ' + port + '...');
 process.on('exit', function () {
 	console.log('Exiting ...');
 	classifications.cleanUp();
-	//	if (null != db) {
-	//  db.close();
-	//	}
-	// close other resources here
 	console.log('bye');
     });
 
@@ -55,4 +51,4 @@ process.on('SIGTERM', function () {
 	process.exit(0);
     });
 
-
+module.exports.app = app;
