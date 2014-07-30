@@ -12,8 +12,7 @@ ZN.Chart = function () {
     this.pickerMaxDate = new Date();
     this.pickerStartDate = new Date();
     this.pickerEndDate = new Date();
-    this.intervalSecs = 3600;
-
+    this.intervalSecs = 86400; // 3600; //
 
 }
 
@@ -71,8 +70,8 @@ ZN.Chart.prototype = {
 
 	// set start/end dates to mirror contents of data/test_data.sql
 	//beware, the month is 0 based, i.e. January is 0!
-        this.pickerStartDate = new Date(Date.UTC(2013, 2, 1));
-        this.pickerEndDate = new Date(Date.UTC(2013, 2, 2));
+        this.pickerStartDate = new Date(Date.UTC(2014, 5, 10));
+        this.pickerEndDate = new Date(Date.UTC(2014, 6, 10));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);

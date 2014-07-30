@@ -131,10 +131,10 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-
+    var classificationsTable = 'classifications_archive'
 
     connection.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
-        "FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
+        "FROM "+classificationsTable+" WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
         "GROUP BY time,project", function(err, rows, fields) {
         if(err) throw err;
         _.map(rows,function(item){
