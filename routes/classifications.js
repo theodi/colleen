@@ -6,8 +6,24 @@ var _ = require('lodash');
 
 var mysql      = require('mysql');
 var parseDbUrl = require('parse-database-url');
+var nconf = require('nconf');
 
-var WNU_DB_URL = process.env.WNU_DB_URL;
+// if testing then want to make sure we are using testing db
+if (process.env.NODE_ENV == 'test') {
+    nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
+}
+
+// config files take precedence over command-line arguments and environment variables 
+
+nconf.file({ file:
+    'config/' + process.env.NODE_ENV + '.json'
+})
+    .argv()
+    .env();
+
+
+var WNU_DB_URL = nconf.get('WNU_DB_URL');
+
 var dbConfig = parseDbUrl(WNU_DB_URL);
 
 // need to parse dbname out of connection string
@@ -598,3 +614,5 @@ exports.cleanUp = function() {
 	connection.end();
     }
 }
+
+module.exports.nconf = nconf;
