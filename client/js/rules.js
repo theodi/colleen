@@ -484,8 +484,8 @@ ZN.Rules.prototype = {
     initProjectLocations: function(){
 
         var projects = this.model.projects;
-        var w = ZN.config.assetBB.width;
-        var h = ZN.config.assetBB.height;
+        var w = ZN.Config.assetBB.width;
+        var h = ZN.Config.assetBB.height;
 
         _.each(projects,function(project){
             var px = (Math.random()-0.5)*w;

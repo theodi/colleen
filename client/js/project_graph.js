@@ -99,29 +99,6 @@ ZN.ProjectGraph.prototype = {
         this.currentBB = layout.getBoundingBox();
         this.targetBB = {bottomleft: new Springy.Vector(-2, -2), topright: new Springy.Vector(2, 2)};
 
-        /*
-        var t = this;
-        this.layout.start(function render() {
-            //t.clear();
-            var str= "";
-
-            t.layout.eachEdge(function(edge, spring) {
-                //t.drawEdge(edge, spring.point1.p, spring.point2.p);
-            });
-
-            t.layout.eachNode(function(node, point) {
-                //t.drawNode(node, point.p);
-
-                var s = toScreen(point.p);
-                //str+= s.x+","+s.y+"; ";
-            });
-            str+="currentBB"+ currentBB.bottomleft.x +", "+currentBB.bottomleft.y;
-
-            $("#diagnostics").html(str);
-
-        });//, this.onRenderStop, this.onRenderStart);
-        */
-
 
     },
 
@@ -129,8 +106,8 @@ ZN.ProjectGraph.prototype = {
     start: function(){
 
 
-        var canvasW = ZN.config.assetBB.width;
-        var canvasH = ZN.config.assetBB.height;
+        var canvasW = ZN.Config.assetBB.width;
+        var canvasH = ZN.Config.assetBB.height;
 
         var layout = this.layout;
 
@@ -199,8 +176,8 @@ ZN.ProjectGraph.prototype = {
         var layout = this.layout;
         if(layout._stop) return;
 
-        var canvasW = ZN.config.assetBB.width;
-        var canvasH = ZN.config.assetBB.height;
+        var canvasW = ZN.Config.assetBB.width;
+        var canvasH = ZN.Config.assetBB.height;
 
         // auto-adjust bounding box;
 

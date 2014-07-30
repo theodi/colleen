@@ -4,7 +4,6 @@ ZN.App = function () {
 
     this.model = null;
     this.rules = null;
-    this.nbody = null;
 
     this.xhr = null;
     this.timeoutTime = 60 * 1000;
@@ -29,12 +28,9 @@ ZN.App = function () {
 
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-    this.rendererType = "canvas"; //"snap";//"raphael" //
 
-    this.paper = null;
-    this.paths = [];
+    //this.paths = [];
     this.frameDurations = [];
-
     this.debug = true;
 
 
@@ -83,7 +79,7 @@ ZN.App.prototype = {
 	//	var url = window.location.protocol + "//" + window.location.host + "/"; 
 	    var url = 'http://localhost:5000/'
         this.apiUrl = url;
-        this.dataSource = ZN.config.dataSource;
+        this.dataSource = ZN.Config.dataSource;
         this.loadProjectRules();
 
     },
@@ -293,25 +289,9 @@ ZN.App.prototype = {
 
     initRenderer:function(){
 
-        switch(this.rendererType){
-            case "raphael":
-                this.renderer = new ZN.RaphaelRenderer();
-                this.renderer.init(this,this.model,this.canvasContainerId);
+        this.renderer = new ZN.CanvasRenderer();
+        this.renderer.init(this,this.model,this.canvasContainerId);
 
-                break;
-            case "snap":
-                this.renderer = new ZN.SnapRenderer();
-                this.renderer.init(this,this.model,this.canvasContainerId);
-
-                break;
-
-            case "canvas":
-                this.renderer = new ZN.CanvasRenderer();
-                this.renderer.init(this,this.model,this.canvasContainerId);
-
-                break;
-
-        }
     },
 
     update:function(){

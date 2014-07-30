@@ -40,8 +40,6 @@ ZN.CanvasRenderer.prototype = {
 
     },
 
-
-
     resize:function(){
 
         var size = this.getCanvasSize();
@@ -79,15 +77,21 @@ ZN.CanvasRenderer.prototype = {
         // Restore the transform
         this.ctx.restore();
 
+        // scale scene to window width
+        var scx = ZN.Config.assetBB.width,
+            scy = ZN.Config.assetBB.height;
+
+        var scale = csz.width/scx;
+        this.ctx.setTransform(scale, 0, 0, scale, cx, cy);
 
         var projects = this.model.projects;
-
 
         _.each(projects,function(project,index){
 
             var psx = project.sx, psy = project.sy;
 
-            var px = project.x+cx, py = project.y+cy,
+            //var px = project.x+cx, py = project.y+cy,
+            var px = project.x, py = project.y,
                 pr = project.rotation;
 
             // project transform
@@ -172,8 +176,6 @@ ZN.CanvasRenderer.prototype = {
         // Restore to project transform
         //console.log("ctx.restore");
         this.ctx.restore();
-
-
 
 
     },
