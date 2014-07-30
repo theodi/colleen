@@ -35,14 +35,12 @@ describe("function fetchRequest", function() {
                 throw err;
             }
 
-            //worker.fetchRequest('galaxy_zoo',fromMs,toMs);
-
                 worker.fetchRequest('serengeti',fromMs,toMs);
 
 
                 setTimeout(function() {
                     var nRecords = 10;
-                    var query = "SELECT * FROM classifications LIMIT "+nRecords;
+                    var query = "SELECT id, CONVERT_TZ(`created_at`, @@session.time_zone, '+00:00') as created_at, user_id, project, country, region, city, latitude, longitude FROM classifications WHERE project = 'serengeti' LIMIT "+nRecords;
                     console.log('Classification query:',query);
 
                     connection.query(query, function(err2, rows, fields) {

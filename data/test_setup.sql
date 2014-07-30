@@ -7,8 +7,8 @@
 --
 -- Table structure for table `analytics`
 --
-
-CREATE TABLE IF NOT EXISTS `analytics` (
+DROP TABLE IF EXISTS `analytics`;
+CREATE TABLE `analytics` (
   `type_id` varchar(1) NOT NULL DEFAULT '',
   `project` varchar(255) NOT NULL,
   `interval` varchar(1) NOT NULL,
@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `analytics` (
 --
 -- Table structure for table `timeseries`
 --
-CREATE TABLE IF NOT EXISTS `timeseries` (
+DROP TABLE IF EXISTS `timeseries`;
+CREATE TABLE `timeseries` (
   `type_id` varchar(1) NOT NULL DEFAULT '',
   `project` varchar(255) NOT NULL DEFAULT '',
   `interval` int(10) unsigned NOT NULL,
@@ -36,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `timeseries` (
 --
 -- Table structure for table `classifications`
 --
-
-CREATE TABLE IF NOT EXISTS `classifications` (
+DROP TABLE IF EXISTS `classifications`;
+CREATE TABLE `classifications` (
   `id` int(11) unsigned NOT NULL,
   `created_at` datetime NOT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
@@ -54,7 +55,6 @@ CREATE TABLE IF NOT EXISTS `classifications` (
 # ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `projects`;
-
 CREATE TABLE `projects` (
   `id` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL DEFAULT '',
