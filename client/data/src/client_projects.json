@@ -1,13 +1,21 @@
 [
+<<<<<<< HEAD
   	"asteroid",
+=======
+
+    "asteroid",
+>>>>>>> client-dev
     "bat_detective",
     "cancer_cells",
     "condor",
     "cyclone_center",
+<<<<<<< HEAD
     "notes_from_nature",
     "planet_four",
     "plankton",
     "radio",
+=======
+>>>>>>> client-dev
     "milky_way"
 
 ]
