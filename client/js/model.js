@@ -18,6 +18,7 @@ ZN.Model = function () {
     this.focusProject = null;
     this.lastFocusProject = null;
     this.focusList = [];
+    this.focusIndex = 0;
     this.lastChangeFocus = 0;
     this.changeFocusTime = 0;
     this.maxSeriesTime = 0;
@@ -51,6 +52,19 @@ ZN.Model.prototype = {
 
             project.setRules(projectData);
         },this);
+
+
+        var indices = [];
+        _.each(projects,function(project,index){
+            indices.push(index);
+        });
+
+        for(var i=0;i<projects.length;i++){
+            var index = parseInt(Math.random()*(projects.length-i-1));
+            this.focusList.push(indices[index]);
+            indices.splice(index,1);
+
+        }
 
     },
 

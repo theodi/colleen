@@ -3,6 +3,7 @@ ZN.Rules = function () {
     this.app = null;
     this.model = null;
     this.frameTime = 0;
+    this.transitionAnim = null;
 
 }
 
@@ -25,6 +26,7 @@ ZN.Rules.prototype = {
             this.updateFocusProject();
         }
         var focusProject = this.model.focusProject;
+        var lfp = this.model.lastFocusProject;
 
         var projectPoints = this.model.projectGraph.projectPoints;
 
@@ -32,7 +34,7 @@ ZN.Rules.prototype = {
 
             // project rules
 
-            if(this.app.runProjectGraph && project!=focusProject){
+            if(this.app.runProjectGraph && project!=focusProject && project!=lfp){
 
                 this.scaleRule(project,project,project.bgScaleAnim);
                 var pt = projectPoints[project.name];
@@ -42,7 +44,13 @@ ZN.Rules.prototype = {
                     //project.sx = 0.05;
                     //project.sy = 0.05;
                 }
+
+                project.opacity = 0.7;
             }
+            else{
+                project.opacity = 1.0;
+            }
+
 
 
             if(project.animation){
@@ -463,68 +471,8 @@ ZN.Rules.prototype = {
         if(this.app.curTime>this.model.lastChangeFocus+this.model.changeFocusTime){
             this.setFocusProject();
 
-            var self = this;
-
-
-            var obj = {
-                t: 0.0
-            };
-
-            var fp = this.model.focusProject;
-            var lfp = this.model.lastFocusProject;
-
-            $(obj).animate({
-                t: 1.0 //I tried obj.t & t as well
-            }, {
-                duration: 2000,
-                easing: 'linear',
-                step: function(now) {
-                    fp.opacity = now;
-                    /*
-                     $("#wrapper").css({
-                     'background-position': now + "% 0%"
-                     });
-                     */
-                }
-            });
-        }
-
-
-
-        // fade in
-        /*
-        var tweenMs = 2000.0;
-        var dt = this.app.curTime-this.model.lastChangeFocus;
-        var fp = this.model.focusProject;
-        var lfp = this.model.lastFocusProject;
-        if(dt<tweenMs){
-
-            var norm = dt/tweenMs;
-            var opacity = norm;//<0.5?0:(norm-0.5)*2.0;
-            fp.opacity = opacity;
-            if(lfp) lfp.opacity = opacity;
 
         }
-        else{
-            fp.opacity = 1.0;
-            if(lfp) lfp.opacity = 1.0;
-        }
-
-
-        // fade out
-        var dt = (this.model.lastChangeFocus+this.model.changeFocusTime)- (this.app.curTime+tweenMs);
-        if(dt<tweenMs){
-
-            var norm = dt/tweenMs;
-            var opacity = norm;//<0.5?0:(norm-0.5)*2.0;
-            fp.opacity = opacity;
-            if(lfp) lfp.opacity = 1.0-opacity;
-
-        }
-        */
-
-
-
 
 
 
@@ -542,12 +490,74 @@ ZN.Rules.prototype = {
         this.model.lastChangeFocus = (new Date()).valueOf();
         this.model.changeFocusTime = (Math.random()*5+5)*1000;
 
-        var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
-        var scale = 0.5;
+        //var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
+        //var scale = 0.5;
+        var projectIndex = this.model.focusList[this.model.focusIndex];
+        var project = this.model.projects[projectIndex];
+        this.model.focusIndex = (this.model.focusIndex+1)%this.model.focusList.length;
+
 
         this.model.focusProject = project;
 
-        project.setFocus({x:0,y:0,sx:scale,sy:scale});
+        //project.setFocus({x:0,y:0,sx:scale,sy:scale});
+
+        var self = this;
+
+        var obj = {
+            t: 0.0
+        };
+
+        var focusScale = 0.8;
+        fp = this.model.focusProject; // scale to foreground
+        var lfp = this.model.lastFocusProject; // scale to background
+        var initFP = {x:fp.x, y:fp.y, sx:fp.sx, sy:fp.sy};
+        var targetFP = {x:0, y:0, sx:focusScale,sy:focusScale};
+        var initLFP = {x:0,y:0,sx:focusScale,sy:focusScale};//{x:lfp.x, y:lfp.y};
+
+        if(this.transitionAnim){
+            this.transitionAnim.stop();
+        }
+
+        this.transitionAnim = $(obj).animate({
+            t: 1.0
+        }, {
+            duration: 1500,
+            easing: 'linear',
+            step: function(t) {
+
+                var x, y,sx,sy;
+
+                if(lfp){
+                    var projectPoints = self.model.projectGraph.projectPoints;
+                    self.scaleRule(lfp,lfp,lfp.bgScaleAnim);
+                    var pt =projectPoints[lfp.name];
+                    var targetLFP = {x:pt.x,y:pt.y,sx:lfp.sx,sy:lfp.sy};
+
+                    lfp.x = initLFP.x+(targetLFP.x-initLFP.x)*t;
+                    lfp.y = initLFP.y+(targetLFP.y-initLFP.y)*t;
+
+                    lfp.sx = initLFP.sx+(targetLFP.sx-initLFP.sx)*t;
+                    lfp.sy = initLFP.sy+(targetLFP.sy-initLFP.sy)*t;
+                }
+
+                // ease outback
+                // t: current time, b: begInnIng value, c: change In value, d: duration
+                //if (s == undefined) s = 1.70158;
+                // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+                var s = 1.70158;
+                var f = 1.0*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
+
+                fp.x = initFP.x+(targetFP.x-initFP.x)*f;
+                fp.y = initFP.y+(targetFP.x-initFP.y)*f;
+                fp.sx = initFP.sx+(targetFP.sx-initFP.sx)*f;
+                fp.sy = initFP.sy+(targetFP.sy-initFP.sy)*f;
+
+            },
+            complete:function(){
+                self.model.lastFocusProject = null;
+            }
+
+        });
 
 
     },
