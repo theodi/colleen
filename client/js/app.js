@@ -226,6 +226,19 @@ ZN.App.prototype = {
             self.renderer.resize();
         });
 
+        $(window).keypress(function( event ) {
+            console.log(event.which);
+            switch(event.which){
+                case 111: // 'o'
+                    break;
+                case 112: // 'p'
+                    self.rules.setFocusProject();
+                    break;
+            }
+
+
+        });
+
     },
 
     loadClassification:function () {

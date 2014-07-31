@@ -112,12 +112,12 @@ ZN.CanvasRenderer.prototype = {
 
                 _.each(shape.trail.shapes,function(trailShape,si){
 
-                    this.renderShape(trailShape);
+                    this.renderShape(project,trailShape);
 
                 },this);
 
                 if(typeof shape.parentId === "undefined"){
-                    this.renderShape(shape);
+                    this.renderShape(project,shape);
                 }
 
             },this);
@@ -128,7 +128,7 @@ ZN.CanvasRenderer.prototype = {
 
     },
 
-    renderShape: function(shape){
+    renderShape: function(project,shape){
 
         // Store project transform
         this.ctx.save();
@@ -160,7 +160,7 @@ ZN.CanvasRenderer.prototype = {
         }
 
 
-        this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity).css();
+        this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity*project.opacity).css();
 
         this.ctx.fill();
 
@@ -177,7 +177,7 @@ ZN.CanvasRenderer.prototype = {
         for(var c=0;c<shape.children.length;c++){
             var childShape = shape.children[c];
             //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
-            this.renderShape(childShape);
+            this.renderShape(project,childShape);
 
         }
 
