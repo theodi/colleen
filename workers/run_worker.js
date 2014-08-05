@@ -1,6 +1,6 @@
 worker = require ('../workers/worker.js');
 
-//worker.startScheduler();
+worker.startScheduler();
 //worker.updateTimeSeriesFromArchive();
 //worker.singleTimeSeriesFromArchive();
-worker.testMySQLError();
+//worker.testMySQLError();

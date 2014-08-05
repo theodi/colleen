@@ -126,34 +126,41 @@ process.on('SIGTERM', function () {
 
 
 
+
+
 /*---------------------------------------------------------------------------*/
 
 // Scheduling
 
-// start worker
-//startScheduler();
+var gUpdateCount = 0;
+var gTimoutObj = null;
 
+var fetchDataTimeout = function(){
+    console.log("Fetch Data:", new Date(),"updateCount",gUpdateCount);
+    gUpdateCount +=1;
+    var timeout = nconf.get("timeout");
+    gTimoutObj = setTimeout(startFetch,timeout);
+}
 
 function startScheduler(){
 
-  
-    var timeout = nconf.get("timeout");
-    var updateCount = 0;
-
-    var fetchDataTimeout = function(){
-        console.log("Fetch Data:", new Date(),"updateCount",updateCount);
-        updateCount +=1;
-        setTimeout(startFetch,timeout);
-    };
-
     gEventEmitter.on('endFetchData', startUpdateTimeSeries);
-
     gEventEmitter.on('endUpdateTimeSeries', fetchDataTimeout);
-
     fetchDataTimeout();
 
-
 }
+
+function onError(err){
+    if(gTimoutObj){
+        clearTimeout(gTimoutObj);
+    }
+    fetchDataTimeout();
+}
+
+process.on('uncaughtException', function(err) {
+    console.log('uncaughtException: ' + err);
+    onError(err);
+});
 
 
 
@@ -172,6 +179,8 @@ function startFetch(){
     connection.connect(function(err) {
         if(err) {
             console.log('Worker: error when connecting to db:', err);
+            onError(err);
+            throw err;
         }
         else{
             fetchNext();
@@ -203,18 +212,21 @@ function fetchProjectData(projectId){
 
     console.log("fetchProjectData",projectId);
 
+    gProjectTable = "invalid";
     //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
     connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
 
         if(err) {
-            endFetch();
-
+            console.log('fetchProjectData, query error:',err);
+            onError(err);
             throw err;
 
         }
 
+        console.log("After Error");
+
         if(rows[0]==null){
-            console.log('fetchProjectData, not in database',projectId);
+            console.log('fetchProjectData, not in database:',projectId);
             fetchNext();
             return;
         }
@@ -312,14 +324,16 @@ function fetchRequest(projectId,fromMs,toMs){
                 var insertStr = inserts.join(',');
                 //console.log(insertStr);
 
+
                 connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
                     function (err, rows) {
 
                         if (err) {
                             console.log('fetchRequest, insert failed',err);
+                            onError(err);
                             throw err;
                         }
-
+                        console.log("After error");
                         removeClassifications(projectId, maxDateMs);
 
 
@@ -334,7 +348,7 @@ function fetchRequest(projectId,fromMs,toMs){
         }
         else{ // end if (!error && response.statusCode == 200) {
             console.log('fetchProjectData request error',error);//,response.statusCode);
-            //endFetch();
+
             removeClassifications(projectId, fromMs);
         }
 
@@ -353,8 +367,12 @@ function removeClassifications(projectId,updateMs){
     //console.log(query);
     connection.query(query, function(err, rows) {
 
-        if(err) throw err;
-        //console.log("removeClassifications result:",rows);
+        if(err) {
+            console.log("removeClassifications Error:",err);
+            onError(err);
+            throw err;
+        }
+
         setProjectsUpdateTime(projectId,updateMs)
 
     });
@@ -372,6 +390,7 @@ function setProjectsUpdateTime(projectId,updateMs){
     connection.query(query,function (err, rows) {
         if (err) {
             console.log('setProjectsUpdateTime error',err);
+            onError(err);
             throw err;
         }
 
@@ -463,7 +482,8 @@ function startUpdateTimeSeries(){
     connection.connect(function(err) {
         if(err) {
             console.log('Worker: error when connecting to db:', err);
-            //throw err;
+            onError(err);
+            throw err;
         }
         else{
 
@@ -515,7 +535,9 @@ function updateTimeSeries(series){
 
     connection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
+            onError(err);
             console.log('updateTimeSeriesInterval error',err);
+            throw err;
 
         }
 
@@ -534,6 +556,7 @@ function updateTimeSeries(series){
             "' AND `type_id`='"+dataType+"'  AND `interval`='"+interval+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
             if (err) {
                 console.log('updateTimeSeriesInterval error',err);
+                onError(err);
                 throw err;
             }
             if(rows[0]){
@@ -588,16 +611,20 @@ function updateTimeSeriesInterval(series, from, to){
             dataQuery = "COUNT(DISTINCT user_id) as count";
             break;
         default:
-            //res.send([]);
+
             return;
     }
 
     var query = "SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
         "FROM "+gClsTable+" WHERE project='"+projectId+"' AND created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+") "+
         "GROUP BY time";
-    //console.log("query",query);
+
     connection.query(query, function(err, rows, fields) {
-        if(err) throw err;
+        if(err) {
+            console.log("updateTimeSeriesInterval Error",err);
+            onError(err);
+            throw err;
+        }
         _.map(rows,function(item){
             //console.log("time bucket",item.time);
             item.time = parseFloat(item.time)*interval + from;
@@ -649,6 +676,7 @@ function updateTimeSeriesInterval(series, from, to){
 
                 if(err){
                     console.log('Insert Error, updateTimeSeriesInterval', err);
+                    onError(err);
                     throw err;
                 }
 
@@ -683,10 +711,14 @@ function removeTimeSeriesItems(series){
             // delete records past series length
             var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project`='"+projectId+"' AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
 
-            //console.log(query);
+
             connection.query(query, function(err, rows) {
 
-                if(err) throw err;
+                if(err) {
+                    console.log("removeTimeSeriesItems Error",err);
+                    onError(err);
+                    throw err;
+                }
                 updateNextTimeSeries();
 
             });
