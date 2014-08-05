@@ -22,7 +22,7 @@ nconf.file({ file:
 
 // provide sensible defaults in case the above don't
 nconf.defaults({
-	timeout: 5000,
+	timeout: 20000,
         loop_interval: 20000,
         projects_list: '../data/projects.json',
 	projects_table_name: 'projects',
@@ -203,16 +203,15 @@ function fetchNext(){
 function endFetch(){
 
     var dt = (new Date().valueOf() - gTimer)/1000;
-    console.log('endFetchData. Time taken (s):',dt);
+    //console.log('endFetchData. Time taken (s):',dt);
     gEventEmitter.emit('endFetchData');
 
 }
 
 function fetchProjectData(projectId){
 
-    console.log("fetchProjectData",projectId);
+    //console.log("fetchProjectData",projectId);
 
-    gProjectTable = "invalid";
     //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
     connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
 
@@ -222,8 +221,6 @@ function fetchProjectData(projectId){
             throw err;
 
         }
-
-        console.log("After Error");
 
         if(rows[0]==null){
             console.log('fetchProjectData, not in database:',projectId);
@@ -264,7 +261,7 @@ function fetchProjectData(projectId){
 
 function fetchRequest(projectId,fromMs,toMs){
 
-    console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs),"perPage",gClassificationsPerPage);
+    //console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs),"perPage",gClassificationsPerPage);
 
     var maxDateMs = toMs, maxDataDateMs = 0;
 
@@ -281,7 +278,7 @@ function fetchRequest(projectId,fromMs,toMs){
     request(options, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
-            console.log('Classifications, data.length:',data.length);
+            //console.log('Classifications, data.length:',data.length);
 
             if(data.length>0){
                 var fields = ['id','created_at','user_id','project','country_code','region','city_name','latitude','longitude'];
@@ -318,7 +315,7 @@ function fetchRequest(projectId,fromMs,toMs){
 
                 if(data.length==perPage){
                     maxDateMs = maxDataDateMs;
-                    console.log('maxDataDateMs',maxDataDateMs);
+                    //console.log('maxDataDateMs',maxDataDateMs);
                 }
 
                 var insertStr = inserts.join(',');
@@ -359,7 +356,7 @@ function removeClassifications(projectId,updateMs){
 
     //console.log('removeClassifications: ',projectId, updateMs, new Date(updateMs));
     var lastClsTime = parseInt(updateMs/1000)-gClsArchiveTime;
-    console.log('removeClassifications from: ',projectId, lastClsTime, new Date(lastClsTime*1000));
+    //console.log('removeClassifications from: ',projectId, lastClsTime, new Date(lastClsTime*1000));
 
     // delete classifications past max interval
     var query = "DELETE FROM "+gClsTable+" WHERE `created_at` < FROM_UNIXTIME('"+lastClsTime+"') AND `project`='"+projectId+"'";
@@ -384,9 +381,9 @@ function removeClassifications(projectId,updateMs){
 function setProjectsUpdateTime(projectId,updateMs){
 
     var unixTime = parseInt(updateMs/1000);
-    console.log('update date',projectId,new Date(unixTime*1000));
+    //console.log('update date',projectId,new Date(unixTime*1000));
     var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'";
-    console.log(query);
+    //console.log(query);
     connection.query(query,function (err, rows) {
         if (err) {
             console.log('setProjectsUpdateTime error',err);
@@ -518,7 +515,7 @@ function updateNextTimeSeries(){
 function endUpdateTimeSeries() {
     disconnect();
     var dt = (new Date().valueOf() - gTimer)/1000;
-    console.log('endUpdateTimeSeries. Time taken (s):',dt);
+    //console.log('endUpdateTimeSeries. Time taken (s):',dt);
     gEventEmitter.emit('endUpdateTimeSeries');
 }
 
@@ -563,24 +560,18 @@ function updateTimeSeries(series){
                 //console.log('seriesMax',rows[0]);
                 seriesMax = rows[0].time;
                 from = seriesMax+interval;
-                // if timeseries ahead of projects updated, use projects updated as max date
-                /*
-                if(from>=to){
-                    from = to-interval;
-                    console.log('Timeseries ahead of Projects updated.','seriesMax:',seriesMax,'timeseries from:',from, 'to:',to);
-                }
-                */
-                console.log('from seriesMax', from);
+
+                //console.log('from seriesMax', from);
             }
             else{
 
                 from = Math.floor(projectUpdatedUnix/interval)*interval - seriesLength[interval]*interval;
-                console.log('from, no seriesMax',from);
+                //console.log('from, no seriesMax',from);
 
             }
 
 
-            console.log(projectId,"updateTimeSeriesIntervals",series.type, series.interval,"from",from,"to",to,"from",new Date(from*1000),"to",new Date(to*1000));
+            //console.log(projectId,"updateTimeSeriesIntervals",series.type, series.interval,"from",from,"to",to,"from",new Date(from*1000),"to",new Date(to*1000));
 
 
             // if interval is less than update period,  start next project
@@ -633,7 +624,7 @@ function updateTimeSeriesInterval(series, from, to){
 
         var minTimeMs = from*1000;
         var nItems = (to-from)/interval;
-        console.log('Series length',nItems);
+        //console.log('Series length',nItems);
 
 
         var values = [];
@@ -706,7 +697,7 @@ function removeTimeSeriesItems(series){
         // if rows to delete
         if(rows[0]){
             lastItemTime = rows[0].time;
-            console.log(projectId, 'lastItemTime: ', lastItemTime,'type',dataType,'interval',interval, new Date(lastItemTime*1000));
+            //console.log(projectId, 'lastItemTime: ', lastItemTime,'type',dataType,'interval',interval, new Date(lastItemTime*1000));
 
             // delete records past series length
             var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project`='"+projectId+"' AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
