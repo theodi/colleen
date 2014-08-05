@@ -540,6 +540,7 @@ ZN.Rules.prototype = {
                     lfp.sy = initLFP.sy+(targetLFP.sy-initLFP.sy)*t;
                 }
 
+                // https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
                 // ease outback
                 // t: current time, b: begInnIng value, c: change In value, d: duration
                 //if (s == undefined) s = 1.70158;

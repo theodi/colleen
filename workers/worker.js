@@ -385,20 +385,12 @@ function fetchProjectDataTest(){
     //curl -H "Accept: application/vnd.zooevents.v1+json"
     //"http://event.zooniverse.org/classifications/galaxy_zoo?from=1399939200000&to=1400025600000&per_page=200&page=1"
 
-    //var from = 1400889600000, to = 1400976000000; // 2014/05/24 00:00 to 2014/05/25 00:00
     var from = 1401235200000, to = 1401321600000; // 2014/05/28 00:00 to 2014/05/29 00:00
 
     var options = {
-        //url: 'http://event.zooniverse.org/classifications/galaxy_zoo?from=1399982400000&to=1399983000000&page=1',//&per_page=10&page=1',
+        //url: 'http://event.zooniverse.org/classifications/galaxy_zoo?from=1399982400000&to=1399983000000&per_page=10&page=0',
         url: 'http://event.zooniverse.org/classifications/galaxy_zoo',
-        //qs:{'from':1399939200000, 'to':1400025600000,'per_page':2000,'page':1},
-        //qs:{'from':1399982400000, 'to':1399986000000,'per_page':5000,'page':0},// Tue, 13 May 2014 12:00:00 GMT 1 hour
-        //qs:{'from':1399982400000, 'to':1400004000000,'per_page':8000,'page':0},// Tue, 13 May 2014 12:00:00 GMT 1 hour
-        //qs:{'from':1399982400000, 'to':1399982520000},//,'per_page':100,'page':1},// Tue, 13 May 2014 00:00:00 GMT 10 mins
-
         qs:{'from':from, 'to':to,'per_page':1000,'page':0},
-
-
         headers: {
             'Accept': 'application/vnd.zooevents.v1+json'
         }
@@ -412,8 +404,28 @@ function fetchProjectDataTest(){
             //console.log(data);
             //console.log('data[0]',data[0]);
             console.log('data.length',data.length,'from',new Date(from), 'to',new Date(to));
-
         }
+    });
+
+}
+
+
+function testMySQLError(){
+
+    setInterval(function(){
+        console.log(new Date());
+    },1000);
+    connect();
+    connection.connect(function(err) {
+        if(err) {
+            console.log('Error',err);
+        }
+        connection.query("SELECT * FROM invalid",function(err2, rows, fields) {
+            if(err2) {
+                console.log('Error',err2);
+            }
+        });
+
     });
 
 }
@@ -438,8 +450,6 @@ function testFetchData(){
 
 }
 
-//loadProjects(testFetchData);
-//fetchProjectDataTest();
 
 /*---------------------------------------------------------------------------*/
 
@@ -853,6 +863,7 @@ module.exports.fetchRequest = fetchRequest;
 module.exports.startScheduler = startScheduler;
 module.exports.updateTimeSeriesFromArchive = updateTimeSeriesFromArchive;
 module.exports.singleTimeSeriesFromArchive = singleTimeSeriesFromArchive;
+module.exports.testMySQLError = testMySQLError;
 
 module.exports.connection = connection;
 module.exports.connect = connect;
