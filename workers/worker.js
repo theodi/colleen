@@ -159,7 +159,7 @@ function onError(err){
 
 process.on('uncaughtException', function(err) {
     console.log('uncaughtException: ' + err);
-    onError(err);
+    //onError(err);
 });
 
 
