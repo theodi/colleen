@@ -330,7 +330,7 @@ function fetchRequest(projectId,fromMs,toMs){
                             onError(err);
                             throw err;
                         }
-                        console.log("After error");
+
                         removeClassifications(projectId, maxDateMs);
 
 
