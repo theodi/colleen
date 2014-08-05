@@ -45,7 +45,7 @@ ZN.Rules.prototype = {
                     //project.sy = 0.05;
                 }
 
-                project.opacity = 0.7;
+                project.opacity = 0.05;
             }
             else{
                 project.opacity = 1.0;
