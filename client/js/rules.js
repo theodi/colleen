@@ -521,7 +521,7 @@ ZN.Rules.prototype = {
         this.transitionAnim = $(obj).animate({
             t: 1.0
         }, {
-            duration: 1500,
+            duration: 5000,
             easing: 'linear',
             step: function(t) {
 
@@ -544,8 +544,8 @@ ZN.Rules.prototype = {
                 // t: current time, b: begInnIng value, c: change In value, d: duration
                 //if (s == undefined) s = 1.70158;
                 // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
-                var s = 1.70158;
-                var f = 1.0*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
+                var s = 10.70158;
+                var f = 1.2*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
 
                 fp.x = initFP.x+(targetFP.x-initFP.x)*f;
                 fp.y = initFP.y+(targetFP.x-initFP.y)*f;
