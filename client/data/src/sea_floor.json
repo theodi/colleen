@@ -27,7 +27,6 @@
             "id":"2","rotation":0,"opacity":0.8,
             "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
 
-
         {  "_comment":"Scale min data",
             "id":"3","rotation":0,"opacity":0.8,
             "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
