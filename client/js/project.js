@@ -168,7 +168,7 @@ ZN.Project.prototype = {
             // paths
             var pathStr = shapeData.d;
             var segsAbs = Snap.path.toAbsolute(pathStr);
-            shape.pathSegs = segsAbs;
+
 
 
             // find bounds
@@ -237,7 +237,8 @@ ZN.Project.prototype = {
                 };
             },this);
             shapeStr+="z";
-            shape.d = shapeStr;
+            shape.d = shape.initial.d = shapeStr;
+
 
             // for child shapes set origin to parent
             if(parent){
@@ -247,7 +248,9 @@ ZN.Project.prototype = {
             }
 
             segsAbs = Snap.path.toAbsolute(shapeStr);
+            var segsAbsInit = Snap.path.toAbsolute(shapeStr);
             shape.pathSegs = segsAbs;
+            shape.initial.pathSegs = segsAbsInit;
 
 
         },this);
@@ -332,7 +335,7 @@ ZN.Shape = function () {
     this.sy=1.0;
 
     this.path=null;
-    this.pathSegs=[];
+    this.pathSegs=[]; // relative path positions in shape
     this.d = "";
     this.fill="0x000000";
     this.flllObj = null;
@@ -348,7 +351,7 @@ ZN.Shape = function () {
     this.children=[];
     this.parent=null;
     this.initial={
-        x:0,y:0,sx:1.0,sy:1.0,fill:"0x000000",rotation:0,opacity:0,d:""
+        x:0,y:0,sx:1.0,sy:1.0,fill:"0x000000",rotation:0,opacity:0,d:"",pathSegs:[]
     };
     this.trail = null;
 

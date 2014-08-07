@@ -7,6 +7,7 @@ ZN.Rules = function () {
     this.focusOpacity = 1.0;
     this.bgOpacity = 0.05;
     this.focusDuration = 1.5; // focus transition seconds
+    this.changeFocusDuration = [30.0,60.0];
 
 
 }
@@ -21,6 +22,7 @@ ZN.Rules.prototype = {
         this.focusOpacity = ZN.Config.focusOpacity;
         this.bgOpacity = ZN.Config.bgOpacity;
         this.focusDuration = ZN.Config.focusDuration;
+        this.changeFocusDuration = ZN.Config.changeFocusDuration;
 
 
 
@@ -134,6 +136,9 @@ ZN.Rules.prototype = {
                                 this.circleRule(project,shape,anim);
                                 break;
 
+                            case "serengeti":
+                                this.serengetiRule(project,shape,anim);
+                                break;
 
 
                             case "translate_circular_rnd":
@@ -470,6 +475,44 @@ ZN.Rules.prototype = {
 
     },
 
+    serengetiRule:function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+        var sc = 20.0;
+        var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
+
+        var iPathSegs = obj.initial.pathSegs;
+        var pathSegs = obj.pathSegs;
+
+
+        for(var s=0;s<iPathSegs.length;s++){
+            var iseg = iPathSegs[s];
+            var seg = pathSegs[s];
+            var p = s%4;
+
+            switch(seg[0]){
+                case "M":
+                    pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
+                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
+                    break;
+                case "C":
+
+                    //pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
+                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
+                    //pathSegs[s][3] = iseg[3]+t[p][0]*sc*n;
+                    pathSegs[s][4] = iseg[4]+t[p][1]*sc*n;
+
+                    pathSegs[s][5] = iseg[5]+t[p][0]*sc*n;
+                    pathSegs[s][6] = iseg[6]+t[p][1]*sc*n;
+                    break;
+
+            };
+        }
+
+
+
+    },
+
 
     // Project rules
 
@@ -495,7 +538,9 @@ ZN.Rules.prototype = {
         }
 
         this.model.lastChangeFocus = (new Date()).valueOf();
-        this.model.changeFocusTime = (Math.random()*5+5)*1000;
+        var min = this.changeFocusDuration[0];
+        var max = this.changeFocusDuration[1];
+        this.model.changeFocusTime = (Math.random()*(max-min)+min)*1000;
 
         //var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
         //var scale = 0.5;
@@ -514,7 +559,7 @@ ZN.Rules.prototype = {
             t: 0.0
         };
 
-        var focusScale = 0.8;
+        var focusScale = 1.0;//0.8;
         fp = this.model.focusProject; // scale to foreground
         var lfp = this.model.lastFocusProject; // scale to background
         var initFP = {x:fp.x, y:fp.y, sx:fp.sx, sy:fp.sy};
@@ -555,10 +600,10 @@ ZN.Rules.prototype = {
                 // t: current time, b: begInnIng value, c: change In value, d: duration
                 //if (s == undefined) s = 1.70158;
                 // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
-                var s = 10.70158;//1.70158;
+                var s = 10.0;//1.70158;
                 var ft = t;
                 //var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
-                var f = 1.2*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
+                var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
                 fp.x = initFP.x+(targetFP.x-initFP.x)*f;
                 fp.y = initFP.y+(targetFP.x-initFP.y)*f;
                 fp.sx = initFP.sx+(targetFP.sx-initFP.sx)*f;

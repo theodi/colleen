@@ -108,7 +108,9 @@ ZN.CanvasRenderer.prototype = {
             this.ctx.rotate(pr*Math.PI/180);
             this.ctx.scale(psx,psy);
 
-            _.each(project.shapes,function(shape,ind){
+            var nShapes = project.shapes.length;
+            for(var s=0;s<nShapes;s++){
+                var shape = project.shapes[nShapes-s-1];
 
                 _.each(shape.trail.shapes,function(trailShape,si){
 
@@ -120,7 +122,8 @@ ZN.CanvasRenderer.prototype = {
                     this.renderShape(project,shape);
                 }
 
-            },this);
+            }
+
 
             this.ctx.restore();
 
@@ -140,7 +143,7 @@ ZN.CanvasRenderer.prototype = {
 
         this.ctx.beginPath();
 
-        var segsAbs = Snap.path.toAbsolute(shape.d);
+        var segsAbs = shape.pathSegs; //Snap.path.toAbsolute(shape.d);
 
         var x, y;
 
