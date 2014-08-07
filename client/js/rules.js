@@ -4,6 +4,10 @@ ZN.Rules = function () {
     this.model = null;
     this.frameTime = 0;
     this.transitionAnim = null;
+    this.focusOpacity = 1.0;
+    this.bgOpacity = 0.05;
+    this.focusDuration = 1.5; // focus transition seconds
+
 
 }
 
@@ -13,6 +17,13 @@ ZN.Rules.prototype = {
     init:function(app,model){
         this.app = app;
         this.model = model;
+
+        this.focusOpacity = ZN.Config.focusOpacity;
+        this.bgOpacity = ZN.Config.bgOpacity;
+        this.focusDuration = ZN.Config.focusDuration;
+
+
+
 
     },
 
@@ -34,21 +45,24 @@ ZN.Rules.prototype = {
 
             // project rules
 
-            if(this.app.runProjectGraph && project!=focusProject && project!=lfp){
+            if(this.app.runProjectGraph){
+                if(project!=focusProject && project!=lfp){
 
-                this.scaleRule(project,project,project.bgScaleAnim);
-                var pt = projectPoints[project.name];
-                if(pt){
-                    project.x = pt.x;
-                    project.y = pt.y;
-                    //project.sx = 0.05;
-                    //project.sy = 0.05;
+                    this.scaleRule(project,project,project.bgScaleAnim);
+                    var pt = projectPoints[project.name];
+                    if(pt){
+                        project.x = pt.x;
+                        project.y = pt.y;
+                        //project.sx = 0.05;
+                        //project.sy = 0.05;
+                    }
+
+                    project.opacity = this.bgOpacity;
                 }
 
-                project.opacity = 0.7;
             }
             else{
-                project.opacity = 1.0;
+                project.opacity = this.focusOpacity;
             }
 
 
@@ -85,15 +99,8 @@ ZN.Rules.prototype = {
                  _.remove(shape.trail.shapes, function(trailShape) {
                  return trailShape.opacity < 0.05;
                  });
-
-
-                 if(typeof shape.parentId==="undefined"){
-                 shape.x -=0.3;
-                 for(var c=0;c<shape.children.length;c++){
-                 //shape.children[c].x-=0.3;
-                 }
-                 }
                  */
+
 
 
                 // shape rules
@@ -521,11 +528,11 @@ ZN.Rules.prototype = {
         this.transitionAnim = $(obj).animate({
             t: 1.0
         }, {
-            duration: 1500,
+            duration: self.focusDuration*1000,
             easing: 'linear',
             step: function(t) {
 
-                var x, y,sx,sy;
+                var x, y,sx,sy,opacity;
 
                 if(lfp){
                     var projectPoints = self.model.projectGraph.projectPoints;
@@ -538,6 +545,9 @@ ZN.Rules.prototype = {
 
                     lfp.sx = initLFP.sx+(targetLFP.sx-initLFP.sx)*t;
                     lfp.sy = initLFP.sy+(targetLFP.sy-initLFP.sy)*t;
+
+                    opacity = self.focusOpacity + (self.bgOpacity-self.focusOpacity)*t;
+                    lfp.opacity = opacity;
                 }
 
                 // https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
@@ -546,12 +556,18 @@ ZN.Rules.prototype = {
                 //if (s == undefined) s = 1.70158;
                 // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
                 var s = 1.70158;
-                var f = 1.0*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
+                var ft = t;
+                var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
 
                 fp.x = initFP.x+(targetFP.x-initFP.x)*f;
                 fp.y = initFP.y+(targetFP.x-initFP.y)*f;
                 fp.sx = initFP.sx+(targetFP.sx-initFP.sx)*f;
                 fp.sy = initFP.sy+(targetFP.sy-initFP.sy)*f;
+
+                opacity = self.bgOpacity + (self.focusOpacity-self.bgOpacity)*t;
+                fp.opacity = opacity;
+
+
 
             },
             complete:function(){

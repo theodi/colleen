@@ -307,8 +307,14 @@ ZN.Project.prototype = {
 
         }
 
-        var duration = Math.random()*60.0+1000.0;
-        this.bgScaleAnim = {"type":"scale","data":"day","sx":[0.02,0.25],"sy":[0.02,0.25],"tween":"linear","fn":"sqrt","duration":[duration,duration], "time":0, "curDuration":duration,"loop":0};
+        var min = ZN.Config.bgScaleAnimDurationRange[0];
+        var max = ZN.Config.bgScaleAnimDurationRange[1];
+        var duration = Math.random()*(max-min)+min;
+        this.bgScaleAnim = ZN.Config.bgScaleAnim;
+        this.bgScaleAnim["duration"] = [duration,duration]
+        this.bgScaleAnim["time"] = 0;
+        this.bgScaleAnim["curDuration"] = duration;
+        this.bgScaleAnim["loop"] = 0;
 
 
 
@@ -324,6 +330,7 @@ ZN.Shape = function () {
     this.vy=0;
     this.sx=1.0;
     this.sy=1.0;
+
     this.path=null;
     this.pathSegs=[];
     this.d = "";
