@@ -35,7 +35,7 @@
 
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","#ff0"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,

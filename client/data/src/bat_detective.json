@@ -1,10 +1,10 @@
 {
     "name":"bat_detective",
-    "sx":0.4,"sy":0.4,
-    "x":200,
-    "y":200,
-    "rotation":45,
-    "_fills":["#951114","#951114"],
+    "sx":0.2,"sy":0.2,
+    "x":0,
+    "y":-250,
+    "rotation":0,
+    "_fills":["#000","#fff"],
     "_comment":"Project level animations",
     "_animation":[
         {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
@@ -25,12 +25,12 @@
             "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
 
         { "_comment":"Scale long duration",
-            "id":"4","rotation":0,"opacity":0.85,
+            "id":"4","rotation":-6.0,"opacity":0.85,
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
 
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#4F0E0E","#170D33"] ,"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
@@ -43,9 +43,17 @@
         { "_comment":"Rotation",
             "id":"8","rotation":0,"opacity":0.9,
             "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,222.0], "time":0}]},
+        
+        { "_comment":"Rotation",
+            "id":"9","rotation":0,"opacity":0.9,
+            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,359],"duration":[20.0,222.0], "time":0}]},
+
+        { "_comment":"Opacity",
+            "id":"10","rotation":0,"opacity":0.8,
+            "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
 
         { "_comment":"Circle",
-            "id":"9","rotation":0,"opacity":0.9,
+            "id":"11","rotation":5.0,"opacity":0.9,
             "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]}
     ]
 }

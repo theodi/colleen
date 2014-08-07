@@ -1,8 +1,8 @@
 {
     "name":"asteroid",
-    "sx":0.6,"sy":0.6,
-    "x":-50,
-    "y":-100,
+    "sx":0.2,"sy":0.2,
+    "x":0,
+    "y":0,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",

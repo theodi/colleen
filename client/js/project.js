@@ -307,8 +307,8 @@ ZN.Project.prototype = {
 
         }
 
-        var duration = Math.random()*60.0+180.0;
-        this.bgScaleAnim = {"type":"scale","data":"day","sx":[0.02,0.2],"sy":[0.02,0.2],"tween":"linear","fn":"sqrt","duration":[duration,duration], "time":0, "curDuration":duration,"loop":0};
+        var duration = Math.random()*60.0+1000.0;
+        this.bgScaleAnim = {"type":"scale","data":"day","sx":[0.02,0.25],"sy":[0.02,0.25],"tween":"linear","fn":"sqrt","duration":[duration,duration], "time":0, "curDuration":duration,"loop":0};
 
 
 
