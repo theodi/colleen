@@ -1,0 +1,28 @@
+{
+    "name":"serengeti",
+    "sx":1.2,"sy":1.2,
+    "x":-400,
+    "y":-250,
+    "rotation":0,
+    "_fills":["#951114","#951114"],
+    "_comment":"Project level animations",
+    "_animation":[
+        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
+        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
+
+
+    "shape_animation":
+    [
+    	{"shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],"animation":
+            [{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]
+    	},
+    	{"shape_ids":["20","21"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#634e0d","474611"] ,"duration":[30.0,120.0], "time":0}]
+    	}
+    ],
+
+    "shapes":
+    [
+
+    ]
+}

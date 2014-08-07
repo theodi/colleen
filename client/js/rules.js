@@ -555,10 +555,10 @@ ZN.Rules.prototype = {
                 // t: current time, b: begInnIng value, c: change In value, d: duration
                 //if (s == undefined) s = 1.70158;
                 // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
-                var s = 1.70158;
+                var s = 10.70158;//1.70158;
                 var ft = t;
-                var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
-
+                //var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
+                var f = 1.2*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
                 fp.x = initFP.x+(targetFP.x-initFP.x)*f;
                 fp.y = initFP.y+(targetFP.x-initFP.y)*f;
                 fp.sx = initFP.sx+(targetFP.sx-initFP.sx)*f;
