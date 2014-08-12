@@ -45,7 +45,7 @@ ZN.App.prototype = {
         this.model = new ZN.Model();
         this.model.init();
         this.rules = new ZN.Rules();
-        this.rules.init(this,this.model);
+
 
         var rules = this.getParameterByName("rules");
         if(rules!=""){
@@ -78,10 +78,11 @@ ZN.App.prototype = {
 
     configLoaded:function(){
 	// url for api on same host as this page served from
-	//	var url = window.location.protocol + "//" + window.location.host + "/"; 
-	    var url = 'http://localhost:5000/'
+		var url = window.location.protocol + "//" + window.location.host + "/";
+	    //var url = './';//'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.Config.dataSource;
+        this.rules.init(this,this.model);
         this.loadProjectRules();
 
     },

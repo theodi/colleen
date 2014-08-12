@@ -4,6 +4,11 @@ ZN.Rules = function () {
     this.model = null;
     this.frameTime = 0;
     this.transitionAnim = null;
+    this.focusOpacity = 1.0;
+    this.bgOpacity = 0.05;
+    this.focusDuration = 1.5; // focus transition seconds
+    this.changeFocusDuration = [30.0,60.0];
+
 
 }
 
@@ -13,6 +18,14 @@ ZN.Rules.prototype = {
     init:function(app,model){
         this.app = app;
         this.model = model;
+
+        this.focusOpacity = ZN.Config.focusOpacity;
+        this.bgOpacity = ZN.Config.bgOpacity;
+        this.focusDuration = ZN.Config.focusDuration;
+        this.changeFocusDuration = ZN.Config.changeFocusDuration;
+
+
+
 
     },
 
@@ -34,21 +47,24 @@ ZN.Rules.prototype = {
 
             // project rules
 
-            if(this.app.runProjectGraph && project!=focusProject && project!=lfp){
+            if(this.app.runProjectGraph){
+                if(project!=focusProject && project!=lfp){
 
-                this.scaleRule(project,project,project.bgScaleAnim);
-                var pt = projectPoints[project.name];
-                if(pt){
-                    project.x = pt.x;
-                    project.y = pt.y;
-                    //project.sx = 0.05;
-                    //project.sy = 0.05;
+                    this.scaleRule(project,project,project.bgScaleAnim);
+                    var pt = projectPoints[project.name];
+                    if(pt){
+                        project.x = pt.x;
+                        project.y = pt.y;
+                        //project.sx = 0.05;
+                        //project.sy = 0.05;
+                    }
+
+                    project.opacity = this.bgOpacity;
                 }
 
-                project.opacity = 0.05;
             }
             else{
-                project.opacity = 1.0;
+                project.opacity = this.focusOpacity;
             }
 
 
@@ -85,15 +101,8 @@ ZN.Rules.prototype = {
                  _.remove(shape.trail.shapes, function(trailShape) {
                  return trailShape.opacity < 0.05;
                  });
-
-
-                 if(typeof shape.parentId==="undefined"){
-                 shape.x -=0.3;
-                 for(var c=0;c<shape.children.length;c++){
-                 //shape.children[c].x-=0.3;
-                 }
-                 }
                  */
+
 
 
                 // shape rules
@@ -127,6 +136,9 @@ ZN.Rules.prototype = {
                                 this.circleRule(project,shape,anim);
                                 break;
 
+                            case "serengeti":
+                                this.serengetiRule(project,shape,anim);
+                                break;
 
 
                             case "translate_circular_rnd":
@@ -463,6 +475,44 @@ ZN.Rules.prototype = {
 
     },
 
+    serengetiRule:function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+        var sc = 20.0;
+        var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
+
+        var iPathSegs = obj.initial.pathSegs;
+        var pathSegs = obj.pathSegs;
+
+
+        for(var s=0;s<iPathSegs.length;s++){
+            var iseg = iPathSegs[s];
+            var seg = pathSegs[s];
+            var p = s%4;
+
+            switch(seg[0]){
+                case "M":
+                    pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
+                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
+                    break;
+                case "C":
+
+                    //pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
+                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
+                    //pathSegs[s][3] = iseg[3]+t[p][0]*sc*n;
+                    pathSegs[s][4] = iseg[4]+t[p][1]*sc*n;
+
+                    pathSegs[s][5] = iseg[5]+t[p][0]*sc*n;
+                    pathSegs[s][6] = iseg[6]+t[p][1]*sc*n;
+                    break;
+
+            };
+        }
+
+
+
+    },
+
 
     // Project rules
 
@@ -488,7 +538,9 @@ ZN.Rules.prototype = {
         }
 
         this.model.lastChangeFocus = (new Date()).valueOf();
-        this.model.changeFocusTime = (Math.random()*5+5)*1000;
+        var min = this.changeFocusDuration[0];
+        var max = this.changeFocusDuration[1];
+        this.model.changeFocusTime = (Math.random()*(max-min)+min)*1000;
 
         //var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
         //var scale = 0.5;
@@ -507,7 +559,7 @@ ZN.Rules.prototype = {
             t: 0.0
         };
 
-        var focusScale = 0.8;
+        var focusScale = 1.0;//0.8;
         fp = this.model.focusProject; // scale to foreground
         var lfp = this.model.lastFocusProject; // scale to background
         var initFP = {x:fp.x, y:fp.y, sx:fp.sx, sy:fp.sy};
@@ -521,11 +573,11 @@ ZN.Rules.prototype = {
         this.transitionAnim = $(obj).animate({
             t: 1.0
         }, {
-            duration: 5000,
+            duration: self.focusDuration*1000,
             easing: 'linear',
             step: function(t) {
 
-                var x, y,sx,sy;
+                var x, y,sx,sy,opacity;
 
                 if(lfp){
                     var projectPoints = self.model.projectGraph.projectPoints;
@@ -538,19 +590,29 @@ ZN.Rules.prototype = {
 
                     lfp.sx = initLFP.sx+(targetLFP.sx-initLFP.sx)*t;
                     lfp.sy = initLFP.sy+(targetLFP.sy-initLFP.sy)*t;
+
+                    opacity = self.focusOpacity + (self.bgOpacity-self.focusOpacity)*t;
+                    lfp.opacity = opacity;
                 }
 
+                // https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
                 // ease outback
                 // t: current time, b: begInnIng value, c: change In value, d: duration
                 //if (s == undefined) s = 1.70158;
                 // return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
-                var s = 10.70158;
-                var f = 1.2*((t=t/1.0-1)*t*((s+1)*t + s) + 1) + 0.0;
-
+                var s = 10.0;//1.70158;
+                var ft = t;
+                //var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
+                var f = 1.0*((ft=ft/1.0-1)*ft*((s+1)*ft + s) + 1) + 0.0;
                 fp.x = initFP.x+(targetFP.x-initFP.x)*f;
                 fp.y = initFP.y+(targetFP.x-initFP.y)*f;
                 fp.sx = initFP.sx+(targetFP.sx-initFP.sx)*f;
                 fp.sy = initFP.sy+(targetFP.sy-initFP.sy)*f;
+
+                opacity = self.bgOpacity + (self.focusOpacity-self.bgOpacity)*t;
+                fp.opacity = opacity;
+
+
 
             },
             complete:function(){
