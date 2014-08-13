@@ -1,4 +1,9 @@
-require('newrelic');
+var usenewrelic = (typeof process.env.WNU_NEW_RELIC_ENABLED == 'undefined' || process.env.WNU_NEW_RELIC_ENABLED == 'true');
+if (usenewrelic) {
+    require('newrelic');
+} else {
+    console.log("New Relic disabled in config");
+}
 var express = require('express'),
     classifications = require('./routes/classifications');
  
@@ -6,10 +11,8 @@ var app = express();
 
 app.use('/', express.static(__dirname +'/client'));
 
-app.configure(function () {
-	app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
-	app.use(express.bodyParser());
-    });
+app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+app.use(express.bodyParser());
 
 app.get('/classificationCount', classifications.getClassificationCount);
 app.get('/classifications/:count/offset/:offset', classifications.getLastClassifications);
@@ -40,7 +43,7 @@ process.on('exit', function () {
 
 // happens when you press Ctrl+C
 process.on('SIGINT', function () {
-	console.log( '\nGracefully shutting down from  SIGINT (Crtl-C)' );
+	console.log( '\nGracefully shutting down from SIGINT (Crtl-C)' );
 	process.exit();
     });
 
