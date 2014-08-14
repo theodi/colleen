@@ -21,7 +21,6 @@ nconf.file({ file:
     .argv()
     .env();
 
-
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
 
 var dbConfig = parseDbUrl(WNU_DB_URL);
@@ -39,9 +38,7 @@ var MIN_SECS = 60,
     WEEK_SECS = 604800,
     MONTH_SECS = 2592000; // month 30 days
 
-
 var connection;
-
 
 function handleDisconnect() {
     connection = mysql.createConnection(WNU_DB_URL); // Recreate the connection, since
@@ -74,7 +71,7 @@ exports.getClassificationCount = function(req, res) {
         console.log('Classification count: ', rows[0].count);
         res.send(rows);
     });
-}
+};
 
 exports.getClassificationCountLatest = function(req, res) {
 
@@ -104,9 +101,7 @@ exports.getClassificationCountLatest = function(req, res) {
 
         });
     });
-
-}
-
+};
 
 exports.getLastClassifications = function(req, res) {
     var count = parseInt(req.params.count);
@@ -124,7 +119,6 @@ exports.getLastClassifications = function(req, res) {
         if(err) throw err;
         res.send(rows);
     });
-
 };
 
 exports.getClassificationInterval = function(req, res) {
@@ -147,7 +141,7 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-    var classificationsTable = 'classifications_archive'
+    var classificationsTable = 'classifications_archive';
 
     connection.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
         "FROM "+classificationsTable+" WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
@@ -179,11 +173,10 @@ exports.getClassificationInterval = function(req, res) {
                 //console.log('timeStr',timeStr);
             }
 
-            var series = {
+            projects[project] = {
                 key: project,
                 values: values
             };
-            projects[project] = series;
         });
 
         _.each(rows,function(row){
@@ -205,7 +198,6 @@ exports.getClassificationInterval = function(req, res) {
         res.send(output);
 
     });
-
 };
 
 exports.getDBstats = function(req, res) {
@@ -213,23 +205,20 @@ exports.getDBstats = function(req, res) {
     connection.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
         if(err) throw err;
         console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
-	output.push(rows);
-	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
-		if(err) throw err;
-		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
-		output.push(rows[0]);
-		res.send(output);
-	    });
+        output.push(rows);
+        connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+            if(err) throw err;
+            console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
+            output.push(rows[0]);
+            res.send(output);
+        });
     });
-
 };
 
 exports.updateAnalytics = function(req, res) {
-
     connection.query("TRUNCATE `analytics`",function(err) {
 
         if(err) throw err;
-
 
         var intervals = [1,12,24,24*7,24*30]; // hours
         //var intervals = [1]; // hours
@@ -244,15 +233,8 @@ exports.updateAnalytics = function(req, res) {
         }
 
         updateAnalyticsIntervals(res,list);
-
     });
-
-
-
-}
-
-
-
+};
 
 function testUserAnalytics(res){
     connection.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`) "+
@@ -263,12 +245,8 @@ function testUserAnalytics(res){
         if(err) throw err;
 
         res.send(rows);
-
-
     });
-
 }
-
 
 function updateAnalyticsIntervals(res,analyticsArray){
     var analytics = analyticsArray.shift();
@@ -379,8 +357,7 @@ exports.updateTimeSeries = function(req, res) {
 
      updateTimeSeriesIntervals(res,[{type:'c',interval:3600,from:from,to:to}]);
      */
-
-}
+};
 
 function updateTimeSeriesIntervals(res,analyticsArray){
     var analytics = analyticsArray.shift();
@@ -390,8 +367,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
     var to = analytics.to; // unix timestamp
 
     console.log('updateTimeSeriesIntervals',analytics.type, analytics.interval);
-
-
 
     var dataQuery = "";
     switch(dataType){
@@ -405,7 +380,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
             res.send([]);
             return;
     }
-
 
     connection.query("SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
         "FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
@@ -435,11 +409,10 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                 //console.log('unixtime',unixtime);
             }
 
-            var series = {
+            projects[project] = {
                 key: project,
                 values: values
             };
-            projects[project] = series;
         });
 
         // add counts to date series
@@ -452,9 +425,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                 item.value = row.count;
             }
             //console.log('row.date',row.date);
-
-
-
         });
 
         var unixNow = parseInt(new Date().valueOf()/1000);
@@ -477,7 +447,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
             function (err, rows, fields) {
 
             if (err) throw err;
-
 
             // delete previous data
 
@@ -502,57 +471,39 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                         else{
                             res.send(rows);
                         }
-
-                    });
+                });
             });
-
-
-
         });
-
     });
-
 }
 
-
 exports.getAnalytics = function(req, res) {
-
     connection.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
         if(err) throw err;
         res.send(rows);
-
     });
-
-}
+};
 
 exports.getAnalyticsAggregateCountries = function(req, res) {
-
     connection.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
         if(err) throw err;
         res.send(rows);
     });
-}
-
+};
 
 exports.getTimeSeries = function(req, res) {
-
-    console.log('getTimeSeries');
-
+    //console.log('getTimeSeries');
     connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`",function(err, rows, fields) {
         if(err) throw err;
         res.send(rows);
-
     });
-
-}
+};
 
 exports.getTimeSeriesIntervals = function(req, res) {
-
-    console.log('getTimeSeries');
+    //console.log('getTimeSeries');
     var intervalsStr = req.params.intervals; // secs
     var intervals = intervalsStr.split(',');
     var intervalQueries = [], invervalValues = [];
-
 
     _.each(intervals,function(interval,index){
         if(!isNaN(interval)){
@@ -561,7 +512,7 @@ exports.getTimeSeriesIntervals = function(req, res) {
         }
     });
     var whereStr = " WHERE " + intervalQueries.join(" OR ");
-    console.log(whereStr);
+    //console.log(whereStr);
 
     //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
     connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
@@ -570,14 +521,10 @@ exports.getTimeSeriesIntervals = function(req, res) {
 
         intervalStr = intervals.join(',');
         res.send({intervals:invervalValues, data:rows});
-
     });
-
-}
-
+};
 
 exports.getTimeSeriesBetweenDates = function(req, res) {
-
     // 2013/03/01 to 2013/04/01 2013/03/29
     // localhost:5000/timeseries/from/1362096000/to/1364774400
 
@@ -601,18 +548,28 @@ exports.getTimeSeriesBetweenDates = function(req, res) {
         if(err) throw err;
 
         res.send({from:from, to:to, data:rows});
-
     });
-
-}
-
+};
 
 exports.cleanUp = function() {
     console.log('Checking for open DB connections');
-    if (null != connection){
-	console.log('Closing DB connection');
-	connection.end();
+    if (null != connection) {
+        console.log('Closing DB connection');
+        connection.end();
     }
-}
+};
+
+exports.ping = function (req, res) {
+    if (null != connection) {
+        connection.query('SELECT 1', function (err, rows) {
+            if (err) {
+                res.send({status: 0});
+            } else {
+                res.send({status: 1});
+            }
+        });
+    }
+    console.log('ping');
+};
 
 module.exports.nconf = nconf;
