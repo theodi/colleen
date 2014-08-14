@@ -26,7 +26,7 @@ app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 app.get('/timeseries',classifications.getTimeSeries);
 app.get('/timeseries/intervals/:intervals',classifications.getTimeSeriesIntervals); // client
 app.get('/timeseries/from/:from/to/:to',classifications.getTimeSeriesBetweenDates); // client
-
+app.get('/ping', classifications.ping); // monitor
 
 app.get('/dbstats',classifications.getDBstats);
 
