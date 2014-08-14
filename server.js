@@ -36,22 +36,22 @@ console.log('Listening on port ' + port + '...');
 
 // Execute commands in clean exit
 process.on('exit', function () {
-	console.log('Exiting ...');
-	classifications.cleanUp();
-	console.log('bye');
-    });
+    console.log('Exiting ...');
+    classifications.cleanUp();
+    console.log('bye');
+});
 
 // happens when you press Ctrl+C
 process.on('SIGINT', function () {
-	console.log( '\nGracefully shutting down from SIGINT (Crtl-C)' );
-	process.exit();
-    });
+    console.log( '\nGracefully shutting down from SIGINT (Crtl-C)' );
+    process.exit();
+});
 
 // usually called with kill
 process.on('SIGTERM', function () {
-	console.log('Parent SIGTERM detected (kill)');
-	// exit cleanly
-	process.exit(0);
-    });
+    console.log('Parent SIGTERM detected (kill)');
+    // exit cleanly
+    process.exit(0);
+});
 
 module.exports.app = app;
