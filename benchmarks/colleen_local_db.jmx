@@ -67,7 +67,7 @@
           <hashTree/>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="getClassificationCountLatest" enabled="true">
             <stringProp name="dataSource">first</stringProp>
-            <stringProp name="query">SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1</stringProp>
+            <stringProp name="query">SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY created_at DESC LIMIT 1</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -123,7 +123,7 @@
           <hashTree/>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="getTimeSeriesIntervals" enabled="true">
             <stringProp name="dataSource">first</stringProp>
-            <stringProp name="query">SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries` WHERE `interval` = &apos;60&apos; OR `interval` = &apos;300&apos; OR `interval` = &apos;900&apos; OR `interval` = &apos;3600&apos; OR `interval` = &apos;86400&apos;</stringProp>
+            <stringProp name="query">SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries` WHERE `interval` IN(60,300,900,3600,86400)</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -154,7 +154,7 @@
             <stringProp name="variableNames"></stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="getDBstats1" enabled="true">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="getDBstats1" enabled="false">
             <stringProp name="dataSource">first</stringProp>
             <stringProp name="query">SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM classifications group by project order by last desc</stringProp>
             <stringProp name="queryArguments"></stringProp>
@@ -163,6 +163,7 @@
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="resultVariable"></stringProp>
             <stringProp name="variableNames"></stringProp>
+            <stringProp name="TestPlan.comments">This is a slow query</stringProp>
           </JDBCSampler>
           <hashTree/>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="getDBstats2" enabled="true">
@@ -266,6 +267,10 @@
         <boolProp name="graph_aggregated">false</boolProp>
         <stringProp name="include_sample_labels"></stringProp>
         <stringProp name="exclude_sample_labels"></stringProp>
+        <stringProp name="start_offset"></stringProp>
+        <stringProp name="end_offset"></stringProp>
+        <boolProp name="include_checkbox_state">false</boolProp>
+        <boolProp name="exclude_checkbox_state">false</boolProp>
       </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
       <hashTree/>
       <kg.apc.jmeter.vizualizers.CorrectedResultCollector guiclass="kg.apc.jmeter.vizualizers.TimesVsThreadsGui" testclass="kg.apc.jmeter.vizualizers.CorrectedResultCollector" testname="jp@gc - Response Times vs Threads" enabled="false">
@@ -305,6 +310,10 @@
         <boolProp name="graph_aggregated">false</boolProp>
         <stringProp name="include_sample_labels"></stringProp>
         <stringProp name="exclude_sample_labels"></stringProp>
+        <stringProp name="start_offset"></stringProp>
+        <stringProp name="end_offset"></stringProp>
+        <boolProp name="include_checkbox_state">false</boolProp>
+        <boolProp name="exclude_checkbox_state">false</boolProp>
       </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
       <hashTree/>
       <kg.apc.jmeter.listener.GraphsGeneratorListener guiclass="TestBeanGUI" testclass="kg.apc.jmeter.listener.GraphsGeneratorListener" testname="jp@gc - Graphs Generator" enabled="true">
@@ -326,6 +335,12 @@
         <boolProp name="preventOutliers">true</boolProp>
         <boolProp name="relativeTimes">false</boolProp>
         <stringProp name="resultsFileName">${__P(TEST_RESULTS_FILE,/tmp/jmeter-results.csv)}</stringProp>
+        <stringProp name="outputBaseFolder"></stringProp>
+        <stringProp name="successFilter"></stringProp>
+        <boolProp name="includeSamplesWithRegex">false</boolProp>
+        <boolProp name="excludeSamplesWithRegex">false</boolProp>
+        <stringProp name="startOffset"></stringProp>
+        <stringProp name="endOffset"></stringProp>
       </kg.apc.jmeter.listener.GraphsGeneratorListener>
       <hashTree/>
     </hashTree>
