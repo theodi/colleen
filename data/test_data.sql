@@ -20,21 +20,28 @@
 --
 
 DROP TABLE IF EXISTS `classifications`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+--
+-- Table structure for table `classifications`
+--
+DROP TABLE IF EXISTS `classifications`;
 CREATE TABLE `classifications` (
-  `id` int(11) unsigned NOT NULL,
-  `created_at` datetime NOT NULL,
-  `user_id` int(11) unsigned DEFAULT NULL,
-  `project` varchar(255) NOT NULL,
-  `country` varchar(2) DEFAULT NULL,
-  `region` varchar(10) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `latitude` decimal(8,5) DEFAULT NULL,
-  `longitude` decimal(8,5) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id`         INT(11) UNSIGNED  NOT NULL,
+  `created_at` TIMESTAMP         NOT NULL,
+  `user_id`    INT(11) UNSIGNED DEFAULT NULL,
+  `project`    VARCHAR(32)
+               CHARACTER SET ascii
+               COLLATE ascii_bin NOT NULL,
+  `country`    CHAR(2)          DEFAULT NULL,
+  `region`     CHAR(2)          DEFAULT NULL,
+  `city`       VARCHAR(255)     DEFAULT NULL,
+  `latitude`   DECIMAL(9, 6)    DEFAULT NULL,
+  `longitude`  DECIMAL(9, 6)    DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_at` (`created_at`),
+  KEY `project` (`project`)
+)
+  ENGINE =InnoDB
+  DEFAULT CHARSET =utf8;
 
 --
 -- Dumping data for table `classifications`
