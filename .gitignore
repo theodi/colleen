@@ -7,7 +7,6 @@ node_modules
 .#*
 web/wnu/*
 *.log
-benchmarks/results/*
 .grunt/
 _SpecRunner.html
 *.hprof

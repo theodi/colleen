@@ -83,7 +83,7 @@ exports.getClassificationCountLatest = function(req, res) {
     }
 
     var maxTimeUnix = 0;
-    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows, fields) {
+    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY created_at DESC LIMIT 1",function(err, rows, fields) {
 
         if(err) throw err;
         maxTimeUnix = rows[0].time;
@@ -206,7 +206,7 @@ exports.getDBstats = function(req, res) {
         if(err) throw err;
         console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
         output.push(rows);
-        connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+        connection.query("SELECT (data_length+index_length)/1048576 tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
             if(err) throw err;
             console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
             output.push(rows[0]);
@@ -282,7 +282,7 @@ function updateAnalyticsIntervals(res,analyticsArray){
 
     var maxTimeUnix = 0;
     // type, project, interval, country, count
-    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows, fields) {
+    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY created_at DESC LIMIT 1",function(err, rows, fields) {
 
         if(err) throw err;
         maxTimeUnix = rows[0].time;
@@ -459,7 +459,7 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                 console.log('maxTime: ', maxTime,'type',dataType,'interval',interval);
 
                 // delete interval records before last update
-                var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
+                var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id` = '"+dataType+"' AND `interval` = "+interval;
 
                 console.log(query);
                 connection.query(query, function(err, rows, fields) {
@@ -503,15 +503,14 @@ exports.getTimeSeriesIntervals = function(req, res) {
     //console.log('getTimeSeries');
     var intervalsStr = req.params.intervals; // secs
     var intervals = intervalsStr.split(',');
-    var intervalQueries = [], invervalValues = [];
+    var intervalValues = [];
 
     _.each(intervals,function(interval,index){
         if(!isNaN(interval)){
-            intervalQueries.push("`interval` = '"+parseInt(interval)+"'");
-            invervalValues.push(parseInt(interval));
+            intervalValues.push(parseInt(interval));
         }
     });
-    var whereStr = " WHERE " + intervalQueries.join(" OR ");
+    var whereStr = " WHERE `interval` IN(" + intervalValues.join(",") + ")";
     //console.log(whereStr);
 
     //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
@@ -519,8 +518,7 @@ exports.getTimeSeriesIntervals = function(req, res) {
 
         if(err) throw err;
 
-        intervalStr = intervals.join(',');
-        res.send({intervals:invervalValues, data:rows});
+        res.send({intervals:intervalValues, data:rows});
     });
 };
 
