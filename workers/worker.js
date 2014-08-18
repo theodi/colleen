@@ -229,7 +229,7 @@ function fetchProjectData(projectId){
 
 
         var fromMs, toMs;
-        var curMs = (new Date()).valueOf();
+        var curMs = (new Date()).valueOf() -gLatency;
         var monthMs = MONTH_SECS * 1000;// a month in ms
         var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
