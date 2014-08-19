@@ -1,8 +1,8 @@
 {
     "name":"planet_four",
     "sx":0.3,"sy":0.3,
-    "x":-400,
-    "y":300,
+    "x":0,
+    "y":0,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
