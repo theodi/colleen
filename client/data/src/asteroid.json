@@ -2,7 +2,7 @@
     "name":"asteroid",
     "sx":0.2,"sy":0.2,
     "x":0,
-    "y":0,
+    "y":-400,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
