@@ -88,21 +88,18 @@ ZN.Rules.prototype = {
 
             _.each(project.shapes,function(shape,ind){
 
-                // shape trails
+                // update shape trails
 
-                /*
-                 _.each(shape.trail.shapes,function(trailShape,si){
+                _.each(shape.trail.shapes, function (trailShape, si) {
 
-                 trailShape.opacity *=0.985;//(trailShape);
+                    trailShape.opacity *= shape.trail.fade;//0.985;//(trailShape);
 
 
-                 },this);
+                }, this);
 
-                 _.remove(shape.trail.shapes, function(trailShape) {
-                 return trailShape.opacity < 0.05;
-                 });
-                 */
-
+                _.remove(shape.trail.shapes, function (trailShape) {
+                    return trailShape.opacity < 0.05;
+                });
 
 
                 // shape rules
@@ -134,6 +131,10 @@ ZN.Rules.prototype = {
 
                             case "circle":
                                 this.circleRule(project,shape,anim);
+                                break;
+
+                            case "trail":
+                                this.trailRule(project,shape,anim);
                                 break;
 
                             case "serengeti":
@@ -429,11 +430,8 @@ ZN.Rules.prototype = {
 
     colourRule: function(project, obj, anim){
 
-
         var n = this.getNextSeriesValue(project, obj, anim);
-
         var fillScale = chroma.scale(anim.fills);
-
 
         // set scale values from anim rule range and normalised value
         var col = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
@@ -441,6 +439,7 @@ ZN.Rules.prototype = {
 
 
     },
+
 
     circleRule:function(project, obj, anim){
 
@@ -474,6 +473,22 @@ ZN.Rules.prototype = {
         obj.y = obj.initial.y +y;
 
     },
+
+
+    trailRule: function(project, obj, anim){
+
+        var endLoop = this.updateAnimTime(anim);
+        if(endLoop){
+            var duration = this.getDuration(project,anim);
+            var trailType = anim['trail_type'];
+            var opacity = anim['opacity'] || obj.opacity;
+            var fade = anim['fade'];
+            obj.addTrailShape(trailType, fade, opacity);
+        }
+
+
+    },
+
 
     serengetiRule:function(project, obj, anim){
 

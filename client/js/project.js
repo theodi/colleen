@@ -391,18 +391,26 @@ ZN.Shape.prototype = {
         this.sx = shape.sx;
         this.sy = shape.sy;
         this.d = shape.d;
+        this.pathSegs = _.cloneDeep(shape.pathSegs);
         this.opacity = shape.opacity;
         this.fill = shape.fill;
 
     },
 
-    addTrailShape: function(){
+    addTrailShape: function(type,fade,opacity){
 
+        this.trail.type = type;
+        if(fade){
+            this.trail.fade = fade;
+        }
         switch(this.trail.type){
             case "path":
 
                 var shape = new ZN.Shape();
                 shape.setTrailData(this);
+                if(opacity){
+                    shape.opacity = opacity;
+                }
 
                 this.trail.shapes.push(shape);
                 break;
@@ -416,11 +424,15 @@ ZN.Shape.prototype = {
                     var shape = new ZN.Shape();
                     shape.setTrailData(this);
 
-                    shape.sx = this.sx*3.0;
-                    shape.sy = this.sy*3.0;
+                    shape.sx = this.sx*30.0;
+                    shape.sy = this.sy*30.0;
 
                     shape.x = pt.x + this.x;
                     shape.y = pt.y + this.y;
+
+                    if(opacity){
+                        shape.opacity = opacity;
+                    }
 
                     var squarePath =
                         "M-0.5,-0.5L-0.5,0.5L0.5,0.5L0.5,-0.5L-0.5,-0.5Z";
@@ -431,6 +443,7 @@ ZN.Shape.prototype = {
                     "C-0.5,-0.5,-0.5,-0.5,-0.5,-0.5z"*/
 
                     shape.d = squarePath;
+                    shape.pathSegs =  Snap.path.toAbsolute(squarePath);
 
 
 
@@ -450,6 +463,7 @@ ZN.Shape.prototype = {
 ZN.Trail = function(){
     this.type = "path"; // "points"; //
     this.shapes = [];
+    this.fade = 0.985;
 
 
 }

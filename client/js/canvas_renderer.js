@@ -135,7 +135,6 @@ ZN.CanvasRenderer.prototype = {
 
         // Store project transform
         this.ctx.save();
-        //console.log("ctx.save");
         // Shape transform
         this.ctx.translate(shape.x,shape.y);
         this.ctx.rotate(shape.rotation*Math.PI/180);
