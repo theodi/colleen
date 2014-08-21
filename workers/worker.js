@@ -5,6 +5,12 @@ var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
 
+
+/*---------------------------------------------------------------------------*/
+
+// Config
+
+
 // if testing then want to make sure we are using testing db
 if (process.env.NODE_ENV == 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});

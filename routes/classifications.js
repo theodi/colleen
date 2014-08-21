@@ -8,6 +8,12 @@ var mysql      = require('mysql');
 var parseDbUrl = require('parse-database-url');
 var nconf = require('nconf');
 
+
+/*---------------------------------------------------------------------------*/
+
+// Config
+
+
 // if testing then want to make sure we are using testing db
 if (process.env.NODE_ENV == 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
@@ -28,7 +34,10 @@ var dbConfig = parseDbUrl(WNU_DB_URL);
 // need to parse dbname out of connection string
 var WNU_DB_NAME = dbConfig['database'];
 
-//var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
+
+/*---------------------------------------------------------------------------*/
+
+// Cosntants and globals
 
 var MIN_SECS = 60,
     MIN_5_SECS = 300,
@@ -39,6 +48,12 @@ var MIN_SECS = 60,
     MONTH_SECS = 2592000; // month 30 days
 
 var connection;
+
+
+/*---------------------------------------------------------------------------*/
+
+// Database connection
+
 
 function handleDisconnect() {
     connection = mysql.createConnection(WNU_DB_URL); // Recreate the connection, since
@@ -64,6 +79,84 @@ function handleDisconnect() {
 handleDisconnect();
 
 
+/*---------------------------------------------------------------------------*/
+
+// Cleanup
+
+exports.cleanUp = function() {
+    console.log('Checking for open DB connections');
+    if (null != connection) {
+        console.log('Closing DB connection');
+        connection.end();
+    }
+};
+
+
+/*---------------------------------------------------------------------------*/
+
+// Timeseries routes
+
+exports.getTimeSeries = function(req, res) {
+    //console.log('getTimeSeries');
+    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` FROM `timeseries`",function(err, rows, fields) {
+        if(err) throw err;
+        res.send(rows);
+    });
+};
+
+exports.getTimeSeriesIntervals = function(req, res) {
+    //console.log('getTimeSeriesIntervals');
+    var intervalsStr = req.params.intervals; // secs
+    var intervals = intervalsStr.split(',');
+    var intervalValues = [];
+
+    _.each(intervals,function(interval,index){
+        if(!isNaN(interval)){
+            intervalValues.push(parseInt(interval));
+        }
+    });
+    var whereStr = " WHERE `interval` IN(" + intervalValues.join(",") + ")";
+    //console.log(whereStr);
+
+    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
+
+        if(err) throw err;
+
+        res.send({intervals:intervalValues, data:rows});
+    });
+};
+
+exports.getTimeSeriesBetweenDates = function(req, res) {
+    //console.log('getTimeSeriesBetweenDates');
+    // 2013/03/01 to 2013/04/01 2013/03/29
+    // localhost:5000/timeseries/from/1362096000/to/1364774400
+
+    // 2013/03/30 23:00 to 2013/04/01
+    // localhost:5000/timeseries/from/1364684400/to/1364774400
+
+    var from = parseInt(req.params.from); // unix timestamp
+    var to = parseInt(req.params.to); // unix timestamp
+
+    if(isNaN(to) || isNaN(from)){
+        res.send([]);
+        return;
+    }
+
+    var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
+        + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
+    //console.log(query);
+    connection.query(query,function(err, rows) {
+
+        if(err) throw err;
+
+        res.send({from:from, to:to, data:rows});
+    });
+};
+
+
+/*---------------------------------------------------------------------------*/
+
+// Classification routes
 
 exports.getClassificationCount = function(req, res) {
     connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
@@ -200,20 +293,12 @@ exports.getClassificationInterval = function(req, res) {
     });
 };
 
-exports.getDBstats = function(req, res) {
-    var output = [];
-    connection.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
-        if(err) throw err;
-        console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
-        output.push(rows);
-        connection.query("SELECT (data_length+index_length)/1048576 tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
-            if(err) throw err;
-            console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
-            output.push(rows[0]);
-            res.send(output);
-        });
-    });
-};
+
+
+/*---------------------------------------------------------------------------*/
+
+// Analytics routes
+
 
 exports.updateAnalytics = function(req, res) {
     connection.query("TRUNCATE `analytics`",function(err) {
@@ -256,29 +341,6 @@ function updateAnalyticsIntervals(res,analyticsArray){
 
     console.log('updateAnalyticsIntervals',analytics.type, analytics.interval);
 
-    /*
-    switch (interval) {
-        case 'd': // day
-            seconds = 60 * 60 * 24;
-            break;
-        case 'w': // week
-            seconds = 60 * 60 * 24 * 7;
-            break;
-        case 'm': // month
-            seconds = 60 * 60 * 24 * 7 * 30;
-            break;
-    }
-    */
-
-    // http://stackoverflow.com/questions/14105018/generating-a-series-of-dates
-    // http://stackoverflow.com/questions/75752/what-is-the-most-straightforward-way-to-pad-empty-dates-in-sql-results-on-eithe
-
- // startTime: beginning of series
- //connection.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-starTime)/"+interval+") AS time "+
- //"FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
- //"GROUP BY time,project", function(err, rows, fields) {
-
-
 
     var maxTimeUnix = 0;
     // type, project, interval, country, count
@@ -320,6 +382,24 @@ function updateAnalyticsIntervals(res,analyticsArray){
     });
 }
 
+
+exports.getAnalytics = function(req, res) {
+    connection.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
+        if(err) throw err;
+        res.send(rows);
+    });
+};
+
+exports.getAnalyticsAggregateCountries = function(req, res) {
+    connection.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
+        if(err) throw err;
+        res.send(rows);
+    });
+};
+
+/*---------------------------------------------------------------------------*/
+
+// Timeseries generation routes
 
 exports.updateTimeSeries = function(req, res) {
 
@@ -477,85 +557,32 @@ function updateTimeSeriesIntervals(res,analyticsArray){
     });
 }
 
-exports.getAnalytics = function(req, res) {
-    connection.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
+/*---------------------------------------------------------------------------*/
+
+// Database stats
+
+
+exports.getDBstats = function(req, res) {
+    var output = [];
+    connection.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
         if(err) throw err;
-        res.send(rows);
+        console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
+        output.push(rows);
+        connection.query("SELECT (data_length+index_length)/1048576 tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+            if(err) throw err;
+            console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
+            output.push(rows[0]);
+            res.send(output);
+        });
     });
 };
 
-exports.getAnalyticsAggregateCountries = function(req, res) {
-    connection.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-    });
-};
 
-exports.getTimeSeries = function(req, res) {
-    //console.log('getTimeSeries');
-    connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-    });
-};
 
-exports.getTimeSeriesIntervals = function(req, res) {
-    //console.log('getTimeSeries');
-    var intervalsStr = req.params.intervals; // secs
-    var intervals = intervalsStr.split(',');
-    var intervalValues = [];
+/*---------------------------------------------------------------------------*/
 
-    _.each(intervals,function(interval,index){
-        if(!isNaN(interval)){
-            intervalValues.push(parseInt(interval));
-        }
-    });
-    var whereStr = " WHERE `interval` IN(" + intervalValues.join(",") + ")";
-    //console.log(whereStr);
+// Ping
 
-    //connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
-    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
-
-        if(err) throw err;
-
-        res.send({intervals:intervalValues, data:rows});
-    });
-};
-
-exports.getTimeSeriesBetweenDates = function(req, res) {
-    // 2013/03/01 to 2013/04/01 2013/03/29
-    // localhost:5000/timeseries/from/1362096000/to/1364774400
-
-    // 2013/03/30 23:00 to 2013/04/01
-    // localhost:5000/timeseries/from/1364684400/to/1364774400
-
-    var from = parseInt(req.params.from); // unix timestamp
-    var to = parseInt(req.params.to); // unix timestamp
-    //var interval = parseInt(req.params.interval); // secs
-
-    if(isNaN(to) || isNaN(from)){
-        res.send([]);
-        return;
-    }
-
-    var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
-        + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
-    //console.log(query);
-    connection.query(query,function(err, rows) {
-
-        if(err) throw err;
-
-        res.send({from:from, to:to, data:rows});
-    });
-};
-
-exports.cleanUp = function() {
-    console.log('Checking for open DB connections');
-    if (null != connection) {
-        console.log('Closing DB connection');
-        connection.end();
-    }
-};
 
 exports.ping = function (req, res) {
     if (null != connection) {
