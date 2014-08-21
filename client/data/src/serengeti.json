@@ -1,0 +1,26 @@
+{
+    "name":"serengeti",
+    "sx":1.0,"sy":1.0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+    "_fills":["#951114","#951114"],
+
+
+
+    "shape_animation":
+    [
+    	{"shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],"animation":
+            [{"type":"_scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0},
+             {"type":"serengeti","data":"hour","tween":"linear","fn":"id","duration":[120.0,220.0], "time":0,"time_fn":"random"}]
+    	},
+    	{"shape_ids":["20","21"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#634e0d","#474611"] ,"duration":[30.0,120.0], "time":0}]
+    	}
+    ],
+
+    "shapes":
+    [
+
+    ]
+}

@@ -5,6 +5,12 @@ var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
 
+
+/*---------------------------------------------------------------------------*/
+
+// Config
+
+
 // if testing then want to make sure we are using testing db
 if (process.env.NODE_ENV == 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
@@ -229,7 +235,7 @@ function fetchProjectData(projectId){
 
 
         var fromMs, toMs;
-        var curMs = (new Date()).valueOf();
+        var curMs = (new Date()).valueOf() -gLatency;
         var monthMs = MONTH_SECS * 1000;// a month in ms
         var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
