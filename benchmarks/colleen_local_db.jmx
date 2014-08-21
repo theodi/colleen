@@ -9,7 +9,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="max_connections" elementType="Argument">
             <stringProp name="Argument.name">max_connections</stringProp>
-            <stringProp name="Argument.value">100</stringProp>
+            <stringProp name="Argument.value">15</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
