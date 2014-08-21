@@ -3,7 +3,6 @@
 //https://github.com/felixge/node-mysql
 
 var _ = require('lodash');
-
 var mysql      = require('mysql');
 var parseDbUrl = require('parse-database-url');
 var nconf = require('nconf');
@@ -49,6 +48,9 @@ var MIN_SECS = 60,
 
 var connection;
 
+var gTimeseriesData = [];
+var gTimeseriesUpdateTime = 0;
+var gTimeseriesUpdateInterval = 60000;
 
 /*---------------------------------------------------------------------------*/
 
@@ -79,6 +81,15 @@ function handleDisconnect() {
 handleDisconnect();
 
 
+var gPool  = mysql.createPool({
+    host     : dbConfig['host'],
+    user     : dbConfig['user'],
+    password : dbConfig['password'],
+    database : dbConfig['database'],
+    connectionLimit : 12
+});
+
+
 /*---------------------------------------------------------------------------*/
 
 // Cleanup
@@ -97,11 +108,54 @@ exports.cleanUp = function() {
 // Timeseries routes
 
 exports.getTimeSeries = function(req, res) {
-    //console.log('getTimeSeries');
-    connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` FROM `timeseries`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
+
+    var curMs = (new Date()).valueOf();
+    if(gTimeseriesUpdateTime+gTimeseriesUpdateInterval<curMs){
+        gPool.getConnection(function(error, con) {
+            if(error) throw error;
+            connection.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` FROM `timeseries`",function(err, rows, fields) {
+                if(err) throw err;
+                gTimeseriesData = rows;
+                gTimeseriesUpdateTime = curMs;
+                console.log('getTimeSeries from DB pool');
+                res.send(gTimeseriesData);
+            });
+        });
+
+    }
+    else{
+        console.log('getTimeSeries from cache');
+        res.send(gTimeseriesData);
+    }
+};
+
+exports.getTimeSeriesBetweenDates = function(req, res) {
+    // console.log('getTimeSeriesBetweenDates');
+
+    // localhost:5000/timeseries/from/1364684400/to/1364774400
+
+    var from = parseInt(req.params.from); // unix timestamp
+    var to = parseInt(req.params.to); // unix timestamp
+
+    if(isNaN(to) || isNaN(from)){
+        res.send([]);
+        return;
+    }
+
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
+            + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
+        //console.log(query);
+        con.query(query,function(err, rows) {
+
+            if(err) throw err;
+            res.send({from:from, to:to, data:rows});
+            con.release();
+        });
     });
+
 };
 
 exports.getTimeSeriesIntervals = function(req, res) {
@@ -126,32 +180,7 @@ exports.getTimeSeriesIntervals = function(req, res) {
     });
 };
 
-exports.getTimeSeriesBetweenDates = function(req, res) {
-    //console.log('getTimeSeriesBetweenDates');
-    // 2013/03/01 to 2013/04/01 2013/03/29
-    // localhost:5000/timeseries/from/1362096000/to/1364774400
 
-    // 2013/03/30 23:00 to 2013/04/01
-    // localhost:5000/timeseries/from/1364684400/to/1364774400
-
-    var from = parseInt(req.params.from); // unix timestamp
-    var to = parseInt(req.params.to); // unix timestamp
-
-    if(isNaN(to) || isNaN(from)){
-        res.send([]);
-        return;
-    }
-
-    var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
-        + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
-    //console.log(query);
-    connection.query(query,function(err, rows) {
-
-        if(err) throw err;
-
-        res.send({from:from, to:to, data:rows});
-    });
-};
 
 
 /*---------------------------------------------------------------------------*/
