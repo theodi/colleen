@@ -1,9 +1,7 @@
-
 module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
 
         clean: {
             build: {
@@ -30,18 +28,13 @@ module.exports = function(grunt) {
         concat: {
             // concat task configuration goes here.
             build: {
-
             }
         },
-
-
 
         uglify: {
             options: {
                 //banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
-
-
             dynamic_mappings: {
                 // Grunt will search for "**/*.js" under "lib/" when the "uglify" task
                 // runs and build the appropriate src-dest file mappings then, so you
@@ -54,13 +47,10 @@ module.exports = function(grunt) {
                         dest: 'web/wnu/js/',   // Destination path prefix.
                         ext: '.js',   // Dest filepaths will have this extension.
                         extDot: 'first'   // Extensions in filenames begin after the first dot
-                    },
-
+                    }
                 ]
             }
-
         },
-
 
         watch: {
             scripts: {
@@ -71,19 +61,22 @@ module.exports = function(grunt) {
                     debounceDelay: 1000
                 }
             }
+        },
+
+        jasmine: {
+            options: {
+                specs: 'spec/*.spec.js'
+            }
         }
     });
-
-
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.loadNpmTasks('grunt-contrib-watch');
-
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // Default task(s).
     grunt.registerTask('default', ['clean','copy']);//,'uglify']);
-
 };

@@ -1,6 +1,5 @@
 # Project Colleen
 
-
 Data art project for the Data as Culture art programme.
 
 This work is currently in active development. The most visible aspect will be a web-base animation built in javascript.
@@ -12,7 +11,6 @@ It is fed by an API built using Node.js, MySQL and Python.
 We intend for this work to be open source but have not yet chosen the license.
 
 ##Acknowledgements
-
 
 Many have helped us. We will name them in time.
 
@@ -27,7 +25,7 @@ Many have helped us. We will name them in time.
 
 ##Installation 
 
-###dev on Mac
+###Dev on Mac
 1. Clone project from github.
 
 1. Install MySQL Community Server (download from http://dev.mysql.com/downloads/mysql/) if not already on your machine.
@@ -35,7 +33,6 @@ Many have helped us. We will name them in time.
 1. Run MySQL server. You will be prompted for a password. It wants the admin password for your mac:
 
         $ sudo /usr/local/mysql/support-files/mysql.server start
-
 
 1. Create the database and load test data by following directions in data/setup.sql
 
@@ -56,7 +53,8 @@ Many have helped us. We will name them in time.
         export WEB='supervisor server.js'
         export WNU_DB_URL=mysql://colleen:PUTMYSQLPASSWORDHERE@localhost/zoon
         export WNU_HOST=localhost:5000
-        export WNU_DATA_MODE=archive       
+        export WNU_DATA_MODE=archive
+        export WNU_NEW_RELIC_ENABLED=false
 
 1. Type:
 
@@ -68,7 +66,7 @@ Many have helped us. We will name them in time.
 
 1. Visit app in browser at http://localhost:5000/chart.html
 
-###production on heroku
+###Production on heroku
 1. Create an account at heroku.com
 1. In a terminal window from the project root directory run the following two commands and you should a response like the one below (but it will be a different url of the form word1-word2-number.herokuapp.com which we'll refer to as YOURAPPNAME from here):
 
@@ -92,7 +90,6 @@ Many have helped us. We will name them in time.
         $ git push heroku master
 
 1. Visit your app at http://YOURAPPNAME
-
 
 ##TODO
 * choose license
