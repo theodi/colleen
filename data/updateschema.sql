@@ -31,3 +31,10 @@ ALTER TABLE `projects`
 ENGINE = InnoDB,
 CHANGE `id` `id` VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
 CHANGE `updated` `updated` TIMESTAMP NULL DEFAULT NULL;
+
+ALTER TABLE `gaps`
+ENGINE = InnoDB,
+CHANGE `gap_begin` `gap_begin` TIMESTAMP NULL DEFAULT NULL,
+CHANGE `gap_end` `gap_end` TIMESTAMP NULL DEFAULT NULL,
+CHANGE `gap_size` `gap_size` INT(11) UNSIGNED NOT NULL,
+CHANGE `gap_threshold` `gap_threshold` INT(11) UNSIGNED NOT NULL;
