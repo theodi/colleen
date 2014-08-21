@@ -141,6 +141,10 @@ ZN.Rules.prototype = {
                                 this.serengetiRule(project,shape,anim);
                                 break;
 
+                            case "radio":
+                                this.radioRule(project,shape,anim);
+                                break;
+
 
                             case "translate_circular_rnd":
                                 var r = anim.radius;
@@ -443,9 +447,7 @@ ZN.Rules.prototype = {
 
     circleRule:function(project, obj, anim){
 
-
         var n = this.getNextSeriesValue(project, obj, anim);
-
         var r = anim.radius;
 
         var incDegrees = anim.deg_per_sec[0]+ (anim.deg_per_sec[1]-anim.deg_per_sec[0])*n;
@@ -490,6 +492,7 @@ ZN.Rules.prototype = {
     },
 
 
+
     serengetiRule:function(project, obj, anim){
 
         var n = this.getNextSeriesValue(project, obj, anim);
@@ -524,7 +527,21 @@ ZN.Rules.prototype = {
             };
         }
 
+    },
 
+
+    radioRule:function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+
+        // translate along axis from project centre
+        var trans = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+
+        var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
+        var dx = dist/obj.initial.x,
+            dy = dist/obj.initial.y;
+        obj.x = obj.initial.x + dx*trans;
+        obj.y = obj.initial.y + dy*trans;
 
     },
 
