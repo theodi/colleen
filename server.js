@@ -23,7 +23,7 @@ app.get('/classificationCount/latest/:seconds',classifications.getClassification
 //app.get('/updateTimeSeries/from/:from/to/:to/interval/:interval', classifications.updateTimeSeries);
 app.get('/analytics',classifications.getAnalytics);
 app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
-app.get('/timeseries',classifications.getTimeSeries);
+app.get('/timeseries',classifications.getTimeSeries); // client
 app.get('/timeseries/intervals/:intervals',classifications.getTimeSeriesIntervals); // client
 app.get('/timeseries/from/:from/to/:to',classifications.getTimeSeriesBetweenDates); // client
 app.get('/ping', classifications.ping); // monitor
