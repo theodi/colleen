@@ -52,6 +52,7 @@ var connection;
 var gTimeseriesData = [];
 var gTimeseriesUpdateTime = 0;
 var gTimeseriesUpdateInterval = 60000;
+var gMaxUpdateInterval = 60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
 
 /*---------------------------------------------------------------------------*/
 
@@ -668,7 +669,7 @@ exports.getDBstats = function(req, res) {
 
 /*---------------------------------------------------------------------------*/
 
-// Ping
+// Monitoring
 
 
 exports.ping = function (req, res) {
@@ -685,6 +686,32 @@ exports.ping = function (req, res) {
         });
     });
     console.log('ping');
+};
+
+
+exports.isUpdating = function (req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        con.query('SELECT UNIX_TIMESTAMP(updated) as time FROM projects ORDER BY updated DESC LIMIT 1', function (err, rows) {
+            con.release();
+            if(err) throw err;
+
+            var lastUpdate = rows[0]['time'];
+            console.log(lastUpdate);
+            console.log(rows[0]);
+            var curUnixTime = parseInt((new Date()).valueOf()/1000);
+            var dt = curUnixTime-lastUpdate;
+            console.log("dt",dt);
+            if(dt>gMaxUpdateInterval){
+                res.send({status: 0});
+            }
+            else{
+                res.send({status: 1});
+            }
+        });
+    });
+    console.log('isUpdating');
 };
 
 module.exports.nconf = nconf;

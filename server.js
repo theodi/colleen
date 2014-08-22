@@ -32,6 +32,7 @@ app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 
 // diagnostics
 app.get('/ping', classifications.ping); // monitor
+app.get('/isupdating', classifications.isUpdating);// monitor
 app.get('/dbstats',classifications.getDBstats);
 
 // generate timeseries and analytics
