@@ -202,7 +202,7 @@ exports.getTimeSeriesIntervals = function(req, res) {
 exports.getClassificationCount = function(req, res) {
     gPool.getConnection(function(error, con) {
         if(error) throw error;
-        cono.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
+        con.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
             con.release();
             if(err) throw err;
             console.log('Classification count: ', rows[0].count);
