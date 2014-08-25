@@ -6,24 +6,16 @@
     "rotation":0,
 
 
-    "shape_animation":[{"shape_ids":["1","1.1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","15.1","16","16.1","17","18","19","19.1","20","20.1","21","21.1","22","23","24","25","25.1","26","26.1","27","27.1","28","28.1","29","30","31","31.1"],"animation":
-            [{"type":"scale","dataType":"c","data":"day","series_len":50,"fn":"id","sx":[0.8,10.0],"sy":[0.8,10.0] ,"duration":[4.0,8.0], "time_fn":"random"}]
-    }],
+    "shape_animation":
+        [{"shape_ids":["1.1","2","3","4","5","6","7","8","9","10","11","12","13","14","15.1","16.1","17","18","19.1","20.1","21.1","22","23","24","25.1","26.1","27.1","28.1","29","30","31.1"],"animation":
+            [{"type":"scale","dataType":"c","data":"day","series_len":50,"fn":"id","sx":[0.1,5.0],"sy":[0.1,5.0] ,"duration":[4.0,20.0], "time_fn":"random"}]
+        },
+        {"shape_ids":["1","15","16","19","20","21","25","26","27","28","31"],"animation":
+            [{"type":"scale","dataType":"c","data":"day","series_len":50,"fn":"id","sx":[0.3,2.0],"sy":[0.3,2.0] ,"duration":[2.0,8.0], "time_fn":"random"}]
+        }],
 
-    "_notes":["the shapes need to be out of sync"],
+    "_comment":"the light blue objects are hiding behind the white ones. as they are the same family, they are being over-ridden by the parent so act in the same way. Need to re-number the hidden ones in the SVG",
 
     "shapes":[
-
-        { "_comment":"Scale long duration",
-            "id":"1","rotation":0,"opacity":0.85,
-            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
-
-      { "_comment":"Opacity",
-            "id":"2","rotation":0,"opacity":0.8,
-            "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
-
-        { "_comment":"Rotation",
-            "id":"3","rotation":0,"opacity":0.9,
-            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,222.0], "time":0}]}
     ]
 }
