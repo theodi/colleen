@@ -5,6 +5,12 @@ var fs = require('fs');
 var events = require('events');
 var nconf = require('nconf');
 
+
+/*---------------------------------------------------------------------------*/
+
+// Config
+
+
 // if testing then want to make sure we are using testing db
 if (process.env.NODE_ENV == 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
@@ -544,7 +550,7 @@ function updateTimeSeries(series){
 
         // find last timeseries date
         connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE project='"+projectId+
-            "' AND `type_id`='"+dataType+"'  AND `interval`='"+interval+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
+            "' AND `type_id`='"+dataType+"'  AND `interval`="+interval+" ORDER BY time DESC LIMIT 1",function(err, rows) {
             if (err) {
                 onError('updateTimeSeriesInterval error',err);
                 throw err;
@@ -682,7 +688,7 @@ function removeTimeSeriesItems(series){
     var lastItemTime = 0;
     var offset = seriesLength[interval] -1;
 
-    connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`='"+interval+"' ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
+    connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`="+interval+" ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
 
         if(err) throw err;
         // if rows to delete
@@ -691,7 +697,7 @@ function removeTimeSeriesItems(series){
             //console.log(projectId, 'lastItemTime: ', lastItemTime,'type',dataType,'interval',interval, new Date(lastItemTime*1000));
 
             // delete records past series length
-            var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project`='"+projectId+"' AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
+            var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project` = '"+projectId+"' AND `type_id` = '"+dataType+"' AND `interval` = "+interval;
 
 
             connection.query(query, function(err, rows) {

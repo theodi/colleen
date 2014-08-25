@@ -18,7 +18,7 @@ ZN.App = function () {
     this.nextRequestTime = 0;
     this.curTime = 0;
     this.lastTime = 0;
-    this.frameTime = 50; // frame ms
+    this.frameTime = 33; // frame ms
     this.requestDuration = 60*1000; // in ms
     this.firstFrame = true;
     this.classificationDelay = 0;
@@ -339,7 +339,7 @@ ZN.App.prototype = {
         var frameTimeTarget = 33; // ms
 
         var t0 = new Date().valueOf();
-        this.rules.update(frameTimeTarget);//this.frameTime);
+        this.rules.update(this.frameTime); // frameTimeTarget
         this.renderer.render();
         this.model.projectGraph.update();
         var t1 = new Date().valueOf();

@@ -1,14 +1,14 @@
 {
     "name":"asteroid",
-    "sx":0.2,"sy":0.2,
+    "sx":1.0,"sy":1.0,
     "x":0,
-    "y":-400,
+    "y":0,
     "rotation":0,
-    "_fills":["#951114","#951114"],
-    "_comment":"Project level animations",
-    "_animation":[
-        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
-        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
+
+    "shape_animation":[{"shape_ids":["1","2","3","4","5","6","7","8","9","11","12","13","14"],"animation":
+            [{"type":"asteroid","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[4.0,8.0], "duration_data":"hour", "time_fn":"random"}]
+    }],
+
 
     "shapes":[
 
@@ -38,7 +38,7 @@
 
         { "_comment":"Translate",
             "id":"7","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"_translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
 
         { "_comment":"Rotation",
             "id":"8","rotation":0,"opacity":0.9,
@@ -46,29 +46,29 @@
 
         { "_comment":"Circle",
             "id":"9","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+            "animation":[{"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
         
-        { "_comment":"Circle",
+        { "_comment":"Large Shape Left",
             "id":"10","rotation":0,"opacity":0.1,
             "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
         { "_comment":"Circle",
             "id":"11","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+            "animation":[{"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
         { "_comment":"Circle",
             "id":"12","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+            "animation":[{"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
         { "_comment":"Circle",
             "id":"13","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+            "animation":[{"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
         { "_comment":"Circle",
             "id":"14","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+            "animation":[{"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
-        { "_comment":"Circle",
+        { "_comment":"Large Shape Right",
             "id":"15","rotation":0,"opacity":0.1,
             "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]}
     ]
