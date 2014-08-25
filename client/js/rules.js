@@ -534,17 +534,75 @@ ZN.Rules.prototype = {
 
         var n = this.getNextSeriesValue(project, obj, anim);
 
+        if(typeof anim['lastSeriesValue'] ==='undefined'){
+            anim['lastSeriesValue'] = n;
+            var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
+            var dx = obj.initial.x/dist,
+                dy = obj.initial.y/dist;
+            anim['dx'] = dx, anim['dy'] = dy;
+            var massScale = 0.001;
+            anim['mass'] = Math.sqrt(obj.width*obj.height)*massScale;
+
+
+
+        }
+
+        var dn = n-anim['lastSeriesValue'];
+
+        // translate along axis from project centre
+        var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+        speed*=1500;
+
+        var dt = this.frameTime/(1000*anim.mass);
+
+        var dsq = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
+
+        if(dn>0){
+            obj.vx += speed*anim.dx*dt/dsq;
+            obj.vy += speed*anim.dy*dt/dsq;
+        }
+        var gravity =400.0;
+
+        obj.vx -= gravity*anim.dx*dt/dsq;
+        obj.vy -= gravity*anim.dy*dt/dsq;
+
+        obj.x += obj.vx;
+        obj.y+= obj.vy;
+
+        if(Math.abs(obj.x)<=Math.abs(obj.initial.x)){
+            obj.x = obj.initial.x;
+            obj.vx=0;
+        }
+        if(Math.abs(obj.y)<=Math.abs(obj.initial.y)){
+            obj.y = obj.initial.y;
+            obj.vy=0;
+        }
+
+
+
+        anim['lastSeriesValue'] = n;
+
+    },
+
+    radialTranslateRule: function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+
         // translate along axis from project centre
         var trans = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
 
         var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
-        var dx = dist/obj.initial.x,
-            dy = dist/obj.initial.y;
+        var dx = obj.initial.x/dist,
+            dy = obj.initial.y/dist;
         obj.x = obj.initial.x + dx*trans;
         obj.y = obj.initial.y + dy*trans;
 
     },
 
+
+
+
+    /*---------------------------------------------------------------------------*/
 
     // Project rules
 
