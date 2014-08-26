@@ -143,6 +143,7 @@ ZN.Rules.prototype = {
 
                             case "radio":
                                 this.radioRule(project,shape,anim);
+                                //this.transnn(project,shape,anim);
                                 break;
 
                             case "asteroid":
@@ -390,15 +391,14 @@ ZN.Rules.prototype = {
         switch(anim.dir){
             case "x":
                 x = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                obj.x = obj.initial.x +x;
                 break;
             case "y":
                 y = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                obj.y = obj.initial.y +y;
                 break;
 
         }
-
-        obj.x = obj.initial.x +x;
-        obj.y = obj.initial.y +y;
 
     },
 
@@ -559,6 +559,7 @@ ZN.Rules.prototype = {
 
         var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
 
+        if(d==0) d = 0.0001;
         if(dn>0){
             obj.vx += speed*anim.dx*dt/d;
             obj.vy += speed*anim.dy*dt/d;
@@ -571,14 +572,17 @@ ZN.Rules.prototype = {
         obj.x += obj.vx;
         obj.y+= obj.vy;
 
-        if(Math.abs(obj.x)<=Math.abs(obj.initial.x)){
-            obj.x = obj.initial.x;
+
+
+        if(Math.abs(obj.x)<=Math.abs(obj.initial.x/4)){
+            obj.x = obj.initial.x/4;
             obj.vx=0;
         }
-        if(Math.abs(obj.y)<=Math.abs(obj.initial.y)){
-            obj.y = obj.initial.y;
+        if(Math.abs(obj.y)<=Math.abs(obj.initial.y/4)){
+            obj.y = obj.initial.y/4;
             obj.vy=0;
         }
+
 
 
 
