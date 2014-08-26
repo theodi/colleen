@@ -1,19 +1,13 @@
 {
     "name":"radio",
-    "sx":0.2,
-    "sy":0.2,
+    "sx":1.0,
+    "sy":1.0,
     "x":0,
-    "y":300,
+    "y":0,
     "rotation":0,
-    "_fills":["#951114","#951114"],
-    "_comment":"Project level animations",
-    "_animation":[
-        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
-        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
-
 
     "shape_animation":[{"shape_ids":["3","4","5","6","7","8","9"],"animation":
-            [{"type":"radio","data":"hour","tween":"linear","fn":"id","range":[0.0,10.0],"duration":[4.0,4.0], "time":0}]
+            [{"type":"radio","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[4.0,8.0], "duration_data":"hour", "time":0}]
     }],
 
     "shapes":[

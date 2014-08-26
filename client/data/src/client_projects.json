@@ -1,3 +1,10 @@
 [
-    "radio"
+
+    "cyclone_center",
+        "sunspot",
+        "wise",
+        "serengeti",
+        "asteroid",
+        "milky_way",
+        "radio"
 ]

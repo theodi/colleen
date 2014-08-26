@@ -143,6 +143,11 @@ ZN.Rules.prototype = {
 
                             case "radio":
                                 this.radioRule(project,shape,anim);
+                                //this.transnn(project,shape,anim);
+                                break;
+
+                            case "asteroid":
+                                this.asteroidRule(project,shape,anim);
                                 break;
 
 
@@ -386,15 +391,14 @@ ZN.Rules.prototype = {
         switch(anim.dir){
             case "x":
                 x = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                obj.x = obj.initial.x +x;
                 break;
             case "y":
                 y = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+                obj.y = obj.initial.y +y;
                 break;
 
         }
-
-        obj.x = obj.initial.x +x;
-        obj.y = obj.initial.y +y;
 
     },
 
@@ -534,17 +538,119 @@ ZN.Rules.prototype = {
 
         var n = this.getNextSeriesValue(project, obj, anim);
 
+        if(typeof anim['lastSeriesValue'] ==='undefined'){
+            anim['lastSeriesValue'] = n;
+            var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
+            var dx = obj.initial.x/dist,
+                dy = obj.initial.y/dist;
+            anim['dx'] = dx, anim['dy'] = dy;
+            var massScale = 0.001;
+            anim['mass'] = Math.sqrt(obj.width*obj.height)*massScale;
+
+        }
+
+        var dn = n-anim['lastSeriesValue'];
+
+        // translate along axis from project centre
+        var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+        speed*=1500;
+
+        var dt = this.frameTime/(1000*anim.mass);
+
+        var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
+
+        if(d==0) d = 0.0001;
+        if(dn>0){
+            obj.vx += speed*anim.dx*dt/d;
+            obj.vy += speed*anim.dy*dt/d;
+        }
+        var gravity = 600.0;
+
+        obj.vx -= gravity*anim.dx*dt/d;
+        obj.vy -= gravity*anim.dy*dt/d;
+
+        obj.x += obj.vx;
+        obj.y+= obj.vy;
+
+
+
+        if(Math.abs(obj.x)<=Math.abs(obj.initial.x/4)){
+            obj.x = obj.initial.x/4;
+            obj.vx=0;
+        }
+        if(Math.abs(obj.y)<=Math.abs(obj.initial.y/4)){
+            obj.y = obj.initial.y/4;
+            obj.vy=0;
+        }
+
+
+
+
+        anim['lastSeriesValue'] = n;
+
+    },
+
+    radialTranslateRule: function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+
         // translate along axis from project centre
         var trans = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
 
         var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
-        var dx = dist/obj.initial.x,
-            dy = dist/obj.initial.y;
+        var dx = obj.initial.x/dist,
+            dy = obj.initial.y/dist;
         obj.x = obj.initial.x + dx*trans;
         obj.y = obj.initial.y + dy*trans;
 
     },
 
+
+    asteroidRule:function(project, obj, anim){
+
+
+        var endLoop = this.updateAnimTime(anim);
+        if(endLoop){
+            var n = Math.random();
+            var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
+            anim.curDuration = duration;
+            // start shooting star
+            var speedScale = 3000;
+            var s = (Math.random()+1.0)*speedScale;
+            var theta = Math.random()*Math.PI*2;
+            obj.vx = Math.cos(theta)*s;
+            obj.vy = Math.sin(theta)*s;
+
+            //console.log("start_anim id",obj.id,obj.vx,obj.vy)
+
+
+        }
+
+        var n = this.getSeriesValue(project, obj, anim);
+
+        var dt = this.frameTime/1000;
+
+        var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
+
+
+        obj.x += obj.vx*dt;
+        obj.y += obj.vy*dt;
+
+
+        if(d>5000){
+            obj.x = obj.initial.x;
+            obj.y = obj.initial.y;
+            obj.vx=0, obj.vy=0;
+        }
+
+
+
+    },
+
+
+
+
+    /*---------------------------------------------------------------------------*/
 
     // Project rules
 
