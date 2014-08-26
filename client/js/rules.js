@@ -533,7 +533,90 @@ ZN.Rules.prototype = {
 
     },
 
+    radioRule:function(project, obj, anim){
 
+        //var n = this.getNextSeriesValue(project, obj, anim);
+
+
+
+        if(typeof anim['dx'] ==='undefined'){
+
+            var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
+            var dx = obj.initial.x/dist,
+                dy = obj.initial.y/dist;
+            anim['dx'] = dx, anim['dy'] = dy;
+            var massScale = 0.001;
+            anim['mass'] = Math.sqrt(obj.width*obj.height)*massScale;
+            obj.opacity = 0.0;
+
+        }
+
+        var endLoop = this.updateAnimTime(anim);
+        if(endLoop){
+            var n = Math.random();
+            var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
+            anim.curDuration = duration;
+
+            obj.opacity = 1.0;
+
+            var maxDistScale = 2.0;
+            obj.x = obj.initial.x*maxDistScale;
+            obj.y = obj.initial.y*maxDistScale;
+            obj.vx=0;
+            obj.vy=0;
+
+
+        }
+
+        /*
+        var n = this.getSeriesValue(project, obj, anim);
+
+        // translate along axis from project centre
+        var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
+        speed*=1500;
+        */
+
+        var dt = this.frameTime/(1000*anim.mass);
+
+        var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
+        //var d = obj.x*obj.x + obj.y*obj.y;
+
+
+        var gravity = 2600.0;
+
+        obj.vx -= gravity*anim.dx*dt/d;
+        obj.vy -= gravity*anim.dy*dt/d;
+
+        obj.x += obj.vx;
+        obj.y += obj.vy;
+
+        var dsq = obj.x*obj.x + obj.y*obj.y;
+
+        var minDistSq = 100*100;
+
+        if(dsq<minDistSq){
+            obj.vx=0;
+            obj.vy=0;
+            obj.opacity = 0.0;
+            obj.x = 0;
+            obj.y = 0;
+        }
+
+
+
+
+        /*
+        if(Math.abs(obj.y)<=Math.abs(obj.initial.y*minDistScale)){
+            obj.y = obj.initial.y*minDistScale;
+            obj.vy=0;
+        }
+        */
+
+
+    },
+
+
+    /*
     radioRule:function(project, obj, anim){
 
         var n = this.getNextSeriesValue(project, obj, anim);
@@ -573,7 +656,6 @@ ZN.Rules.prototype = {
         obj.y+= obj.vy;
 
 
-
         if(Math.abs(obj.x)<=Math.abs(obj.initial.x/4)){
             obj.x = obj.initial.x/4;
             obj.vx=0;
@@ -583,12 +665,10 @@ ZN.Rules.prototype = {
             obj.vy=0;
         }
 
-
-
-
         anim['lastSeriesValue'] = n;
 
     },
+    */
 
     radialTranslateRule: function(project, obj, anim){
 
