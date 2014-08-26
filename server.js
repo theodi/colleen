@@ -14,7 +14,11 @@ app.use(compression());
 app.use('/', express.static(__dirname +'/client'));
 
 app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
-app.use(express.bodyParser());
+//bodyParser is deprecated
+//See http://stackoverflow.com/questions/20390513/heroku-foreman-exits-on-express-js-bodyparser-call
+//app.use(express.bodyParser());
+app.use(express.json());
+app.use(express.urlencoded());
 
 // timeseries
 app.get('/timeseries',classifications.getTimeSeries); // client
