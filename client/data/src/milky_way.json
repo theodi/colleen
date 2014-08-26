@@ -17,5 +17,9 @@
     "_comment":"the light blue objects are hiding behind the white ones. as they are the same family, they are being over-ridden by the parent so act in the same way. Need to re-number the hidden ones in the SVG",
 
     "shapes":[
+        { "_comment":"Single shooting star",
+            "id":"5","rotation":0,
+            "animation":[{"type":"asteroid","data":"hour","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min15", "time":0}]}
+
     ]
 }

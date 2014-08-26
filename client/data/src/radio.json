@@ -6,20 +6,20 @@
     "y":0,
     "rotation":0,
 
-    "shape_animation":[{"shape_ids":["2","3","4","5","6","7","9"],"animation":
-            [{"type":"radio","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[4.0,8.0], "duration_data":"hour", "time":0}]
+    "shape_animation":[{"shape_ids":["3","4","5","6","7","9"],"animation":
+            [{"type":"radio","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[10.0,20.0], "duration_data":"hour", "time":0}]
     }],
 
     "shapes":[
 
         { "_comment":"Central Shape",
-            "id":"1","rotation":-18,
-            "animation":[{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,4.0], "time":0},
+            "id":"1","rotation":-18, "opacity":0.6,
+            "animation":[{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[10.0,20.0], "duration_data":"hour", "time":0},
                 {"type":"trail","trail_type":"path","fade":0.985,"opacity":0.3,"duration":[1.0,2.0], "time":0}]},
 
         { "_comment":"Central Bar. Scale X",
             "id":"2","rotation":-11,
-            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[4.0,4.0], "time":0},
+            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[10.0,4.0], "time":0},
                 {"type":"trail","trail_type":"path","fade":0.95,"duration":[2.0,2.0], "time":0}]},
 
         {  "_comment":"Scale min data",
