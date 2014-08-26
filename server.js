@@ -6,14 +6,15 @@ if (usenewrelic) {
 }
 var express = require('express'),
     classifications = require('./routes/classifications');
- 
+var compression = require('compression');
+
 var app = express();
+app.use(compression());
 
 app.use('/', express.static(__dirname +'/client'));
 
 app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
 app.use(express.bodyParser());
-
 
 // timeseries
 app.get('/timeseries',classifications.getTimeSeries); // client

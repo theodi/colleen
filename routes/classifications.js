@@ -116,7 +116,7 @@ exports.cleanUp = function() {
 exports.getTimeSeries = function(req, res) {
 
     var curMs = (new Date()).valueOf();
-    if(gTimeseriesUpdateTime+gTimeseriesUpdateInterval<curMs){
+    if (gTimeseriesUpdateTime+gTimeseriesUpdateInterval<curMs) {
         gPool.getConnection(function(error, con) {
             if(error) throw error;
             con.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` FROM `timeseries`",function(err, rows, fields) {
@@ -126,12 +126,9 @@ exports.getTimeSeries = function(req, res) {
                 gTimeseriesUpdateTime = curMs;
                 console.log('getTimeSeries from DB pool');
                 res.send(gTimeseriesData);
-
             });
         });
-
-    }
-    else{
+    } else {
         console.log('getTimeSeries from cache');
         res.send(gTimeseriesData);
     }
