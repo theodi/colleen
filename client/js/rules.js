@@ -636,7 +636,7 @@ ZN.Rules.prototype = {
 
         // translate along axis from project centre
         var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
-        speed*=1500;
+        speed*=2000;
 
         var dt = this.frameTime/(1000*anim.mass);
 
@@ -647,7 +647,7 @@ ZN.Rules.prototype = {
             obj.vx += speed*anim.dx*dt/d;
             obj.vy += speed*anim.dy*dt/d;
         }
-        var gravity = 600.0;
+        var gravity = 700.0;
 
         obj.vx -= gravity*anim.dx*dt/d;
         obj.vy -= gravity*anim.dy*dt/d;
