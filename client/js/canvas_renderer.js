@@ -176,8 +176,9 @@ ZN.CanvasRenderer.prototype = {
         this.ctx.stroke();
         */
 
-        for(var c=0;c<shape.children.length;c++){
-            var childShape = shape.children[c];
+        var nShapes = shape.children.length;
+        for(var c=0;c<nShapes;c++){
+            var childShape = shape.children[nShapes-c-1];
             //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
             this.renderShape(project,childShape);
 
