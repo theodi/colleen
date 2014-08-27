@@ -8,7 +8,8 @@
     "_fills":["#F29525","#100BF4"],
     "_comment":"Project level animations",
     "animation":[
-        {"type":"rotate","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","rotation":[-5,5],"duration":[200.0,400.0], "duration_data":"min15", "time":0}
+        {"type":"rotate","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","rotation":[-5,5],"duration":[200.0,400.0], "duration_data":"min15", "time":0},
+        {"_comment":"short series_len test","type":"_rotate","dataType":"c","data":"min","tween":"linear","fn":"sqrt","rotation":[-90,90],"duration":[10.0,400.0],"series_len":5, "time":0}
     ],
      
     "shape_animation":[{"shape_ids":["1","1.1","1.2","1.3","1.4","1.5","1.6"],"animation":
