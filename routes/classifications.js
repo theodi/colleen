@@ -283,7 +283,9 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-    var classificationsTable = 'classifications_archive';
+
+    var classificationsTable = 'classifications';
+    //var classificationsTable = 'classifications_archive';
 
     gPool.getConnection(function(error, con) {
         if(error) throw error;
