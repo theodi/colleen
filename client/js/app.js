@@ -32,7 +32,7 @@ ZN.App = function () {
 
 
     // timeseries
-    this.timeSeriesRequestInterval = 5*1000; // in ms
+    this.timeSeriesRequestInterval = 60*1000; // in ms
     this.timeSeriesLatency = 2*60*1000 // in ms
     this.dataSource = "archive"; // "live"
 
@@ -210,6 +210,9 @@ ZN.App.prototype = {
         this.initRenderer();
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
+
+        $("#wrapper").fadeIn();
+        $("#loader").fadeOut();
 
         // set focus project
         if(this.runProjectGraph){
