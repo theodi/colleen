@@ -8,7 +8,7 @@
     "_comment":"Project level animations",
     "animation":[
         {"type":"_rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
-        {"type":"scale","dataType":"u","data":"min","sx":[0.96,1.05],"sy":[0.96,1.05] ,"duration":[60.0,200.0], "duration_data":"min", "time":0}],
+    ],
 
 
     "shape_animation":

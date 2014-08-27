@@ -76,10 +76,6 @@ ZN.Rules.prototype = {
                             this.rotateRule(project, project,anim);
                             break;
 
-                        case "scale":
-                            this.scaleRule(project, project,anim);
-                            break;
-
                     }
                 },this);
             }
@@ -499,9 +495,25 @@ ZN.Rules.prototype = {
 
     serengetiRule:function(project, obj, anim){
 
+
         var n = this.getNextSeriesValue(project, obj, anim);
-        var sc = 20.0;
-        var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
+
+
+        var nt = anim.time/anim.curDuration;
+
+        var rangeX = anim.rangeX;
+        var dx = rangeX[0]+ (rangeX[1]-rangeX[0])*n;
+
+        var rangeY = anim.rangeY;
+        var dy = rangeY[0]+ (rangeY[1]-rangeY[0])*-1.0*Math.cos((n-0.5)*2*Math.PI);
+
+
+        //var sc = 20.0;
+        // bl, br, tr, tl
+        //var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
+
+        var t = [[0.0,0.0],[0.0,0.0],[dx,dy],[dx,dy]];
+
 
         var iPathSegs = obj.initial.pathSegs;
         var pathSegs = obj.pathSegs;
@@ -514,18 +526,18 @@ ZN.Rules.prototype = {
 
             switch(seg[0]){
                 case "M":
-                    pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
-                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
+                    pathSegs[s][1] = iseg[1]+t[p][0]; // pt0.x
+                    pathSegs[s][2] = iseg[2]+t[p][1]; // pt0.y
                     break;
                 case "C":
 
-                    //pathSegs[s][1] = iseg[1]+t[p][0]*sc*n;
-                    pathSegs[s][2] = iseg[2]+t[p][1]*sc*n;
-                    //pathSegs[s][3] = iseg[3]+t[p][0]*sc*n;
-                    pathSegs[s][4] = iseg[4]+t[p][1]*sc*n;
+                    pathSegs[s][1] = iseg[1]+t[p][0];
+                    pathSegs[s][2] = iseg[2]+t[p][1];
+                    pathSegs[s][3] = iseg[3]+t[p][0];
+                    pathSegs[s][4] = iseg[4]+t[p][1];
 
-                    pathSegs[s][5] = iseg[5]+t[p][0]*sc*n;
-                    pathSegs[s][6] = iseg[6]+t[p][1]*sc*n;
+                    pathSegs[s][5] = iseg[5]+t[p][0]; // pt1.x
+                    pathSegs[s][6] = iseg[6]+t[p][1]; // pt1.y
                     break;
 
             };
@@ -691,9 +703,12 @@ ZN.Rules.prototype = {
 
         var endLoop = this.updateAnimTime(anim);
         if(endLoop){
-            var n = Math.random();
-            var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
-            anim.curDuration = duration;
+
+            // set random duration
+            //var n = Math.random();
+            //var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
+            //anim.curDuration = duration;
+
             // start shooting star
             var speedScale = 3000;
             var s = (Math.random()+1.0)*speedScale;

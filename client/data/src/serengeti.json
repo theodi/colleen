@@ -9,8 +9,8 @@
     "shape_animation":
     [
     	{"shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],"animation":
-            [{"type":"_scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0},
-             {"type":"serengeti","data":"hour","tween":"linear","fn":"id","duration":[120.0,220.0], "time":0,"time_fn":"random"},
+            [
+             {"type":"serengeti","data":"hour","tween":"linear","fn":"id","duration":[100.0,100.0], "rangeX":[-20.0,20.0],"rangeY":[-3.0,3.0],"time":0,"time_fn":"random"},
              {"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.4,0.8],"duration":[30.0,240.0], "time":0}]
     	},
 
