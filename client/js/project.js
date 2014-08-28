@@ -335,7 +335,7 @@ ZN.Shape = function () {
     this.sy=1.0;
 
     this.path=null;
-    this.pathSegs=[]; // relative path positions in shape
+    this.pathSegs=[];
     this.d = "";
     this.fill="0x000000";
     this.flllObj = null;
@@ -343,7 +343,6 @@ ZN.Shape = function () {
     this.opacity = 1.0;
     this.width=0;
     this.height=0;
-    //this.duration = 1.0;
 
     this.bounds = null;
     this.boundsPath = null;

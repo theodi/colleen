@@ -174,7 +174,7 @@ ZN.Model.prototype = {
                 if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
                 timeseries[type][interval].series.push(count);
                 //timeseries[type][interval].count += count;
-                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count);
+                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count,1.0);
                 timeseries[type][interval].lastTime = Math.max(timeseries[type][interval].lastTime,time);
 
             }
@@ -217,16 +217,15 @@ ZN.Model.prototype = {
                 var firstItemCount = timeseries[type][interval].series[0];
                 timeseries[type][interval].series.shift();
 
-                //timeseries[type][interval].count += count;
-                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count);
+                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count,1.0);
                 timeseries[type][interval].lastTime = Math.max(timeseries[type][interval].lastTime,time);
 
                 // find maximum count if removed item largest
                 if(firstItemCount == timeseries[type][interval].max){
-                    timeseries[type][interval].max = _.max(timeseries[type][interval].series);
+                    timeseries[type][interval].max = Math.max(_.max(timeseries[type][interval].series),1.0);
                 }
 
-                console.log('incTimeSeries',type,interval,count,time);
+                console.log('incTimeSeries',project.name,type,interval,count,time);
 
             }
             else{

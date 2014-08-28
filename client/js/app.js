@@ -5,34 +5,41 @@ ZN.App = function () {
     this.model = null;
     this.rules = null;
 
+    // ajax
     this.xhr = null;
-    this.timeoutTime = 60 * 1000;
+    this.timeoutTime = 20 * 1000;
     this.timeoutCount = 0;
-    this.bLoadData = true;
     this.dataType = "json";
     this.apiUrl = "";
-    this.dataSource = "archive"; // "live"
-    this.archiveStartSecs = 120000;//2*24*60*60; // seconds
     this.ruleFile = "project_rules";
 
-    this.nextRequestTime = 0;
+    // frame timing
     this.curTime = 0;
     this.lastTime = 0;
     this.frameTime = 33; // frame ms
-    this.requestDuration = 60*1000; // in ms
     this.firstFrame = true;
+    this.frameDurations = [];
+    this.debug = true;
+
+    // classifications request. Not currently used
+    /*
+    this.nextRequestTime = 0;
+    this.requestDuration = 60*1000; // in ms
     this.classificationDelay = 0;
     this.classificationLoadCount = 0;
+    this.archiveStartSecs = 120000;//2*24*60*60; // seconds
+    */
 
+
+    // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
+    this.timeSeriesLatency = 2*60*1000 // in ms
+    this.dataSource = "archive"; // "live"
 
+
+    // rendering
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-
-    //this.paths = [];
-    this.frameDurations = [];
-
-    this.debug = true;
     this.runProjectGraph = true;
 
 
@@ -53,8 +60,6 @@ ZN.App.prototype = {
         }
 
         this.loadConfig();
-
-
 
     },
 
@@ -95,6 +100,7 @@ ZN.App.prototype = {
             url:url,
             dataType:type,
             contentType:"application/x-www-form-urlencoded;charset=uft-8",
+            timeout:self.timeoutTime,
             success:function (data) {
                 self.timeoutCount = 0;
                 callback.apply(self,[data]);
@@ -161,6 +167,7 @@ ZN.App.prototype = {
 
     },
 
+    /*
     loadProjectAnalytics:function() {
         var url = this.apiUrl+"analytics";
         this.loadUrl(url, "json",this.analyticsLoaded);
@@ -169,18 +176,21 @@ ZN.App.prototype = {
     analyticsLoaded:function(data){
         this.model.parseAnalytics(data);
         this.startApp();
-        //this.loadClassification();
     },
+    */
 
+    loadTimeSeries:function() {
+        // select timeseries
+        //var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
 
-    loadTimeSeries:function(intervals) {
-        var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
+        // all timeseries
+        var url = this.apiUrl+"timeseries/";
         this.loadUrl(url, "json",this.timeSeriesLoaded);
 
     },
+
     timeSeriesLoaded:function(data){
         this.model.parseTimeSeries(data);
-        //this.startApp();
         this.loadProjectGraph();
     },
 
@@ -201,9 +211,9 @@ ZN.App.prototype = {
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
 
+        $("#wrapper").fadeIn();
+        $("#loader").fadeOut();
 
-        // init project positions
-        //this.rules.initProjectLocations();
         // set focus project
         if(this.runProjectGraph){
             this.rules.setFocusProject();
@@ -242,6 +252,7 @@ ZN.App.prototype = {
 
     },
 
+    /*
     loadClassification:function () {
         var maxItems = 1000;
         var requestDurationSecs = this.requestDuration/1000;
@@ -270,27 +281,34 @@ ZN.App.prototype = {
 
         }
         else{
-            /*
+
             if(this.classificationDelay < delay){
-                this.classificationDelay = delay;
+                //this.classificationDelay = delay;
             }
-            */
+
         }
 
-
     },
+    */
 
     loadIncTimeSeries:function() {
-        var from = this.model.maxSeriesTime + 1;
+        var from = this.model.maxSeriesTime +60; // last time plus 1 min
 
         // archived
-        var to = from+this.timeSeriesRequestInterval/1000;
-        // realtime
-        //var to = this.curTime/1000;
+        //var to = from+this.timeSeriesRequestInterval/1000;
 
-        var url = this.apiUrl+"timeseries/from/"+from+"/to/"+to;
-        console.log('loadIncTimeSeries',url);
-        this.loadUrl(url, "json",this.incTimeSeriesLoaded);
+        // realtime
+        var to = parseInt((this.curTime-this.timeSeriesLatency)/1000);
+
+        if(from>to){
+            var self = this;
+            setTimeout(function(){self.loadIncTimeSeries()}, this.timeSeriesRequestInterval);
+        }
+        else{
+            var url = this.apiUrl+"timeseries/from/"+from+"/to/"+to;
+            //console.log('loadIncTimeSeries',url);
+            this.loadUrl(url, "json",this.incTimeSeriesLoaded);
+        }
 
     },
     incTimeSeriesLoaded:function(data){
