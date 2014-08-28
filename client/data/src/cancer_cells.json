@@ -1,15 +1,14 @@
 {
     "name":"cancer_cells",
-    "sx":1.2,"sy":1.2,
-    "x":-400,
-    "y":-250,
+    "sx":1.0,"sy":1.0,
+    "x":0,
+    "y":0,
     "rotation":0,
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
     "animation":[
-        {"type":"_rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
+        {"type":"_rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0}
     ],
-
 
     "shape_animation":
     [
@@ -25,7 +24,7 @@
         {"_comment":"yellow cells","shape_ids":["26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45" ],"animation":
             [{"type":"colour","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#EFDE0C","F900AD"] ,"duration":[30.0,120.0], "time":0},
             {"type":"scale","dataType":"u","data":"min","sx":[0.97,1.03],"sy":[0.97,1.03] ,"duration":[20.0,40.0], "duration_data":"min", "time_fn":"index"},
-            {"type":"trail","trail_type":"path","fade":0.985,"opacity":0.5,"duration":[1.0,2.0], "time":0}]
+            {"type":"_trail","trail_type":"path","fade":0.985,"opacity":0.5,"duration":[1.0,2.0], "time":0}]
     	}
     ],
 
