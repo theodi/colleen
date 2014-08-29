@@ -56,7 +56,8 @@ Many have helped us. We will name them in time.
         export WEB='supervisor server.js'
         export WNU_DB_URL=mysql://colleen:PUTMYSQLPASSWORDHERE@localhost/zoon
         export WNU_HOST=localhost:5000
-        export WNU_DATA_MODE=archive       
+        export WNU_DATA_MODE=archive  
+        export NODE_ENV=dev
 
 1. Type:
 
