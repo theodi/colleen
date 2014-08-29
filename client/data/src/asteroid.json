@@ -5,6 +5,8 @@
     "y":0,
     "rotation":0,
 
+    "sound":{"type":"asteroid"},
+
     "shape_animation":[{"shape_ids":["1","2","3","4","5","11","12"],"animation":
             [{"type":"asteroid","data":"hour","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min15", "time_fn":"random"},
             {"type":"trail","trail_type":"path","fade":0.5,"duration":[1.0,3.0], "time":0}]}

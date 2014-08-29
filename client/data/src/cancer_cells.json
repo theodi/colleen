@@ -7,7 +7,7 @@
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
     "animation":[
-        {"type":"_rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
+        {"type":"_rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0}
     ],
 
 

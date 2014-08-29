@@ -75,13 +75,15 @@ ZN.Project.prototype = {
     },
 
     setRules:function(data){
-        //this.shapes = data.shapes;
 
         _.each(data,function(value,key){
-            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' || key=="animation"){
+
+            if(key!="shapes" && key!="shape_animation"){
                 this[key] = value;
             }
         },this);
+
+        this.id = data.name;
 
 
         var fillScale = null;

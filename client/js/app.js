@@ -40,6 +40,7 @@ ZN.App = function () {
     // rendering
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
+    this.soundEngine = null;
     this.runProjectGraph = true;
 
 
@@ -207,7 +208,13 @@ ZN.App.prototype = {
 
 
     startApp:function(){
-        this.initRenderer();
+
+        this.renderer = new ZN.CanvasRenderer();
+        this.renderer.init(this,this.model,this.canvasContainerId);
+
+        this.soundEngine = new ZN.SoundEngine();
+        this.soundEngine.init(this,this.model);
+
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
 
@@ -252,44 +259,7 @@ ZN.App.prototype = {
 
     },
 
-    /*
-    loadClassification:function () {
-        var maxItems = 1000;
-        var requestDurationSecs = this.requestDuration/1000;
-        var offsetSecs = 0;
-        if(this.dataSource=="archive"){
-            offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
-        }
-        var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
 
-        this.loadUrl(url, "json", this.classificationLoaded);
-
-    },
-
-    classificationLoaded:function(data){
-        var d = data;
-        var classifications = this.model.addClassifications(data);
-        var delay = (new Date()).valueOf() - classifications[0].time;
-
-        this.classificationLoadCount += 1;
-
-        if(this.firstFrame){
-            this.firstFrame = false;
-            this.classificationDelay = delay;
-            this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
-            this.update();
-
-        }
-        else{
-
-            if(this.classificationDelay < delay){
-                //this.classificationDelay = delay;
-            }
-
-        }
-
-    },
-    */
 
     loadIncTimeSeries:function() {
         var from = this.model.maxSeriesTime +60; // last time plus 1 min
@@ -323,47 +293,20 @@ ZN.App.prototype = {
 
     },
 
-    initRenderer:function(){
-
-        this.renderer = new ZN.CanvasRenderer();
-        this.renderer.init(this,this.model,this.canvasContainerId);
-
-    },
 
     update:function(){
         var self = this;
         this.updateFps();
-
-        /*
-        // load new classifications
-        if(this.curTime>this.nextRequestTime){
-            this.loadClassification();
-            this.nextRequestTime = this.curTime + this.requestDuration;
-            console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
-        }
-
-        // classification
-        if(this.model.classifications.length>0){
-            var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
-            if(this.curTime>nextClassificationTime){
-                console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
-                var classification = this.model.removeFirstClassification();
-                console.log("classification timestamp:",classification.timestamp);
-
-            }
-        }
-        */
 
         var frameTimeTarget = 33; // ms
 
         var t0 = new Date().valueOf();
         this.rules.update(this.frameTime); // frameTimeTarget
         this.renderer.render();
+        this.soundEngine.update();
         this.model.projectGraph.update();
         var t1 = new Date().valueOf();
         var dt = t1-t0;
-
-
 
         var timeout = Math.max(frameTimeTarget-dt,0);
         timeout = Math.min(timeout,frameTimeTarget);
@@ -402,6 +345,67 @@ ZN.App.prototype = {
             results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
+
+
+    /*
+     loadClassification:function () {
+     var maxItems = 1000;
+     var requestDurationSecs = this.requestDuration/1000;
+     var offsetSecs = 0;
+     if(this.dataSource=="archive"){
+     offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
+     }
+     var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
+
+     this.loadUrl(url, "json", this.classificationLoaded);
+
+     },
+
+     classificationLoaded:function(data){
+     var d = data;
+     var classifications = this.model.addClassifications(data);
+     var delay = (new Date()).valueOf() - classifications[0].time;
+
+     this.classificationLoadCount += 1;
+
+     if(this.firstFrame){
+     this.firstFrame = false;
+     this.classificationDelay = delay;
+     this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
+     this.update();
+
+     }
+     else{
+
+     if(this.classificationDelay < delay){
+     //this.classificationDelay = delay;
+     }
+
+     }
+
+     },
+
+     updateClassifications:function(){
+     /*
+     // load new classifications
+     if(this.curTime>this.nextRequestTime){
+     this.loadClassification();
+     this.nextRequestTime = this.curTime + this.requestDuration;
+     console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
+     }
+
+     // classification
+     if(this.model.classifications.length>0){
+     var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
+     if(this.curTime>nextClassificationTime){
+     console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
+     var classification = this.model.removeFirstClassification();
+     console.log("classification timestamp:",classification.timestamp);
+
+     }
+     }
+     */
+
 
 
 }
