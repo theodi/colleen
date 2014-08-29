@@ -1,0 +1,46 @@
+{
+    "name":"war diary",
+    "sx":0,"sy":0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+    
+     "shape_animation":
+        [{"shape_ids":["1","2","3","5","6","10","11"],"animation":
+            [{"type":"scale","dataType":"c","data":"day","series_len":30,"fn":"id","sx":[0.8,1.0],"sy":[0.8,1.0] ,"duration":[4.0,20.0], "time_fn":"index"}]
+        },
+        {"shape_ids":["4","7","8","9","12","13","14","15"],"animation":
+            [{"type":"scale","dataType":"u","data":"day","series_len":30,"fn":"id","sx":[0.0,0.0],"sy":[0.3,7.0] ,"duration":[3.0,8.0], "time_fn":"random"}]
+        }],
+
+    "shapes":[
+
+        { "_comment":"Rotation",
+            "id":"2","rotation":-2.5,
+            "type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.9,1.0],"sy":[0.9,1.0] ,"duration":[40.0,80.0], "time":0},
+        { "_comment":"Rotation",
+            "id":"4","rotation":-4.5},
+        { "_comment":"Rotation",
+            "id":"5","rotation":-34.3},
+        { "_comment":"Rotation",
+            "id":"6","rotation":-5.5},
+        { "_comment":"Rotation",
+            "id":"7","rotation":6.5},
+        { "_comment":"Rotation",
+            "id":"8","rotation":5.7},
+        { "_comment":"Rotation",
+            "id":"9","rotation":2.5},
+        { "_comment":"Rotation",
+            "id":"10","rotation":10.4},
+        { "_comment":"Rotation",
+            "id":"11","rotation":6.2},
+        { "_comment":"Rotation",
+            "id":"12","rotation":-7.0},
+        { "_comment":"Rotation",
+            "id":"13","rotation":-7.0},
+        { "_comment":"Rotation",
+            "id":"14","rotation":-7.0},            
+        { "_comment":"Rotation",
+            "id":"15","rotation":-7.0}
+    ]
+}

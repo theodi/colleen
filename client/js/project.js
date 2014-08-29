@@ -75,13 +75,15 @@ ZN.Project.prototype = {
     },
 
     setRules:function(data){
-        //this.shapes = data.shapes;
 
         _.each(data,function(value,key){
-            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' || key=="animation"){
+
+            if(key!="shapes" && key!="shape_animation"){
                 this[key] = value;
             }
         },this);
+
+        this.id = data.name;
 
 
         var fillScale = null;
@@ -335,7 +337,7 @@ ZN.Shape = function () {
     this.sy=1.0;
 
     this.path=null;
-    this.pathSegs=[]; // relative path positions in shape
+    this.pathSegs=[];
     this.d = "";
     this.fill="0x000000";
     this.flllObj = null;
@@ -343,7 +345,6 @@ ZN.Shape = function () {
     this.opacity = 1.0;
     this.width=0;
     this.height=0;
-    //this.duration = 1.0;
 
     this.bounds = null;
     this.boundsPath = null;

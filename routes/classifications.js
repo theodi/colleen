@@ -40,12 +40,12 @@ var WNU_DB_NAME = dbConfig['database'];
 // Cosntants and globals
 
 var MIN_SECS = 60,
-    MIN_5_SECS = 300,
+    //MIN_5_SECS = 300,
     MIN_15_SECS = 900,
     HOUR_SECS = 3600,
-    DAY_SECS = 86400,
-    WEEK_SECS = 604800,
-    MONTH_SECS = 2592000; // month 30 days
+    DAY_SECS = 86400;
+    //WEEK_SECS = 604800,
+    //MONTH_SECS = 2592000; // month 30 days
 
 var connection;
 
@@ -119,10 +119,12 @@ exports.getTimeSeries = function(req, res) {
     if (gTimeseriesUpdateTime+gTimeseriesUpdateInterval<curMs) {
         gPool.getConnection(function(error, con) {
             if(error) throw error;
-            con.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` FROM `timeseries`",function(err, rows, fields) {
+            con.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries`",function(err, rows, fields) {
                 con.release();
                 if(err) throw err;
-                gTimeseriesData = rows;
+
+                var intervalValues = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
+                gTimeseriesData = {intervals:intervalValues,data:rows};
                 gTimeseriesUpdateTime = curMs;
                 console.log('getTimeSeries from DB pool');
                 res.send(gTimeseriesData);
@@ -281,7 +283,9 @@ exports.getClassificationInterval = function(req, res) {
     console.log('from: ' + from + ' to: ' + to, ' interval:' + interval);
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
-    var classificationsTable = 'classifications_archive';
+
+    var classificationsTable = 'classifications';
+    //var classificationsTable = 'classifications_archive';
 
     gPool.getConnection(function(error, con) {
         if(error) throw error;

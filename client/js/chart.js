@@ -62,7 +62,7 @@ ZN.Chart.prototype = {
         var self = this;
 
 
-        this.minDate = this.pickerMinDate = new Date(Date.UTC(2007, 0, 1));
+        this.minDate = this.pickerMinDate = new Date(Date.UTC(2013, 0, 1));
         this.maxDate = this.pickerMaxDate = new Date();
         var format = d3.time.format("%Y/%m/%d");
         var minDateStr = format(this.minDate);
@@ -70,8 +70,14 @@ ZN.Chart.prototype = {
 
 	// set start/end dates to mirror contents of data/test_data.sql
 	//beware, the month is 0 based, i.e. January is 0!
-        this.pickerStartDate = new Date(Date.UTC(2014, 5, 10));
-        this.pickerEndDate = new Date(Date.UTC(2014, 6, 10));
+        var d = new Date();
+        this.pickerEndDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        var endMs = this.pickerEndDate.valueOf();
+        var startMs = endMs-60*60*24*30*1000; // 30 days;
+        this.pickerStartDate = new Date(startMs);
+        // archive data
+        //this.pickerStartDate = new Date(Date.UTC(2014, 5, 10));
+        //this.pickerEndDate = new Date(Date.UTC(2014, 6, 10));
         format = d3.time.format("%Y/%m/%d %H:%M");
         var minValue = format(this.pickerStartDate);
         var maxValue = format(this.pickerEndDate);

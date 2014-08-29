@@ -28,14 +28,14 @@ nconf.file({ file:
 // provide sensible defaults in case the above don't
 nconf.defaults({
 	timeout: 20000,
-        loop_interval: 20000,
-        projects_list: '../data/projects.json',
+
+    projects_list: '../data/projects.json',
 	projects_table_name: 'projects',
 	classifications_table_name: 'classifications',
-        timeseries_table_name: 'timeseries',
-        cls_expire_after_x_days: 7,
-        default_project_updated_time:1402704000000,
-        classifications_per_page:5000
+    timeseries_table_name: 'timeseries',
+    cls_expire_after_x_days: 40,
+    default_project_updated_time:1402704000000,
+    classifications_per_page:5000
 });
 
 
@@ -70,7 +70,7 @@ var gTimer = 0;
 
 var gEventEmitter = new events.EventEmitter();
 
-var gClsArchiveTime = DAY_SECS*60;
+var gClsArchiveTime = DAY_SECS*nconf.get("cls_expire_after_x_days");
 var gLatency = 60000; // query up to N ms behind current time
 
 /*---------------------------------------------------------------------------*/
@@ -236,7 +236,7 @@ function fetchProjectData(projectId){
 
         var fromMs, toMs;
         var curMs = (new Date()).valueOf() -gLatency;
-        var monthMs = MONTH_SECS * 1000;// a month in ms
+
         var intervalMs = 15*60*1000; // 15 mins in ms
         var projectUpdated = rows[0].time;
         if(projectUpdated==null){
@@ -244,6 +244,7 @@ function fetchProjectData(projectId){
 
             fromMs = gDefaultProjectUpdatedTime;
             // 2014/06/14 // 1401580800000; //2014/06/01 // 1398902400000;// 2014/05/01 // 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
+            // var monthMs = MONTH_SECS * 1000;// a month in ms
             //fromMs = (new Date()).valueOf() - monthMs;
             console.log("projectUpdated is NULL",projectUpdated);
         }
@@ -376,8 +377,6 @@ function removeClassifications(projectId,updateMs){
         setProjectsUpdateTime(projectId,updateMs)
 
     });
-
-
 
 }
 
