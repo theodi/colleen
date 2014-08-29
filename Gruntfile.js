@@ -67,16 +67,22 @@ module.exports = function(grunt) {
             options: {
                 specs: 'spec/*.spec.js'
             }
+        },
+
+        githooks: {
+            all: {
+                'pre-commit': 'jasmine'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-
+    grunt.loadNpmTasks('grunt-githooks');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // Default task(s).
-    grunt.registerTask('default', ['clean','copy']);//,'uglify']);
+    grunt.registerTask('default', ['clean', 'copy', 'githooks']);//,'uglify']);
 };
