@@ -33,7 +33,7 @@
     "postinstall": "echo postinstall time; ./node_modules/grunt-cli/bin/grunt"
   },
   "devDependencies": {
-    "grunt-githooks": "~0.3.1",
+    "grunt-githooks": "^0.3.1",
     "grunt-jasmine-node": "~0.2.1"
   }
 }
