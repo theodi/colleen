@@ -11,7 +11,11 @@ var compression = require('compression');
 var app = express();
 app.use(compression());
 
-app.use('/', express.static(__dirname +'/client'));
+var webRoot = 'client';
+if(process.env.NODE_ENV=='prod'){
+    webRoot = 'web';
+}
+app.use('/', express.static(__dirname +'/'+webRoot));
 
 app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
 //bodyParser is deprecated

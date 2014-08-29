@@ -10,10 +10,14 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
 
-    <script src="lib/jquery/jquery-1.11.1.min.js"></script>
+    <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <!--(if target dev)><!-->
     <script src="lib/lodash/lodash.compat.min.js"></script>
     <script src="lib/snap/snap.svg-min.js"></script>
     <script src="lib/chroma/chroma.min.js"></script>
+    <script src="lib/springy/springy.js"></script>
     <script src="js/util.js"></script>
     <script src="js/app.js"></script>
     <script src="js/model.js"></script>
@@ -22,7 +26,13 @@
     <script src="js/canvas_renderer.js"></script>
     <script src="js/sound.js"></script>
     <script src="js/project_graph.js"></script>
-    <script src="lib/springy/springy.js"></script>
+
+    <!--<!(endif)-->
+    <!--(if target dist)>
+      <script src="js/wnu.min.js"></script>
+    <!(endif)-->
+
+
 
     <script type="text/javascript">
         $(window).load(function() {
