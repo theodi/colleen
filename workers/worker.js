@@ -542,7 +542,7 @@ function updateTimeSeries(series){
             updateNextTimeSeries();
             return;
         }
-        //projectUpdatedMs = rows[0].time *1000;
+
         projectUpdatedUnix = rows[0].time;
         to = projectUpdatedUnix;
 
@@ -554,13 +554,22 @@ function updateTimeSeries(series){
                 onError('updateTimeSeriesInterval error',err);
                 throw err;
             }
+            // if series entries in database, set from time to last item plus interval
             if(rows[0]){
                 //console.log('seriesMax',rows[0]);
                 seriesMax = rows[0].time;
                 from = seriesMax+interval;
 
+                var maxPeriod = seriesLength[interval]*interval;
+                // if gap in time series greater than series length, set from time for series length
+                if(to-from>maxPeriod){
+                    console.log('maxPeriod exceeded',projectId,from,to,maxPeriod);
+                    from = Math.floor(projectUpdatedUnix/interval)*interval-maxPeriod;
+                }
+
                 //console.log('from seriesMax', from);
             }
+            // else set from time from project update minus series length
             else{
 
                 from = Math.floor(projectUpdatedUnix/interval)*interval - seriesLength[interval]*interval;
@@ -568,9 +577,7 @@ function updateTimeSeries(series){
 
             }
 
-
             //console.log(projectId,"updateTimeSeriesIntervals",series.type, series.interval,"from",from,"to",to,"from",new Date(from*1000),"to",new Date(to*1000));
-
 
             // if interval is less than update period,  start next project
             if(to-from<interval){
