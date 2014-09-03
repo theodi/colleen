@@ -52,7 +52,7 @@ var connection;
 var gTimeseriesData = [];
 var gTimeseriesUpdateTime = 0;
 var gTimeseriesUpdateInterval = 60000;
-var gMaxUpdateInterval = 5;//60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
+var gMaxUpdateInterval = 60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
 
 /*---------------------------------------------------------------------------*/
 
