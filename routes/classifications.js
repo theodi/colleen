@@ -52,7 +52,7 @@ var connection;
 var gTimeseriesData = [];
 var gTimeseriesUpdateTime = 0;
 var gTimeseriesUpdateInterval = 60000;
-var gMaxUpdateInterval = 60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
+var gMaxUpdateInterval = 5;//60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
 
 /*---------------------------------------------------------------------------*/
 
@@ -686,7 +686,7 @@ exports.ping = function (req, res) {
             }
         });
     });
-    console.log('ping');
+    //console.log('ping');
 };
 
 
@@ -699,11 +699,11 @@ exports.isUpdating = function (req, res) {
             if(err) throw err;
 
             var lastUpdate = rows[0]['time'];
-            console.log(lastUpdate);
-            console.log(rows[0]);
+            //console.log(lastUpdate);
+            //console.log(rows[0]);
             var curUnixTime = parseInt((new Date()).valueOf()/1000);
             var dt = curUnixTime-lastUpdate;
-            console.log("dt",dt);
+            console.log("isUpdating dt",dt,"seconds");
             if(dt>gMaxUpdateInterval){
                 res.send({status: 0});
             }
@@ -712,7 +712,7 @@ exports.isUpdating = function (req, res) {
             }
         });
     });
-    console.log('isUpdating');
+
 };
 
 module.exports.nconf = nconf;
