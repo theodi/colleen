@@ -55,11 +55,14 @@ ZN.Rules.prototype = {
                     if(pt){
                         project.x = pt.x;
                         project.y = pt.y;
-                        //project.sx = 0.05;
-                        //project.sy = 0.05;
+
                     }
 
                     project.opacity = this.bgOpacity;
+                }
+
+                if(project==focusProject){
+                    this.soundIntensityRule(project,project,project.bgScaleAnim);
                 }
 
             }
@@ -743,6 +746,21 @@ ZN.Rules.prototype = {
     },
 
 
+    /*---------------------------------------------------------------------------*/
+
+    // Sound rules
+
+    soundIntensityRule: function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+
+        // set intensity from anim rule range and normalised value
+        this.app.soundEngine.setIntensity(n);
+
+
+    },
+
+
 
 
     /*---------------------------------------------------------------------------*/
@@ -752,13 +770,17 @@ ZN.Rules.prototype = {
     updateFocusProject: function(){
 
         if(this.app.curTime>this.model.lastChangeFocus+this.model.changeFocusTime){
-            this.setFocusProject();
-
-
+            this.incFocusProject(1);
         }
 
+    },
 
+    incFocusProject: function(value){
+        this.model.focusIndex+=value;
+        if(this.model.focusIndex<0) this.model.focusIndex = this.model.focusList.length-1;
+        if(this.model.focusIndex>this.model.focusList.length-1) this.model.focusIndex = 0;
 
+        this.setFocusProject();
     },
 
     setFocusProject: function(){
@@ -779,12 +801,12 @@ ZN.Rules.prototype = {
         //var scale = 0.5;
         var projectIndex = this.model.focusList[this.model.focusIndex];
         var project = this.model.projects[projectIndex];
-        this.model.focusIndex = (this.model.focusIndex+1)%this.model.focusList.length;
+
 
 
         this.model.focusProject = project;
 
-        //project.setFocus({x:0,y:0,sx:scale,sy:scale});
+        this.app.soundEngine.setProject(project);
 
         var self = this;
 

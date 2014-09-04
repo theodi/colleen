@@ -83,11 +83,12 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-	// url for api on same host as this page served from
+	    // url for api on same host as this page served from
 		var url = window.location.protocol + "//" + window.location.host + "/";
 	    //var url = './';//'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.Config.dataSource;
+        this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
         this.loadProjectRules();
 
@@ -181,11 +182,17 @@ ZN.App.prototype = {
     */
 
     loadTimeSeries:function() {
+        var url;
         // select timeseries
         //var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
 
         // all timeseries
-        var url = this.apiUrl+"timeseries/";
+        if(this.dataSource=="json_file"){
+            url = "data/"+ZN.Config.timeseriesJson;
+        }
+        else{
+            url = this.apiUrl+"timeseries/";
+        }
         this.loadUrl(url, "json",this.timeSeriesLoaded);
 
     },
@@ -245,12 +252,13 @@ ZN.App.prototype = {
         });
 
         $(window).keypress(function( event ) {
-            console.log(event.which);
+            //console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
+                    self.rules.incFocusProject(-1);
                     break;
                 case 112: // 'p'
-                    self.rules.setFocusProject();
+                    self.rules.incFocusProject(1);
                     break;
             }
 
@@ -262,13 +270,18 @@ ZN.App.prototype = {
 
 
     loadIncTimeSeries:function() {
+
+        if(this.dataSource=="json_file") return;
+
         var from = this.model.maxSeriesTime +60; // last time plus 1 min
+        var to = 0;
 
-        // archived
-        //var to = from+this.timeSeriesRequestInterval/1000;
-
-        // realtime
-        var to = parseInt((this.curTime-this.timeSeriesLatency)/1000);
+        if(this.dataSource=="archive"){
+            to = from+this.timeSeriesRequestInterval/1000;
+        }
+        else{ // live
+            to = parseInt((this.curTime-this.timeSeriesLatency)/1000);
+        }
 
         if(from>to){
             var self = this;
@@ -303,7 +316,7 @@ ZN.App.prototype = {
         var t0 = new Date().valueOf();
         this.rules.update(this.frameTime); // frameTimeTarget
         this.renderer.render();
-        this.soundEngine.update();
+        //this.soundEngine.update();
         this.model.projectGraph.update();
         var t1 = new Date().valueOf();
         var dt = t1-t0;
@@ -332,7 +345,9 @@ ZN.App.prototype = {
         });
         var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
         if(this.debug){
-            $("#diagnostics").html(fps);
+            var projectName = "";
+            if(this.model.focusProject) projectName=this.model.focusProject.name;
+            $("#diagnostics").html(fps+" : "+ projectName);
         }
 
     },

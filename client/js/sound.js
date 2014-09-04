@@ -2,7 +2,8 @@ ZN.SoundEngine = function(){
 
     this.app = null;
     this.model = null;
-    this.frameTime = 0;
+    this.project = null;
+
 }
 
 ZN.SoundEngine.prototype = {
@@ -12,8 +13,27 @@ ZN.SoundEngine.prototype = {
         this.app = app;
         this.model = model;
 
+        var path = ZN.Config.soundPath;
+        var files = ZN.Config.soundFiles;
+
+
     },
 
+    setProject: function(projectObj){
+
+        this.project = projectObj;
+
+    },
+
+    triggerSound: function(id){
+
+    },
+
+    setIntensity: function(value){
+        //console.log('sound intensity ',value);
+    }
+
+    /*
     update: function(frameTime){
 
         this.frameTime = frameTime;
@@ -33,6 +53,7 @@ ZN.SoundEngine.prototype = {
 
         },this);
     }
+    */
 
 }
 
