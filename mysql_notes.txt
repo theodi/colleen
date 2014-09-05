@@ -16,7 +16,7 @@ to run app on port 3000
 
 If you have issues with MySQL not starting
 
-> sudo /usr/local/mysql/support-files/mysql.server 
+> sudo /usr/local/mysql/support-files/mysql.server start
 
 ensure present working directory is the project directory (i.e. colleen), then
 
