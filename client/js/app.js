@@ -40,6 +40,7 @@ ZN.App = function () {
     // rendering
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
+    this.soundEngine = null;
     this.runProjectGraph = true;
 
 
@@ -82,11 +83,12 @@ ZN.App.prototype = {
     },
 
     configLoaded:function(){
-	// url for api on same host as this page served from
+	    // url for api on same host as this page served from
 		var url = window.location.protocol + "//" + window.location.host + "/";
 	    //var url = './';//'http://localhost:5000/'
         this.apiUrl = url;
         this.dataSource = ZN.Config.dataSource;
+        this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
         this.loadProjectRules();
 
@@ -180,11 +182,17 @@ ZN.App.prototype = {
     */
 
     loadTimeSeries:function() {
+        var url;
         // select timeseries
         //var url = this.apiUrl+"timeseries/intervals/"+ intervals.join(',');
 
         // all timeseries
-        var url = this.apiUrl+"timeseries/";
+        if(this.dataSource=="json_file"){
+            url = "data/"+ZN.Config.timeseriesJson;
+        }
+        else{
+            url = this.apiUrl+"timeseries/";
+        }
         this.loadUrl(url, "json",this.timeSeriesLoaded);
 
     },
@@ -207,7 +215,13 @@ ZN.App.prototype = {
 
 
     startApp:function(){
-        this.initRenderer();
+
+        this.renderer = new ZN.CanvasRenderer();
+        this.renderer.init(this,this.model,this.canvasContainerId);
+
+        this.soundEngine = new ZN.SoundEngine();
+        this.soundEngine.init(this,this.model);
+
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
 
@@ -238,12 +252,13 @@ ZN.App.prototype = {
         });
 
         $(window).keypress(function( event ) {
-            console.log(event.which);
+            //console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
+                    self.rules.incFocusProject(-1);
                     break;
                 case 112: // 'p'
-                    self.rules.setFocusProject();
+                    self.rules.incFocusProject(1);
                     break;
             }
 
@@ -252,53 +267,21 @@ ZN.App.prototype = {
 
     },
 
-    /*
-    loadClassification:function () {
-        var maxItems = 1000;
-        var requestDurationSecs = this.requestDuration/1000;
-        var offsetSecs = 0;
-        if(this.dataSource=="archive"){
-            offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
-        }
-        var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
 
-        this.loadUrl(url, "json", this.classificationLoaded);
-
-    },
-
-    classificationLoaded:function(data){
-        var d = data;
-        var classifications = this.model.addClassifications(data);
-        var delay = (new Date()).valueOf() - classifications[0].time;
-
-        this.classificationLoadCount += 1;
-
-        if(this.firstFrame){
-            this.firstFrame = false;
-            this.classificationDelay = delay;
-            this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
-            this.update();
-
-        }
-        else{
-
-            if(this.classificationDelay < delay){
-                //this.classificationDelay = delay;
-            }
-
-        }
-
-    },
-    */
 
     loadIncTimeSeries:function() {
+
+        if(this.dataSource=="json_file") return;
+
         var from = this.model.maxSeriesTime +60; // last time plus 1 min
+        var to = 0;
 
-        // archived
-        //var to = from+this.timeSeriesRequestInterval/1000;
-
-        // realtime
-        var to = parseInt((this.curTime-this.timeSeriesLatency)/1000);
+        if(this.dataSource=="archive"){
+            to = from+this.timeSeriesRequestInterval/1000;
+        }
+        else{ // live
+            to = parseInt((this.curTime-this.timeSeriesLatency)/1000);
+        }
 
         if(from>to){
             var self = this;
@@ -323,47 +306,20 @@ ZN.App.prototype = {
 
     },
 
-    initRenderer:function(){
-
-        this.renderer = new ZN.CanvasRenderer();
-        this.renderer.init(this,this.model,this.canvasContainerId);
-
-    },
 
     update:function(){
         var self = this;
         this.updateFps();
-
-        /*
-        // load new classifications
-        if(this.curTime>this.nextRequestTime){
-            this.loadClassification();
-            this.nextRequestTime = this.curTime + this.requestDuration;
-            console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
-        }
-
-        // classification
-        if(this.model.classifications.length>0){
-            var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
-            if(this.curTime>nextClassificationTime){
-                console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
-                var classification = this.model.removeFirstClassification();
-                console.log("classification timestamp:",classification.timestamp);
-
-            }
-        }
-        */
 
         var frameTimeTarget = 33; // ms
 
         var t0 = new Date().valueOf();
         this.rules.update(this.frameTime); // frameTimeTarget
         this.renderer.render();
+        //this.soundEngine.update();
         this.model.projectGraph.update();
         var t1 = new Date().valueOf();
         var dt = t1-t0;
-
-
 
         var timeout = Math.max(frameTimeTarget-dt,0);
         timeout = Math.min(timeout,frameTimeTarget);
@@ -389,7 +345,9 @@ ZN.App.prototype = {
         });
         var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
         if(this.debug){
-            $("#diagnostics").html(fps);
+            var projectName = "";
+            if(this.model.focusProject) projectName=this.model.focusProject.name;
+            $("#diagnostics").html(fps+" : "+ projectName);
         }
 
     },
@@ -402,6 +360,67 @@ ZN.App.prototype = {
             results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
+
+
+    /*
+     loadClassification:function () {
+     var maxItems = 1000;
+     var requestDurationSecs = this.requestDuration/1000;
+     var offsetSecs = 0;
+     if(this.dataSource=="archive"){
+     offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
+     }
+     var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
+
+     this.loadUrl(url, "json", this.classificationLoaded);
+
+     },
+
+     classificationLoaded:function(data){
+     var d = data;
+     var classifications = this.model.addClassifications(data);
+     var delay = (new Date()).valueOf() - classifications[0].time;
+
+     this.classificationLoadCount += 1;
+
+     if(this.firstFrame){
+     this.firstFrame = false;
+     this.classificationDelay = delay;
+     this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
+     this.update();
+
+     }
+     else{
+
+     if(this.classificationDelay < delay){
+     //this.classificationDelay = delay;
+     }
+
+     }
+
+     },
+
+     updateClassifications:function(){
+     /*
+     // load new classifications
+     if(this.curTime>this.nextRequestTime){
+     this.loadClassification();
+     this.nextRequestTime = this.curTime + this.requestDuration;
+     console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
+     }
+
+     // classification
+     if(this.model.classifications.length>0){
+     var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
+     if(this.curTime>nextClassificationTime){
+     console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
+     var classification = this.model.removeFirstClassification();
+     console.log("classification timestamp:",classification.timestamp);
+
+     }
+     }
+     */
+
 
 
 }
