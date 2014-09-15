@@ -32,7 +32,8 @@
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["6","9"],"animation":
-            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":50,"duration":[1.0,4.0], "time":0, "angle":0}]
+            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":50,"duration":[1.0,4.0], "time":0, "angle":0},
+            {"type":"point_translate","data":"day","tween":"linear","fn":"sqrt","duration":[60.0,60.0], "rangeX":[-20.0,20.0],"rangeY":[-3.0,3.0],"time_fn":"random"}]
         }
     ],
 
