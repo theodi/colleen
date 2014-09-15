@@ -87,6 +87,7 @@ var gClassificationsPerPage = nconf.get("classifications_per_page");
 console.log('NODE_ENV is',nconf.get('NODE_ENV'));
 console.log('projects_list is',nconf.get('projects_list'));
 console.log('WNU_DB_URL',WNU_DB_URL);
+console.log('gClsArchiveTime',gClsArchiveTime);
 
 function connect(){
     if(connection!=null){
@@ -299,6 +300,11 @@ function fetchRequest(projectId,fromMs,toMs){
                         else if(field=='created_at'){
                             var date = new Date(record[field]);
                             value = "FROM_UNIXTIME('"+parseInt(date.valueOf()/1000)+"')";
+                            //console.log('record[field]',record[field],'value',value,'date',date);
+                        }
+                        else if(field=='user_id'){
+                            value = parseInt(record[field]);
+                            if(isNaN(value)) value = 0;
                             //console.log('record[field]',record[field],'value',value,'date',date);
                         }
                         else if(record[field]){
