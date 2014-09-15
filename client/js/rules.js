@@ -572,9 +572,9 @@ ZN.Rules.prototype = {
             var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
             anim.curDuration = duration;
 
-            obj.opacity = 1.0;
+            obj.opacity = 0.4;
 
-            var maxDistScale = 2.0;
+            var maxDistScale = 1.5;
             obj.x = obj.initial.x*maxDistScale;
             obj.y = obj.initial.y*maxDistScale;
             obj.vx=0;
