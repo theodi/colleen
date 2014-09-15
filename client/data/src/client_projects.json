@@ -1,11 +1,15 @@
 [
-    "condor",
+    "asteroid",
+    "bat_detective",
+    "cancer_cells",
+    "cyclone_center",
     "wise",
+    "galaxy_zoo",
     "milky_way",
-    "notes_from_nature",
     "planet_four",
     "plankton",
     "radio",
-    "war_diary",
-    "galaxy_zoo"
+    "serengeti",
+    "war_diary"
+
 ]
