@@ -4,12 +4,24 @@
     "x":0,
     "y":0,
     "rotation":0,
-
+        
     "sound":{"type":"asteroid","files":["s0.mp3","s1.mp3"]},
 
-    "shape_animation":[{"shape_ids":["1","2","3","4","5","11","12"],"animation":
-            [{"type":"asteroid","data":"hour","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min15", "time_fn":"random"},
-            {"type":"trail","trail_type":"path","fade":0.5,"duration":[1.0,3.0], "time":0}]}
+    "_comment":"Project level animation SCALE NOT WORKING", "animation":[
+        {"type":"scale","dataType":"c","data":"day","sx":[0.97,1.5],"sy":[0.97,1.02] ,"duration":[100.0,40.0], "time":0}
+    ],
+
+    "shape_animation":
+    [
+        {"_comment":"small asteroid shapes","shape_ids":["1","2","3","4","5","11","12"],"animation":
+            [{"type":"asteroid","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min", "time_fn":"random"},
+            {"type":"trail","trail_type":"path","fade":0.98,"duration":[1.0,3.0], "time":0}]
+        },
+
+        {"_comment":"medium shapes","shape_ids":["6","7","8","9","13","14"],"animation":
+            [{"type":"asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "duration_data":"min", "time_fn":"random"},
+            {"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,120.0], "duration_data":"hour", "time_fn":"random"}]
+        }
     ],
 
 
@@ -20,12 +32,13 @@
             "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,8.0], "time":0}]},
 
         { "_comment":"",
-            "id":"7","rotation":0,"opacity":0.8
+            "id":"7","rotation":0,"opacity":0.8,
+            "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.4,0.9] ,"duration":[16.0,8.0], "time":0}]
         },
 
-        { "_comment":"Rotation",
+        { "_comment":"largest medium shape",
             "id":"8","rotation":0,"opacity":0.9,
-            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,120.0], "time":0}]},
+            "animation":[{"type":"_rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,120.0], "time":0}]},
 
         { "_comment":"",
             "id":"9","rotation":0,"opacity":0.9
