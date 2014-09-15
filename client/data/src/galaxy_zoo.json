@@ -49,7 +49,7 @@
 
         { "_comment":"small yellow shape",
             "id":"8","rotation":0,
-             "animation":[{"type":"translate","data":"min","series_len":60,"tween":"linear","fn":"sqrt","dir":"x","range":[-800,300],"duration":[60.0,0.0],"time":0},
+             "animation":[{"type":"translate","data":"min","series_len":2,"tween":"linear","fn":"sqrt","dir":"x","range":[-800,300],"duration":[60.0,0.0],"time":0},
              {"type":"trail","trail_type":"path","fade":0.95,"duration":[2.0,3.0], "time":0},
              {"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
