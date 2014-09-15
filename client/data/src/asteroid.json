@@ -7,6 +7,8 @@
         
     "sound":{"type":"asteroid","files":["s0.mp3","s1.mp3"]},
 
+    "bgScaleAnim":{"type":"scale","data":"min","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
+
     "_comment":"Project level animation SCALE NOT WORKING", "animation":[
         {"type":"scale","dataType":"c","data":"day","sx":[0.97,1.5],"sy":[0.97,1.02] ,"duration":[100.0,40.0], "time":0}
     ],

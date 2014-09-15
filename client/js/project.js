@@ -312,11 +312,15 @@ ZN.Project.prototype = {
 
         }
 
+        // animation rule when project in background
         var min = ZN.Config.bgScaleAnimDurationRange[0];
         var max = ZN.Config.bgScaleAnimDurationRange[1];
         var duration = Math.random()*(max-min)+min;
-        this.bgScaleAnim = ZN.Config.bgScaleAnim;
-        this.bgScaleAnim["duration"] = [duration,duration]
+        if(!data.bgScaleAnim){
+            this.bgScaleAnim = ZN.Config.bgScaleAnim;
+        }
+
+        this.bgScaleAnim["duration"] = [duration,duration];
         this.bgScaleAnim["time"] = 0;
         this.bgScaleAnim["curDuration"] = duration;
         this.bgScaleAnim["loop"] = 0;
