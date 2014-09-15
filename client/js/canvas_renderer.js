@@ -37,6 +37,8 @@ ZN.CanvasRenderer.prototype = {
         };
         this.bgImage.src = 'images/patina_test.jpg';
 
+        this.resize();
+
 
     },
 

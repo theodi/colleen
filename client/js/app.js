@@ -16,7 +16,7 @@ ZN.App = function () {
     // frame timing
     this.curTime = 0;
     this.lastTime = 0;
-    this.frameTime = 33; // frame ms
+    this.frameTime = 40; // frame ms
     this.firstFrame = true;
     this.frameDurations = [];
     this.debug = true;
@@ -311,10 +311,10 @@ ZN.App.prototype = {
         var self = this;
         this.updateFps();
 
-        var frameTimeTarget = 33; // ms
+        var frameTimeTarget = 40; // ms
 
         var t0 = new Date().valueOf();
-        this.rules.update(this.frameTime); // frameTimeTarget
+        this.rules.update(frameTimeTarget); // this.frameTime
         this.renderer.render();
         //this.soundEngine.update();
         this.model.projectGraph.update();
