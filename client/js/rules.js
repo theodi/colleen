@@ -140,6 +140,10 @@ ZN.Rules.prototype = {
                                 this.serengetiRule(project,shape,anim);
                                 break;
 
+                            case "point_translate":
+                                this.pointTranslateRule(project,shape,anim);
+                                break;
+
                             case "radio":
                                 this.radioRule(project,shape,anim);
                                 //this.transnn(project,shape,anim);
@@ -498,9 +502,7 @@ ZN.Rules.prototype = {
 
     serengetiRule:function(project, obj, anim){
 
-
         var n = this.getNextSeriesValue(project, obj, anim);
-
 
         var nt = anim.time/anim.curDuration;
 
@@ -510,14 +512,40 @@ ZN.Rules.prototype = {
         var rangeY = anim.rangeY;
         var dy = rangeY[0]+ (rangeY[1]-rangeY[0])*-1.0*Math.cos((n-0.5)*2*Math.PI);
 
-
         //var sc = 20.0;
         // bl, br, tr, tl
         //var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
 
         var t = [[0.0,0.0],[0.0,0.0],[dx,dy],[dx,dy]];
 
+        this.pointTranslate(obj,t);
 
+    },
+
+
+    pointTranslateRule:function(project, obj, anim){
+
+        var n = this.getNextSeriesValue(project, obj, anim);
+
+        var nt = anim.time/anim.curDuration;
+
+        var rangeX = anim.rangeX;
+        var dx = rangeX[0] + (rangeX[1]-rangeX[0])*n;
+
+        var rangeY = anim.rangeY;
+        var dy = rangeY[0] + (rangeY[1]-rangeY[0])*-1.0*Math.cos((n-0.5)*2*Math.PI);
+
+        // bl, br, tr, tl
+        //var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
+
+        var t = [[-dx,-dy],[-dx,-dy],[dx,dy],[dx,dy]];
+
+        this.pointTranslate(obj,t);
+
+
+    },
+
+    pointTranslate:function(obj,t){
         var iPathSegs = obj.initial.pathSegs;
         var pathSegs = obj.pathSegs;
 
@@ -551,8 +579,6 @@ ZN.Rules.prototype = {
     radioRule:function(project, obj, anim){
 
         //var n = this.getNextSeriesValue(project, obj, anim);
-
-
 
         if(typeof anim['dx'] ==='undefined'){
 
