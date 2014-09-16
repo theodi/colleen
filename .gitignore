@@ -10,3 +10,7 @@ web/wnu/*
 .grunt/
 _SpecRunner.html
 *.hprof
+
+*.wav
+
+*.aif

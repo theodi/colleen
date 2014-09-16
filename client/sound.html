@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://localhost:3000/sound/test -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>ZN Soundengine</title>
+    <link rel='stylesheet' href='css/sound.css' />
+    <script src="js/soundengine.js"></script>
+    <script src="js/testpage.js"></script>
+  <style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; }[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; }[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; }[touch-action="scroll"],[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }</style><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -90px !important;
+    width: 180px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+
+body {
+  padding: 50px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+a {
+  color: #00b7ff;
+}
+
+</style></head>
+  <body>
+    <h1>ZN Soundengine</h1>
+    <p>This is a testpage for the ZN Soundengine</p>
+    <p>Currently playing: <b><span class="scene_id">scene_b</span></b></p>
+    <ul>
+    <li><button class="prev">Prev Scene</button><button class="next">Next Scene</button>or press <i>o/p</i>, this also starts audio</li>
+    <li><button class="trig_a">Trigger A</button> or press <i>t</i> to trigger a one-shot sample </li>
+    <li><button class="trig_b">Trigger B</button> or press <i>y</i> to trigger a one-shot sample </li>
+    <li><input type="range" class="intensity" min="0" ,="" max="100" step="1">intensity: <span class="intensity-value">0</span></li>
+    <li><button class="startstop">Start/Stop</button> or press <i>s</i></li>
+    </ul>
+
+    <button class="init">Reload</button>&nbsp;status:&nbsp;<span class="progress">ready</span>
+    <h3>Current scene info:</h3>
+    <div class="scene-info" width="400"></div>
+
+</body></html>
