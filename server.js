@@ -1,3 +1,5 @@
+'use strict';
+
 var usenewrelic = (typeof process.env.WNU_NEW_RELIC_ENABLED == 'undefined' || process.env.WNU_NEW_RELIC_ENABLED == 'true');
 if (usenewrelic) {
     require('newrelic');
@@ -5,7 +7,8 @@ if (usenewrelic) {
     console.log("New Relic disabled in config");
 }
 var express = require('express'),
-    classifications = require('./routes/classifications');
+    classifications = require('./routes/classifications'),
+    sound = require('./routes/sound');
 var compression = require('compression');
 
 var app = express();
@@ -16,6 +19,8 @@ if(process.env.NODE_ENV=='prod'){
     webRoot = 'web';
 }
 app.use('/', express.static(__dirname +'/'+webRoot));
+
+app.use('/audio', express.static(__dirname +'/public/audio'));
 
 app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
 //bodyParser is deprecated
@@ -43,6 +48,9 @@ app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 app.get('/ping', classifications.ping); // monitor
 app.get('/isupdating', classifications.isUpdating);// monitor
 app.get('/dbstats',classifications.getDBstats);
+
+app.get('/sound', sound.test);
+app.get('/sound/config', sound.config);
 
 // generate timeseries and analytics
 //app.get('/updateAnalytics',classifications.updateAnalytics);
