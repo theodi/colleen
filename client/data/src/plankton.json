@@ -12,7 +12,6 @@
 
 
     "shape_animation":[
-
         {"shape_ids":["1","1.1"],"animation":
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
@@ -23,7 +22,7 @@
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["5","5.1","5.2","5.3"],"animation":
-            [{"type":"scale","dataType":"c","data":"min","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
+            [{"type":"scale","dataType":"c","data":"min","fn":"id","sx":[0.8,1.05],"sy":[0.8,1.05] ,"duration":[4.0,4.0], "time":0}]
         },
         {"shape_ids":["7","7.1"],"animation":
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
@@ -32,8 +31,7 @@
             [{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.1],"sy":[0.8,1.1] ,"duration":[4.0,8.0], "time":0}]
         },
         {"shape_ids":["6","9"],"animation":
-            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":50,"duration":[1.0,4.0], "time":0, "angle":0},
-            {"type":"point_translate","data":"day","tween":"linear","fn":"sqrt","duration":[60.0,60.0], "rangeX":[-20.0,20.0],"rangeY":[-3.0,3.0],"time_fn":"random"}]
+            [{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":50,"duration":[1.0,4.0], "time":0, "angle":0}]
         }
     ],
 
@@ -41,7 +39,7 @@
 
         { "_comment":"Translate",
             "id":"3","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-10,100] ,"duration":[20.0,20.0], "time":0}]},
         { "_comment":"Rotation",
             "id":"1.1","rotation":-35.5},
         { "_comment":"Rotation",
@@ -51,9 +49,13 @@
         { "_comment":"Rotation",
             "id":"2.2","rotation":43.7},
         { "_comment":"Rotation",
-            "id":"4","rotation":-3.5},
+            "id":"4","rotation":-3.5, "animation":[
+            {"type":"point_translate","data":"hour","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0}]},
         { "_comment":"Rotation",
             "id":"4.1","rotation":54},
+        { "_comment":"Large block Rotation + point_translate",
+            "id":"5","animation":[
+            {"type":"point_translate","data":"min","tween":"linear","fn":"sqrt","duration":[10.0,10.0],"rangeX":[-4.0,3.0],"rangeY":[-3.0,4.0],"time":0}]},
         { "_comment":"Rotation",
             "id":"5.1","rotation":-8.7},
         { "_comment":"Rotation",
