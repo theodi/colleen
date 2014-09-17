@@ -36,7 +36,7 @@ function nextScene(){
 
   activeSceneId = sceneIds[activeSceneIndex];
   var info = ZN.soundengine.moveToScene(activeSceneId);
-  updateIntensity(info.intensity);
+  updateSceneLayersMix(info.layersMix);
   displayInfo(info);
   displaySceneId(activeSceneId);
   isPlaying = true;
@@ -49,7 +49,7 @@ function previousScene(){
 
   activeSceneId = sceneIds[activeSceneIndex];
   var info = ZN.soundengine.moveToScene(activeSceneId);
-  updateIntensity(info.intensity);
+  updateSceneLayersMix(info.layersMix);
   displayInfo(info);
   displaySceneId(activeSceneId);
   isPlaying = true;
@@ -65,28 +65,28 @@ function triggerB(){
    debug('triggered', filename);
 }
 
-function setIntensity(v){
-  ZN.soundengine.setSceneIntensity(v);
-  displayIntensity(v);
+function setSceneLayersMix(v){
+  ZN.soundengine.setSceneLayersMix(v);
+  displaySceneLayersMix(v);
 }
 
-function displayIntensity(v){
-  $('span.intensity-value').text(v);
+function displaySceneLayersMix(v){
+  $('span.scenemix-value').text(v);
 }
 
-function setBaseLayerVolume(v){
-  ZN.soundengine.setBaseLayerVolume(v);
-  displayBaseLayerVolume(v);
+function setBaseLayersMix(v){
+  ZN.soundengine.setBaseLayersMix(v);
+  displayBaseLayersMix(v);
 }
 
-function displayBaseLayerVolume(v){
-  $('span.basevol-value').text(v);
+function displayBaseLayersMix(v){
+  $('span.basemix-value').text(v);
 }
 
 
-function updateIntensity(v){
+function updateSceneLayersMix(v){
   $('input.intensity').val(v);
-  displayIntensity(v);
+  displaySceneLayersMix(v);
 }
 
 function displayInfo(info){
@@ -174,14 +174,14 @@ $(document).ready(function() {
     startstop();
   });
 
-  $('input.intensity').on('input', function() {
+  $('input.scenemix').on('input', function() {
     var v = $(this).val();
-    setIntensity(v);
+    setSceneLayersMix(v);
   });
 
-  $('input.basevol').on('input', function() {
+  $('input.basemix').on('input', function() {
     var v = $(this).val();
-    setBaseLayerVolume(v);
+    setBaseLayersMix(v);
   });
 
 });

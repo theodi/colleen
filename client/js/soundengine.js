@@ -17,16 +17,9 @@ var isPlaying = false;
 var epCurveIn, epCurveOut; // curve for equal power panning / crossfade
 
 /* global xwindow, xdocument*/
-var context = new(window.AudioContext || window.webkitAudioContext)();
-
-var sceneData = {
-  // __baselayer : {
-  //   volume: context.createGain(),
-  //   buffer: null,
-  //   filename: null,
-  //   source: null,
-  // }
-};
+// var context = new(window.AudioContext || window.webkitAudioContext)();
+var context = new window.webkitAudioContext();
+var sceneData = {};
 
 var mix; // mixbus
 
@@ -52,7 +45,7 @@ function init(config, cbProgress) {
 
     var scene = {
       id : def.id, // for progress report
-      intensity: 0,
+      layersMix: 0,
       layers: [],
       smplr_a: {
         samples:[],
@@ -121,8 +114,11 @@ function moveToScene(sceneId) {
 
   // first time , or after stop, start the base
   if(!isPlaying){
+    debug('start base layers');
     startLayers('__base');
+    setBaseLayersMix(0);
   }
+
   // previousSceneId = activeSceneId;
   // fade out current scene
   stopLayers(activeSceneId);
@@ -131,15 +127,17 @@ function moveToScene(sceneId) {
   // fade in active scene
   startLayers(activeSceneId);
 
-  // return intensity value for user feedback
   var data = sceneData[sceneId];
 
   // only really needed for first selected scenes
-  mapIntensityToLayerMix(data.intensity);
+  setSceneLayersMix(data.layersMix);
+
+  // now we're playing
+  isPlaying = true;
 
   return {
     id : sceneId,
-    intensity : data.intensity,
+    layersMix : data.layersMix,
     layers : {
       count: data.layers.length
     },
@@ -156,19 +154,28 @@ function clamp(v, min, max){
   return Math.min(Math.max(v, min), max);
 }
 
-function setSceneIntensity(v) {
+function setSceneLayersMix(v) {
   if(activeSceneId === '__none__')
     return;
 
-  // debug('set intensity for', activeSceneId);
-  sceneData[activeSceneId].intensity = v;
+  // debug('set layersMix for', activeSceneId);
 
-  mapIntensityToLayerMix(v);
+
+  if(!settings.sceneLayersMixMode)
+    mixLayersKeep1(activeSceneId, v);
+  else
+    mixLayersAllOff(activeSceneId, v);
 }
 
-function mapIntensityToLayerMix(v){
-  var vnorm = v / 100;
-  var data = sceneData[activeSceneId];
+function setBaseLayersMix(v){
+  // sceneData.__base.layersMix = v;
+  mixLayersAllOff('__base', v);
+}
+
+function mixLayersKeep1(sceneId, v){
+  // var vnorm = v / 100;
+  var data = sceneData[sceneId];
+  data.layersMix = v;
   var numLayers = data.layers.length;
   if(numLayers <= 1) return; // nothing to do with one layer
 
@@ -176,15 +183,53 @@ function mapIntensityToLayerMix(v){
   if(!index) return; // always play layer 0
 
   var delta = 1 / (numLayers-1);
-  var offset = vnorm - (delta * (index-1));
+  var offset = v - delta * (index-1);
   offset = clamp(offset, 0, 1);
   var vol = offset / delta;
   vol = clamp(vol, 0, 1); // clip to 1
   vol = Math.cos((1-vol) * 0.5*Math.PI); // equal power
   layer.mix.gain.value = vol;
-  // debug('layer', index, 'offset', offset, 'volume', vol);
+  debug('mode0 layer', index, 'offset', offset, 'volume', vol);
  });
 }
+
+function mixLayersAllOff(sceneId, v){
+  // var vnorm = v / 100;
+  var data = sceneData[sceneId];
+  data.layersMix = v;
+  var numLayers = data.layers.length;
+
+ data.layers.forEach(function(layer, index, arr){
+  var delta = 1 / numLayers;
+  var offset = v - delta * index;
+  offset = clamp(offset, 0, 1);
+  var vol = offset / delta;
+  vol = clamp(vol, 0, 1); // clip to 1
+  vol = Math.cos((1-vol) * 0.5*Math.PI); // equal power
+  layer.mix.gain.value = vol;
+  debug(sceneId, 'mode1 layer', index, 'offset', offset, 'volume', vol);
+ });
+}
+
+
+// function mapIntensityToBaseLayers(v){
+//   // var vnorm = v / 100;
+//   var data = sceneData.__base;
+//   if(!data) return;
+
+//   var numLayers = data.layers.length;
+
+//  data.layers.forEach(function(layer, index, arr){
+//   var delta = 1 / numLayers;
+//   var offset = v - delta * index;
+//   offset = clamp(offset, 0, 1);
+//   var vol = offset / delta;
+//   vol = clamp(vol, 0, 1); // clip to 1
+//   vol = Math.cos((1-vol) * 0.5*Math.PI); // equal power
+//   layer.mix.gain.value = vol;
+//   // debug('mode1 layer', index, 'offset', offset, 'volume', vol);
+//  });
+// }
 
 function dbToGain(db){
   return Math.pow(10, (db/10));
@@ -348,53 +393,20 @@ function loadSceneLayers(def, callback) {
     getAudioBufferData(url, function(err, buffer) {
       if (err) return cb(err);
       var data = sceneData[def.id];
+      var layer = {
+        buffer: buffer,
+        filename: filename,
+        mix: context.createGain(), // layersMix fade
+        volume: context.createGain() // static layer master volume
+      };
 
-      // if(def.id === '__base'){
-      //   var layer = {
-      //     buffer: buffer,
-      //     filename: filename,
-      //     volume: context.createGain() // static layer master volume
-      //   };
-
-      //   var vol = def.volumes.layers[count++];
-      //   layer.volume.gain.value = dbToGain(vol || 0);
-      //   // connect directly to mix
-      //   layer.volume.connect(data.fade);
-      //   // start playing in loop
-      //   var source = context.createBufferSource();
-      //   source.buffer = layer.buffer;
-      //   source.connect(layer.volume);
-      //   source.loop = true;
-      //   source.start();
-      //   // store reference
-      //   layer.source = source;
-      //   data.layers.push(layer);
-
-      // }else{
-
-        var layer = {
-          buffer: buffer,
-          filename: filename,
-          mix: context.createGain(), // intensity fade
-          volume: context.createGain() // static layer master volume
-        };
-
-        layer.mix.connect(layer.volume);
-
-        // base layers are not mixed with intensity
-        // mix stage always 1
-        if(def.id === '__base'){
-          layer.mix.gain.value = 1;
-        }
-
-        var vol = def.volumes.layers[count++];
-      // debug(def.id, 'layer volume', count-1, vol, dbToGain(vol || 0));
-        layer.volume.gain.value = dbToGain(vol || 0);
-        layer.volume.connect(data.fade);
-        data.layers.push(layer);
-      // }
-
-
+      layer.mix.gain.value = 0;
+      layer.mix.connect(layer.volume);
+      var vol = def.volumes.layers[count++];
+    // debug(def.id, 'layer volume', count-1, vol, dbToGain(vol || 0));
+      layer.volume.gain.value = dbToGain(vol || 0);
+      layer.volume.connect(data.fade);
+      data.layers.push(layer);
       return cb(null);
     });
   }, callback);
@@ -447,11 +459,11 @@ function startLayers(sceneId) {
     source.connect(layer.mix);
     source.loop = true;
     source.start();
-    if(sceneId !== '__base'){
-      data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
-    }
-    // store reference
     layer.source = source;
+
+    // if(sceneId !== '__base'){
+      data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
+    // }
   });
 }
 
@@ -466,49 +478,15 @@ function stopLayers(sceneId) {
     var layer = array[index];
     debug('stop layer', layer.filename);
     var now = context.currentTime;
-    if(sceneId !== '__base'){
+    // if(sceneId !== '__base'){
       data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
       // stop layer when done fading
       layer.source.stop(now + fadeTime);
-    }else{
-      layer.source.stop(0);
-    }
+    // }else{
+    //   layer.source.stop(0);
+    // }
   });
 }
-
-// function startBaseLayer(){
-//   var data = sceneData.__base;
-//   if (!data) {
-//     return;
-//   }
-//   data.layers.forEach(function(_, index, array) {
-//     var layer = array[index];
-//     debug('start base layer', layer.filename);
-//     var source = context.createBufferSource();
-//     source.buffer = layer.buffer;
-//     source.connect(layer.volume);
-//     source.loop = true;
-//     source.start();
-//     data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, settings.fadeTime);
-//     // store reference
-//     layer.source = source;
-//   });
-// }
-
-// function stopBaseLayer(){
-//   var data = sceneData.__base;
-//   if (!data) {
-//     return;
-//   }
-//   data.layers.forEach(function(_, index, array) {
-//     var layer = array[index];
-//     debug('stop base layer', layer);
-//     var now = context.currentTime;
-//     data.fade.gain.setValueCurveAtTime(epCurveOut, now, settings.fadeTime);
-//     // stop layer when done fading
-//     layer.source.stop(now + settings.fadeTime);
-//   });
-// }
 
 function getAudioBufferData(url, callback) {
 
@@ -532,19 +510,19 @@ function getAudioBufferData(url, callback) {
   request.send();
 }
 
-function setBaseLayerVolume(db){
-  var data = sceneData.__base;
-  if(!data){
-    debug('No base layer available, setBaseLayerVolume no-op');
-    return;
-  }
+// function setBaseLayerVolume(db){
+//   var data = sceneData.__base;
+//   if(!data){
+//     debug('No base layer available, setBaseLayerVolume no-op');
+//     return;
+//   }
 
-  if(db <= -40){
-    data.fade.gain.value = 0;
-  }else{
-    data.fade.gain.value = dbToGain(db);
-  }
-}
+//   if(db <= -40){
+//     data.fade.gain.value = 0;
+//   }else{
+//     data.fade.gain.value = dbToGain(db);
+//   }
+// }
 
 module.exports = {
   init: init,
@@ -552,8 +530,8 @@ module.exports = {
   stop: stop,
   moveToScene: moveToScene,
   triggerSampler: triggerSampler,
-  setSceneIntensity: setSceneIntensity,
-  setBaseLayerVolume: setBaseLayerVolume
+  setSceneLayersMix: setSceneLayersMix,
+  setBaseLayersMix: setBaseLayersMix
 };
 
 },{"assert":6,"async":2,"debug":3,"lodash":12,"path":8}],2:[function(require,module,exports){

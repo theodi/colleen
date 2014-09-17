@@ -27,8 +27,8 @@
     <li><button class="prev">Prev Scene</button><button class="next">Next Scene</button>or press <i>o/p</i>, this also starts audio</li>
     <li><button class="trig_a">Trigger A</button> or press <i>t</i> to trigger a one-shot sample </li>
     <li><button class="trig_b">Trigger B</button> or press <i>y</i> to trigger a one-shot sample </li>
-    <li><input type="range" class="intensity" min="0" ,="" max="100" step="1" value="0">intensity: <span class="intensity-value">83</span></li>
-    <li><input type="range" class="basevol" min="-20" ,="" max="0" step="1" value="-20">base layers volume: <span class="basevol-value">-5</span> dB</li>
+    <li><input type="range" class="scenemix" min="0" ,="" max="1" step="0.01" value="0">scene layers mix: <span class="scenemix-value">0.64</span></li>
+    <li><input type="range" class="basemix" min="0" ,="" max="1" step="0.01" value="0">base layers mix: <span class="basemix-value">0.16</span></li>
     <li><button class="startstop">Start/Stop</button> or press <i>s</i></li>
     </ul>
 
@@ -36,7 +36,7 @@
     <h3>Scene info:</h3>
     <div class="scene-info" width="400">{
     "id": "scene_a",
-    "intensity": 0,
+    "layersMix": "0.64",
     "layers": {
         "count": 2
     },
