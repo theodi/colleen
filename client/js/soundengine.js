@@ -18,15 +18,21 @@ var epCurveIn, epCurveOut; // curve for equal power panning / crossfade
 
 /* global xwindow, xdocument*/
 // var context = new(window.AudioContext || window.webkitAudioContext)();
-var context = new window.webkitAudioContext();
+var context;
 var sceneData = {};
-
 var mix; // mixbus
 
 function init(config, cbProgress) {
-  // TODO check system compatibility Web Audio API
-  // debugger;
   debug('Initializing soundengine');
+
+  if('AudioContext' in window) {
+     context = new window.AudioContext();
+  }else if('webkitAudioContext' in window) {
+     context = new window.webkitAudioContext();
+  }else{
+    // window.alert('Soundengine: Web Audio API not supported');
+    cbProgress(new Error('Web Audio API not supported'));
+  }
 
   makeEqualPowerCurve();
 
@@ -342,7 +348,7 @@ function triggerSamplerA() {
   var source = context.createBufferSource();
   source.buffer = sample.buffer;
   source.connect(data.smplr_a.volume);
-  source.start();
+  source.start(0);
   sample.source = source;
   return sample.filename;
 }
@@ -360,7 +366,7 @@ function triggerSamplerB() {
   var source = context.createBufferSource();
   source.buffer = sample.buffer;
   source.connect(data.smplr_b.volume);
-  source.start();
+  source.start(0);
   sample.source = source;
   return sample.filename;
 }
@@ -458,12 +464,10 @@ function startLayers(sceneId) {
     source.buffer = layer.buffer;
     source.connect(layer.mix);
     source.loop = true;
-    source.start();
+    source.start(0);
     layer.source = source;
-
-    // if(sceneId !== '__base'){
-      data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
-    // }
+    data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
+    // data.fade.gain.setValueCurveAtTime(epCurveIn, 0.01, fadeTime);
   });
 }
 
@@ -478,13 +482,11 @@ function stopLayers(sceneId) {
     var layer = array[index];
     debug('stop layer', layer.filename);
     var now = context.currentTime;
-    // if(sceneId !== '__base'){
-      data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
-      // stop layer when done fading
-      layer.source.stop(now + fadeTime);
-    // }else{
-    //   layer.source.stop(0);
-    // }
+    debug('setValueCurveAtTime now', now, 'fadeTime', fadeTime);
+    data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
+    // data.fade.gain.setValueCurveAtTime(epCurveOut, 0.01, fadeTime);
+    // stop layer when done fading
+    layer.source.stop(now + fadeTime);
   });
 }
 
