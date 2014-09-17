@@ -4,11 +4,8 @@
 var $ = require('jquery');
 var _ = require('lodash');
 var debug = require('debug')('testpage');
-// var soundengine = require('./main');
 
-// console.log('To enable debugging set localStorage.debug variable from the browser console');
 
-// var options = data;
 var isPlaying = false;
 var sceneIds = [];
 
@@ -32,8 +29,9 @@ function loadCallback(err, progress) {
 }
 
 function nextScene(){
+  // debugger;
   activeSceneIndex++;
-  if (activeSceneIndex >= config.scenes.length)
+  if (activeSceneIndex >= sceneIds.length)
     activeSceneIndex = 0;
 
   activeSceneId = sceneIds[activeSceneIndex];
@@ -47,7 +45,7 @@ function nextScene(){
 function previousScene(){
   activeSceneIndex--;
   if (activeSceneIndex < 0)
-    activeSceneIndex = config.scenes.length - 1;
+    activeSceneIndex = sceneIds.length - 1;
 
   activeSceneId = sceneIds[activeSceneIndex];
   var info = ZN.soundengine.moveToScene(activeSceneId);
@@ -75,6 +73,16 @@ function setIntensity(v){
 function displayIntensity(v){
   $('span.intensity-value').text(v);
 }
+
+function setBaseLayerVolume(v){
+  ZN.soundengine.setBaseLayerVolume(v);
+  displayBaseLayerVolume(v);
+}
+
+function displayBaseLayerVolume(v){
+  $('span.basevol-value').text(v);
+}
+
 
 function updateIntensity(v){
   $('input.intensity').val(v);
@@ -110,7 +118,8 @@ $(document).ready(function() {
     config = data;
 
     config.scenes.forEach(function(p) {
-      sceneIds.push(p.id);
+      if(p.id !== '__base')
+         sceneIds.push(p.id);
     });
 
     debug('scene id list', sceneIds);
@@ -164,16 +173,17 @@ $(document).ready(function() {
   $('button.startstop').click(function() {
     startstop();
   });
+
   $('input.intensity').on('input', function() {
     var v = $(this).val();
-    // debug('input intensity:', v);
     setIntensity(v);
   });
-  // $('input.intensity').change(function() {
-  //   var v = $(this).val();
-  //   debug('change intensity:', v);
-  //   setIntensity(v);
-  // });
+
+  $('input.basevol').on('input', function() {
+    var v = $(this).val();
+    setBaseLayerVolume(v);
+  });
+
 });
 
 },{"debug":2,"jquery":5,"lodash":6}],2:[function(require,module,exports){

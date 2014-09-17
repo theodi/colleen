@@ -2,12 +2,12 @@
 'use strict';
 
 var soundOptions = {
-  pathToRoot: 'public/audio',
-  baseUrl : '/audio',
+  pathToSoundset: 'client/audio/exampleset',
+  baseUrl : 'audio/exampleset',
   // baseUrl : 'http://www.vauxlab.com/audio', // NEEDS CORS HEADERS
   extension : 'mp3',
   crossfadeSec : 1.5,
-
+  mixBusVolume : 0
 };
 
 

@@ -20,12 +20,12 @@ var epCurveIn, epCurveOut; // curve for equal power panning / crossfade
 var context = new(window.AudioContext || window.webkitAudioContext)();
 
 var sceneData = {
-  __baselayer : {
-    volume: context.createGain(),
-    buffer: null,
-    filename: null,
-    source: null,
-  }
+  // __baselayer : {
+  //   volume: context.createGain(),
+  //   buffer: null,
+  //   filename: null,
+  //   source: null,
+  // }
 };
 
 var mix; // mixbus
@@ -38,6 +38,8 @@ function init(config, cbProgress) {
   makeEqualPowerCurve();
 
   stopLayers(activeSceneId); // stop any already playing sceneDefs
+  stopLayers('__base');
+
   activeSceneId = '__none__';
 
   // set up master bus
@@ -49,19 +51,33 @@ function init(config, cbProgress) {
     // sceneIds.push(p.id);
 
     var scene = {
+      id : def.id, // for progress report
       intensity: 0,
       layers: [],
-      smplr_a: {samples:[], pool:[]},
-      smplr_b: {samples:[], pool:[]},
+      smplr_a: {
+        samples:[],
+        pool:[],
+        volume: context.createGain()
+      },
+      smplr_b: {
+        samples:[],
+        pool:[],
+        volume: context.createGain()
+      },
       fade: context.createGain(),
       volume: context.createGain()
     };
+
+    scene.smplr_a.volume.connect(scene.volume);
+    scene.smplr_a.volume.gain.value = dbToGain(def.volumes.smplr_a || 0);
+    scene.smplr_b.volume.connect(scene.volume);
+    scene.smplr_b.volume.gain.value = dbToGain(def.volumes.smplr_b || 0);
 
     scene.fade.connect(scene.volume);
     scene.fade.gain.value = 0;
 
     scene.volume.connect(mix);
-    scene.volume.gain.value = 1;
+    scene.volume.gain.value = dbToGain(def.volumes.master || 0);
 
     // store new scene
     sceneData[def.id] = scene;
@@ -72,7 +88,7 @@ function init(config, cbProgress) {
   async.eachSeries(config.scenes, function(def, callback) {
     // Calculate how much we still need to load
     var percent = (loadCounter++/ config.scenes.length) * 100;
-    cbProgress(null, percent);
+    cbProgress(null, Math.floor(percent), def.id);
     loadSceneFiles(def, callback);
     },
     function(err) {
@@ -88,14 +104,25 @@ function init(config, cbProgress) {
 
 function createMixBus(){
   mix = context.createGain();
-  mix.gain.value = 0.8;
+  mix.gain.value = dbToGain(settings.mixBusVolume || 0);
   var compressor = context.createDynamicsCompressor();
   mix.connect(compressor);
+  // mix.connect(context.destination);
   compressor.connect(context.destination);
 }
 
 function moveToScene(sceneId) {
+  if(!sceneId)
+    return window.alert('Soundengine invalid scene id: "undefined"');
+  if(sceneId === '__base')
+    return window.alert('Soundengine scene id: __base is not allowed');
+
   debug('changing focus to', sceneId);
+
+  // first time , or after stop, start the base
+  if(!isPlaying){
+    startLayers('__base');
+  }
   // previousSceneId = activeSceneId;
   // fade out current scene
   stopLayers(activeSceneId);
@@ -106,6 +133,10 @@ function moveToScene(sceneId) {
 
   // return intensity value for user feedback
   var data = sceneData[sceneId];
+
+  // only really needed for first selected scenes
+  mapIntensityToLayerMix(data.intensity);
+
   return {
     id : sceneId,
     intensity : data.intensity,
@@ -129,6 +160,7 @@ function setSceneIntensity(v) {
   if(activeSceneId === '__none__')
     return;
 
+  // debug('set intensity for', activeSceneId);
   sceneData[activeSceneId].intensity = v;
 
   mapIntensityToLayerMix(v);
@@ -154,6 +186,10 @@ function mapIntensityToLayerMix(v){
  });
 }
 
+function dbToGain(db){
+  return Math.pow(10, (db/10));
+}
+
 function makeEqualPowerCurve(){
   var valueCount = 4096;
   epCurveOut = new Float32Array(valueCount);
@@ -171,11 +207,13 @@ function makeEqualPowerCurve(){
 function start() {
   isPlaying = true;
   startLayers(activeSceneId);
+  startLayers('__base');
 }
 
 function stop() {
   isPlaying = false;
   stopLayers(activeSceneId);
+  stopLayers('__base');
 }
 
 function nextSampleIndex(ab){
@@ -258,7 +296,7 @@ function triggerSamplerA() {
 
   var source = context.createBufferSource();
   source.buffer = sample.buffer;
-  source.connect(data.volume);
+  source.connect(data.smplr_a.volume);
   source.start();
   sample.source = source;
   return sample.filename;
@@ -276,7 +314,7 @@ function triggerSamplerB() {
 
   var source = context.createBufferSource();
   source.buffer = sample.buffer;
-  source.connect(data.volume);
+  source.connect(data.smplr_b.volume);
   source.start();
   sample.source = source;
   return sample.filename;
@@ -302,22 +340,61 @@ function loadSceneFiles(def, callback) {
 
 function loadSceneLayers(def, callback) {
   // load layers in series so we keep their alphabetical order
+  var count = 0;
+
   async.eachSeries(def.layers, function(filename, cb) {
     var url = settings.baseUrl + path.join("/", def.id, "layers", filename);
     debug('load layer', url);
     getAudioBufferData(url, function(err, buffer) {
       if (err) return cb(err);
       var data = sceneData[def.id];
-      var layer = {
-        buffer: buffer,
-        filename: filename,
-        mix: context.createGain(), // intensity fade
-        volume: context.createGain() // static layer master volume
-      };
 
-      layer.mix.connect(layer.volume);
-      layer.volume.connect(data.fade);
-      data.layers.push(layer);
+      // if(def.id === '__base'){
+      //   var layer = {
+      //     buffer: buffer,
+      //     filename: filename,
+      //     volume: context.createGain() // static layer master volume
+      //   };
+
+      //   var vol = def.volumes.layers[count++];
+      //   layer.volume.gain.value = dbToGain(vol || 0);
+      //   // connect directly to mix
+      //   layer.volume.connect(data.fade);
+      //   // start playing in loop
+      //   var source = context.createBufferSource();
+      //   source.buffer = layer.buffer;
+      //   source.connect(layer.volume);
+      //   source.loop = true;
+      //   source.start();
+      //   // store reference
+      //   layer.source = source;
+      //   data.layers.push(layer);
+
+      // }else{
+
+        var layer = {
+          buffer: buffer,
+          filename: filename,
+          mix: context.createGain(), // intensity fade
+          volume: context.createGain() // static layer master volume
+        };
+
+        layer.mix.connect(layer.volume);
+
+        // base layers are not mixed with intensity
+        // mix stage always 1
+        if(def.id === '__base'){
+          layer.mix.gain.value = 1;
+        }
+
+        var vol = def.volumes.layers[count++];
+      // debug(def.id, 'layer volume', count-1, vol, dbToGain(vol || 0));
+        layer.volume.gain.value = dbToGain(vol || 0);
+        layer.volume.connect(data.fade);
+        data.layers.push(layer);
+      // }
+
+
       return cb(null);
     });
   }, callback);
@@ -361,6 +438,7 @@ function startLayers(sceneId) {
     debug('no layers for', sceneId);
     return;
   }
+  var fadeTime = settings.fadeTime;
   data.layers.forEach(function(_, index, array) {
     var layer = array[index];
     debug('start layer', layer.filename);
@@ -369,7 +447,9 @@ function startLayers(sceneId) {
     source.connect(layer.mix);
     source.loop = true;
     source.start();
-    data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, settings.fadeTime);
+    if(sceneId !== '__base'){
+      data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
+    }
     // store reference
     layer.source = source;
   });
@@ -381,15 +461,54 @@ function stopLayers(sceneId) {
     debug('no layers for', sceneId);
     return;
   }
+  var fadeTime = settings.fadeTime;
   data.layers.forEach(function(_, index, array) {
     var layer = array[index];
-    debug('stop layer', layer);
+    debug('stop layer', layer.filename);
     var now = context.currentTime;
-    data.fade.gain.setValueCurveAtTime(epCurveOut, now, settings.fadeTime);
-    // stop layer when done fading
-    layer.source.stop(now + settings.fadeTime);
+    if(sceneId !== '__base'){
+      data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
+      // stop layer when done fading
+      layer.source.stop(now + fadeTime);
+    }else{
+      layer.source.stop(0);
+    }
   });
 }
+
+// function startBaseLayer(){
+//   var data = sceneData.__base;
+//   if (!data) {
+//     return;
+//   }
+//   data.layers.forEach(function(_, index, array) {
+//     var layer = array[index];
+//     debug('start base layer', layer.filename);
+//     var source = context.createBufferSource();
+//     source.buffer = layer.buffer;
+//     source.connect(layer.volume);
+//     source.loop = true;
+//     source.start();
+//     data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, settings.fadeTime);
+//     // store reference
+//     layer.source = source;
+//   });
+// }
+
+// function stopBaseLayer(){
+//   var data = sceneData.__base;
+//   if (!data) {
+//     return;
+//   }
+//   data.layers.forEach(function(_, index, array) {
+//     var layer = array[index];
+//     debug('stop base layer', layer);
+//     var now = context.currentTime;
+//     data.fade.gain.setValueCurveAtTime(epCurveOut, now, settings.fadeTime);
+//     // stop layer when done fading
+//     layer.source.stop(now + settings.fadeTime);
+//   });
+// }
 
 function getAudioBufferData(url, callback) {
 
@@ -413,13 +532,28 @@ function getAudioBufferData(url, callback) {
   request.send();
 }
 
+function setBaseLayerVolume(db){
+  var data = sceneData.__base;
+  if(!data){
+    debug('No base layer available, setBaseLayerVolume no-op');
+    return;
+  }
+
+  if(db <= -40){
+    data.fade.gain.value = 0;
+  }else{
+    data.fade.gain.value = dbToGain(db);
+  }
+}
+
 module.exports = {
   init: init,
   start: start,
   stop: stop,
   moveToScene: moveToScene,
   triggerSampler: triggerSampler,
-  setSceneIntensity: setSceneIntensity
+  setSceneIntensity: setSceneIntensity,
+  setBaseLayerVolume: setBaseLayerVolume
 };
 
 },{"assert":6,"async":2,"debug":3,"lodash":12,"path":8}],2:[function(require,module,exports){

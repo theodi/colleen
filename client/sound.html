@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0032)http://localhost:3000/sound/test -->
+<!-- saved from url=(0027)http://localhost:3030/sound -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>ZN Soundengine</title>
     <link rel='stylesheet' href='css/sound.css' />
@@ -18,33 +18,35 @@
 .en-markup-crop-options div div:first-of-type {
     margin-left: 0px !important;
 }
-
-body {
-  padding: 50px;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-}
-a {
-  color: #00b7ff;
-}
-
 </style></head>
   <body>
     <h1>ZN Soundengine</h1>
     <p>This is a testpage for the ZN Soundengine</p>
-    <p>Currently playing: <b><span class="scene_id">scene_b</span></b></p>
+    <p>Currently playing: <b><span class="scene_id">scene_a</span></b></p>
     <ul>
     <li><button class="prev">Prev Scene</button><button class="next">Next Scene</button>or press <i>o/p</i>, this also starts audio</li>
     <li><button class="trig_a">Trigger A</button> or press <i>t</i> to trigger a one-shot sample </li>
     <li><button class="trig_b">Trigger B</button> or press <i>y</i> to trigger a one-shot sample </li>
-    <li><input type="range" class="intensity" min="0" ,="" max="100" step="1">intensity: <span class="intensity-value">0</span></li>
+    <li><input type="range" class="intensity" min="0" ,="" max="100" step="1" value="0">intensity: <span class="intensity-value">83</span></li>
+    <li><input type="range" class="basevol" min="-20" ,="" max="0" step="1" value="-20">base layers volume: <span class="basevol-value">-5</span> dB</li>
     <li><button class="startstop">Start/Stop</button> or press <i>s</i></li>
     </ul>
 
     <button class="init">Reload</button>&nbsp;status:&nbsp;<span class="progress">ready</span>
-    <h3>Current scene info:</h3>
-    <div class="scene-info" width="400"></div>
+    <h3>Scene info:</h3>
+    <div class="scene-info" width="400">{
+    "id": "scene_a",
+    "intensity": 0,
+    "layers": {
+        "count": 2
+    },
+    "smplr_a": {
+        "count": 14
+    },
+    "smplr_b": {
+        "count": 0
+    }
+}</div>
+
 
 </body></html>

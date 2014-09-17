@@ -1,16 +1,10 @@
 'use strict';
-// var express = require('express');
-// var router = express.Router();
+
 var fs = require('fs');
 var config = require('../config');
 var debug = require('debug')('soundengine');
 var async = require('async');
 var path = require('path');
-
-/* GET home page. */
-// router.get('/', function(req, res) {
-//   res.sendfile('../client/sound.html');
-// });
 
 exports.test = function(req, res) {
   res.sendfile(path.resolve('client/sound.html'));
@@ -27,6 +21,7 @@ exports.config = function(req, res) {
   });
 };
 
+//============ PASTE FROM ORIGINAL ========
 
 function listDirectories(dir, extension, cb){
   var results = [];
@@ -88,7 +83,7 @@ function listFilenames(dir, fileExt, cb){
 }
 
 function compileSoundConfig(options, callback){
-  var root = path.join(__dirname, '../', options.pathToRoot);
+  var root = path.join(__dirname, '../', options.pathToSoundset);
   var fileExt = options.extension || 'mp3';
   var config = {
     options : options,
@@ -113,11 +108,20 @@ function compileSoundConfig(options, callback){
         debug('Parsing folder contents for', projectId);
         // var dir = root + '/' + project;
         async.series({
+          volumes: function(callback){
+            // read json file from scene directory
+            try{
+              // var json = require(dir + '/volumes.json');
+              var json = JSON.parse(fs.readFileSync(dir + '/volumes.json', 'utf8'));
+              // debug('json', json);
+              callback(null, json);
+            }catch(err){
+              debug('no volumes.json file found for', projectId);
+              callback(null, {});
+            }
+          },
           layers: function(callback){
             listFilenames(dir + '/layers', fileExt, callback);
-          },
-          smplr: function(callback){
-            listFilenames(dir + '/smplr', fileExt, callback);
           },
           smplr_a: function(callback){
             listFilenames(dir + '/smplr_a', fileExt, callback);
@@ -128,15 +132,18 @@ function compileSoundConfig(options, callback){
         }, function(err, results){
           if(err) return cb(err);
 
-          debug('layers', results.layers);
-          debug('smplr', results.smplr);
-          debug('smplr_a', results.smplr_a);
-          debug('smplr_b', results.smplr_b);
+          // debug('volumes', results.volumes);
+          // debug('layers', results.layers);
+          // debug('smplr', results.smplr);
+          // debug('smplr_a', results.smplr_a);
+          // debug('smplr_b', results.smplr_b);
+
 
           config.scenes.push({
             id : projectId,
+            volumes : results.volumes,
             layers : results.layers,
-            smplr_a : results.smplr_a.concat(results.smplr),
+            smplr_a : results.smplr_a,
             smplr_b : results.smplr_b
           });
           cb(null);
@@ -149,5 +156,3 @@ function compileSoundConfig(options, callback){
     return callback(null, config);
   }); // async waterfall
 }
-
-// module.exports = router;
