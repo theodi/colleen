@@ -11,7 +11,7 @@
 
     "animation":[
         {"type":"sound_loop_trigger","dataType":"c","duration_data":"min","duration":[3.0,6.0], "time":0},
-        {"type":"sound_intensity","dataType":"c","data":"min","duration":[10.0,10.0], "time":0}
+        {"type":"sound_intensity","dataType":"c","data":"min","tween":"linear","range":[0.2,1.0],"duration":[10.0,10.0], "time":0}
 
     ],
 

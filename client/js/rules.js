@@ -61,9 +61,7 @@ ZN.Rules.prototype = {
                     project.opacity = this.bgOpacity;
                 }
 
-                if(project==focusProject){
-                    this.soundIntensityRule(project,project,project.bgScaleAnim);
-                }
+
 
             }
             else{
@@ -79,10 +77,14 @@ ZN.Rules.prototype = {
                             this.rotateRule(project,project,anim);
                             break;
                         case "sound_loop_trigger":
-                            this.soundLoopTriggerRule(project,project,anim);
+                            if(this.isFocusProject(project)){
+                                this.soundLoopTriggerRule(project,project,anim);
+                            }
                             break;
                         case "sound_intensity":
-                            this.soundIntensityRule(project,project,anim);
+                            if(this.isFocusProject(project)){
+                                this.soundIntensityRule(project,project,anim);
+                            }
                             break;
 
                     }
@@ -791,7 +793,8 @@ ZN.Rules.prototype = {
 
         // set intensity from anim rule range and normalised value
         var n = this.getNextSeriesValue(project, obj, anim);
-        ZN.soundengine.setSceneLayersMix(n);
+        var intensity = anim.range[0] + (anim.range[1]-anim.range[0])*n;
+        ZN.soundengine.setSceneLayersMix(intensity);
 
     },
 
