@@ -21,21 +21,10 @@ ZN.App = function () {
     this.frameDurations = [];
     this.debug = true;
 
-    // classifications request. Not currently used
-    /*
-    this.nextRequestTime = 0;
-    this.requestDuration = 60*1000; // in ms
-    this.classificationDelay = 0;
-    this.classificationLoadCount = 0;
-    this.archiveStartSecs = 120000;//2*24*60*60; // seconds
-    */
-
-
     // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
     this.timeSeriesLatency = 2*60*1000 // in ms
     this.dataSource = "archive"; // "live"
-
 
     // rendering
     this.canvasContainerId = "canvas-container";
@@ -60,6 +49,13 @@ ZN.App.prototype = {
             this.ruleFile += "_" + rules;
         }
 
+        if(this.debug){
+            $(document.body).append(
+                '<div id="diagnostics" style="position:absolute;z-index:10;"></div>'+
+                '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
+            );
+        }
+
         this.loadConfig();
 
     },
@@ -77,7 +73,7 @@ ZN.App.prototype = {
                 self.configLoaded();
             },
             error:function (xhr, status, error) {
-                //if (xhr.status != 404) {alert(error);} else {alert("404 config not found");}
+                if (xhr.status != 404) {alert(error);} else {alert("404 config not found");}
             }
         })
     },
@@ -90,7 +86,7 @@ ZN.App.prototype = {
         this.dataSource = ZN.Config.dataSource;
         this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
-        this.loadProjectRules();
+        this.loadSoundConfig();
 
     },
 
@@ -154,18 +150,52 @@ ZN.App.prototype = {
 
     },
 
+    loadSoundConfig:function () {
+        var url = ZN.Config.soundConfigPath;
+        this.loadUrl(url, "json", this.soundConfigLoaded);
+
+    },
+    soundConfigLoaded:function (config) {
+        var self = this;
+        ZN.soundengine.init(config, function(err, progress){
+            if(err){
+                window.alert('Soundengine failed to load:'+ err.message);
+                return;
+            }
+
+            if(self.debug){
+                var txt = progress!=100?'sound files...'+progress+'%':'';
+                $('#sound-progress').text(txt);
+            }
+
+            if(progress === 100){
+                self.soundLoadComplete();
+            }
+        });
+        this.loadProjectRules();
+    },
+
+    soundLoadComplete: function(){
+        // set scene
+
+        // start sound
+
+        ZN.soundengine.start();
+        this.startApp();
+        ZN.soundengine.setSceneLayersMix(ZN.Config.sceneLayersMix);
+        ZN.soundengine.setBaseLayersMix(ZN.Config.baseLayersMix);
+
+    },
 
     loadProjectRules:function () {
         var url = "data/"+this.ruleFile+".json";
-
         this.loadUrl(url, "json",this.projectRulesLoaded);
 
     },
+
     projectRulesLoaded:function(data){
         this.model.initProjects(data);
-        var SECS = this.model.SECS;
-
-        this.loadTimeSeries([SECS.MIN, SECS.MIN5, SECS.MIN15, SECS.HOUR, SECS.DAY]);
+        this.loadTimeSeries();
 
     },
 
@@ -210,7 +240,7 @@ ZN.App.prototype = {
     },
     projectGraphLoaded:function (data) {
         this.model.initProjectGraph(data);
-        this.startApp();
+        //this.startApp();
     },
 
 
@@ -219,8 +249,8 @@ ZN.App.prototype = {
         this.renderer = new ZN.CanvasRenderer();
         this.renderer.init(this,this.model,this.canvasContainerId);
 
-        this.soundEngine = new ZN.SoundEngine();
-        this.soundEngine.init(this,this.model);
+        //this.soundEngine = new ZN.SoundEngine();
+        //this.soundEngine.init(this,this.model);
 
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
@@ -243,9 +273,7 @@ ZN.App.prototype = {
 
     initInterface:function(){
         var self = this;
-        if(this.debug){
-            $(document.body).append('<div id="diagnostics" style="position:absolute;z-index:10;"></div>');
-        }
+
 
         $(window).resize(function(){
             self.renderer.resize();
@@ -363,6 +391,17 @@ ZN.App.prototype = {
 
 
     /*
+
+
+     // classifications request. Not currently used
+
+     this.nextRequestTime = 0;
+     this.requestDuration = 60*1000; // in ms
+     this.classificationDelay = 0;
+     this.classificationLoadCount = 0;
+     this.archiveStartSecs = 120000;//2*24*60*60; // seconds
+
+
      loadClassification:function () {
      var maxItems = 1000;
      var requestDurationSecs = this.requestDuration/1000;

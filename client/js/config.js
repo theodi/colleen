@@ -7,8 +7,9 @@ ZN.Config = {
     assetBB:{left:0,bottom:1080,right:1920,top:0,width:1920,height:1080},
 
     // Sound
-    soundPath:"sound/",
-    soundFiles:["s0.mp3","s1.mp3"],
+    soundConfigPath:"sound/config",
+    sceneLayersMix:0.8,
+    baseLayersMix:0.2,
 
     // Debug
     debug:true,
