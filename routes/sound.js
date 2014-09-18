@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var config = require('../config');
+var config = require('../config/config');
 var debug = require('debug')('soundengine');
 var async = require('async');
 var path = require('path');

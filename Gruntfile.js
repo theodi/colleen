@@ -24,6 +24,7 @@ module.exports = function(grunt) {
 
                     {expand: true, cwd: 'client/css/', src: ['**'], dest: 'web/wnu/css/'},
                     {expand: true, cwd: 'client/images/', src: ['**'], dest: 'web/wnu/images/'},
+                    {expand: true, cwd: 'client/audio/wnu', src: ['**'], dest: 'web/wnu/audio/wnu/'},
                     // wnu data
                     {expand: true, cwd: 'client/data/', src: ['*.json','*.csv'], dest: 'web/wnu/data/', filter: 'isFile'},
                     {src:'client/js/config.js', dest:'web/wnu/js/config.js' },
@@ -52,7 +53,8 @@ module.exports = function(grunt) {
                     'client/lib/springy/springy.js',
                     'client/js/*.js',
                     '!client/js/chart.js',
-                    '!client/js/config.js'
+                    '!client/js/config.js',
+                    '!client/js/testpage.js'
 
                 ] }
             }

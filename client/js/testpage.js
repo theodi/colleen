@@ -145,7 +145,7 @@ $(document).ready(function() {
       case 84: // t trigger sound
         triggerA();
         break;
-      case 84: // t trigger sound
+      case 89: // y trigger sound
         triggerB();
         break;
     }

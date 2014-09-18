@@ -23,10 +23,10 @@ ZN.Rules.prototype = {
         this.bgOpacity = ZN.Config.bgOpacity;
         this.focusDuration = ZN.Config.focusDuration;
         this.changeFocusDuration = ZN.Config.changeFocusDuration;
+    },
 
-
-
-
+    isFocusProject: function(project){
+        return (this.model.focusProject.id == project.id);
     },
 
     update: function(frameTime){
@@ -745,6 +745,9 @@ ZN.Rules.prototype = {
             obj.vx = Math.cos(theta)*s;
             obj.vy = Math.sin(theta)*s;
 
+            if(anim.hasOwnProperty('sound') && this.isFocusProject(project)){
+                var filename = ZN.soundengine.triggerSampler(anim.sound);
+            }
             //console.log("start_anim id",obj.id,obj.vx,obj.vy)
 
 

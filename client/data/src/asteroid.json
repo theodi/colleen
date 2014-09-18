@@ -4,8 +4,6 @@
     "x":0,
     "y":0,
     "rotation":0,
-        
-    "sound":{"type":"asteroid","files":["s0.mp3","s1.mp3"]},
 
     "bgScaleAnim":{"type":"scale","data":"min","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
 
@@ -21,8 +19,9 @@
         },
 
         {"_comment":"medium shapes","shape_ids":["6","7","8","9","13","14"],"animation":
-            [{"type":"asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "duration_data":"min", "time_fn":"random"},
-            {"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[220.0,320.0], "duration_data":"hour", "time_fn":"random"}]
+            [{"type":"_asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "sound":0, "duration_data":"min", "time_fn":"random"},
+                {"type":"asteroid","dataType":"u","data":"min","series_len":60,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,11.0], "sound":0, "duration_data":"min", "time_fn":"random"},
+                {"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[220.0,320.0], "duration_data":"hour", "time_fn":"random"}]
         }
     ],
 
