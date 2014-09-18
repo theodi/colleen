@@ -76,7 +76,13 @@ ZN.Rules.prototype = {
                 _.each(project.animation,function(anim){
                     switch(anim.type){
                         case "rotate":
-                            this.rotateRule(project, project,anim);
+                            this.rotateRule(project,project,anim);
+                            break;
+                        case "sound_loop_trigger":
+                            this.soundLoopTriggerRule(project,project,anim);
+                            break;
+                        case "sound_intensity":
+                            this.soundIntensityRule(project,project,anim);
                             break;
 
                     }
@@ -152,6 +158,8 @@ ZN.Rules.prototype = {
                             case "asteroid":
                                 this.asteroidRule(project,shape,anim);
                                 break;
+
+
 
 
                             case "translate_circular_rnd":
@@ -737,6 +745,7 @@ ZN.Rules.prototype = {
             //var n = Math.random();
             //var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
             //anim.curDuration = duration;
+            var duration = this.getDuration(project,anim);
 
             // start shooting star
             var speedScale = 3000;
@@ -770,9 +779,8 @@ ZN.Rules.prototype = {
             obj.vx=0, obj.vy=0;
         }
 
-
-
     },
+
 
 
     /*---------------------------------------------------------------------------*/
@@ -781,18 +789,30 @@ ZN.Rules.prototype = {
 
     soundIntensityRule: function(project, obj, anim){
 
-        var n = this.getNextSeriesValue(project, obj, anim);
-
         // set intensity from anim rule range and normalised value
-        //this.app.soundEngine.setIntensity(n);
+        var n = this.getNextSeriesValue(project, obj, anim);
+        ZN.soundengine.setSceneLayersMix(n);
 
+    },
 
+    soundLoopTriggerRule:function(project, obj, anim){
+
+        var endLoop = this.updateAnimTime(anim);
+        if(endLoop){
+
+            var duration = this.getDuration(project,anim);
+
+            if(this.isFocusProject(project)){
+                var filename = ZN.soundengine.triggerSampler(anim.sound);
+            }
+        }
     },
 
 
 
 
-    /*---------------------------------------------------------------------------*/
+
+        /*---------------------------------------------------------------------------*/
 
     // Project rules
 
