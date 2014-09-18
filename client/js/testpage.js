@@ -85,7 +85,7 @@ function displayBaseLayersMix(v){
 
 
 function updateSceneLayersMix(v){
-  $('input.intensity').val(v);
+  $('input.scenemix').val(v);
   displaySceneLayersMix(v);
 }
 
@@ -145,7 +145,7 @@ $(document).ready(function() {
       case 84: // t trigger sound
         triggerA();
         break;
-      case 89: // y trigger sound
+      case 84: // t trigger sound
         triggerB();
         break;
     }

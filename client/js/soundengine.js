@@ -466,7 +466,11 @@ function startLayers(sceneId) {
     source.loop = true;
     source.start(0);
     layer.source = source;
-    data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
+    try{
+      data.fade.gain.setValueCurveAtTime(epCurveIn, context.currentTime, fadeTime);
+    }catch(err){
+      // oh shut up already firefox
+    }
     // data.fade.gain.setValueCurveAtTime(epCurveIn, 0.01, fadeTime);
   });
 }
@@ -483,7 +487,11 @@ function stopLayers(sceneId) {
     debug('stop layer', layer.filename);
     var now = context.currentTime;
     debug('setValueCurveAtTime now', now, 'fadeTime', fadeTime);
-    data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
+    try{
+      data.fade.gain.setValueCurveAtTime(epCurveOut, now, fadeTime);
+    }catch(err){
+      // oh shut up already firefox
+    }
     // data.fade.gain.setValueCurveAtTime(epCurveOut, 0.01, fadeTime);
     // stop layer when done fading
     layer.source.stop(now + fadeTime);
