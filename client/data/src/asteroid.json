@@ -7,8 +7,12 @@
 
     "bgScaleAnim":{"type":"scale","data":"min","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
 
-    "_comment":"Project level animation SCALE NOT WORKING", "animation":[
-        {"type":"scale","dataType":"c","data":"day","sx":[0.97,1.5],"sy":[0.97,1.02] ,"duration":[100.0,40.0], "time":0}
+    "_comment":"Project level animation SCALE NOT WORKING",
+
+    "animation":[
+        {"type":"sound_loop_trigger","dataType":"c","duration_data":"min","duration":[3.0,6.0], "time":0},
+        {"type":"sound_intensity","dataType":"c","data":"min","tween":"linear","range":[0.2,1.0],"duration":[10.0,10.0], "time":0}
+
     ],
 
     "shape_animation":
@@ -20,7 +24,7 @@
 
         {"_comment":"medium shapes","shape_ids":["6","7","8","9","13","14"],"animation":
             [{"type":"_asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "sound":0, "duration_data":"min", "time_fn":"random"},
-                {"type":"asteroid","dataType":"u","data":"min","series_len":60,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,11.0], "sound":0, "duration_data":"min", "time_fn":"random"},
+                {"type":"_asteroid","dataType":"u","data":"min","series_len":60,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,11.0], "sound":0, "duration_data":"min", "time_fn":"random"},
                 {"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[220.0,320.0], "duration_data":"hour", "time_fn":"random"}]
         }
     ],
