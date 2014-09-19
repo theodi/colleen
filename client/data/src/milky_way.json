@@ -24,7 +24,7 @@
             []},
 
         { "shape_ids":["2","5","6"],
-            "animation":[{"type":"asteroid","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,100.0],"sound":0,"duration_data":"min15","time_fn":"random", "loop_sound":1}]}
+            "animation":[{"type":"asteroid","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,100.0],"loop_sound":0,"duration_data":"min15","time_fn":"random", "loop_sound":1}]}
         ],
 
     "shapes":[
