@@ -3,9 +3,7 @@
 
 var soundOptions = {
 
-  //pathToSoundset: 'http://s3.amazonaws.com/wnu/audio/exampleset/',//'client/audio/wnu',
-  //baseUrl : 'http://s3.amazonaws.com/wnu/audio/exampleset/',//'audio/wnu',
-
+  //baseUrl : 'http://s3.amazonaws.com/wnu/audio/wnu',
   pathToSoundset: 'client/audio/wnu',
   baseUrl : 'audio/wnu',
 
