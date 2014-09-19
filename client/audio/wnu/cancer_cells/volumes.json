@@ -1,6 +1,6 @@
 {
-  "layers" : [0],
+  "layers" : [0, -3],
   "smplr_a" : 0,
-  "smplr_b" : -3,
+  "smplr_b" : 0,
   "master" : 0
 }
