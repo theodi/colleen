@@ -9,8 +9,8 @@ ZN.Config = {
     // Sound
     soundConfigPath:"sound/config",
     //soundConfigPath:"data/sound_config.json",
-    sceneLayersMix:1.0,
-    baseLayersMix:0.2,
+    //sceneLayersMix:1.0,
+    //baseLayersMix:1.0,
 
     // Debug
     debug:true,

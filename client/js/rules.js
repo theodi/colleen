@@ -330,7 +330,7 @@ ZN.Rules.prototype = {
         }
 
         if(anim.hasOwnProperty('loop_sound') && this.isFocusProject(project)){
-            var filename = ZN.soundengine.triggerSampler(anim.sound);
+            this.triggerSound(anim.loop_sound);
         }
 
         return duration;
@@ -798,7 +798,7 @@ ZN.Rules.prototype = {
         // set intensity from anim rule range and normalised value
         var n = this.getNextSeriesValue(project, obj, anim);
         var intensity = anim.range[0] + (anim.range[1]-anim.range[0])*n;
-        ZN.soundengine.setSceneLayersMix(intensity);
+        ZN.soundengine.setSceneLayersMix(intensity*this.app.volume);
 
     },
 
@@ -810,9 +810,19 @@ ZN.Rules.prototype = {
             var duration = this.getDuration(project,anim);
 
             if(this.isFocusProject(project)){
-                var filename = ZN.soundengine.triggerSampler(anim.sample);
+                this.triggerSound(anim.sample);
             }
+
         }
+    },
+
+    triggerSound: function(sample){
+
+        if(this.app.volume>0){
+            var filename = ZN.soundengine.triggerSampler(sample);
+
+        }
+
     },
 
 
@@ -936,9 +946,10 @@ ZN.Rules.prototype = {
     setProjectSound: function(project){
         var info = ZN.soundengine.moveToScene(project.id);
         var layersMix = info.layersMix;
-        ZN.soundengine.setSceneLayersMix(ZN.Config.sceneLayersMix);
-        ZN.soundengine.setBaseLayersMix(ZN.Config.baseLayersMix);
-        var filename = ZN.soundengine.triggerSampler(0);
+        ZN.soundengine.setSceneLayersMix(this.app.volume);
+        ZN.soundengine.setBaseLayersMix(this.app.volume);
+        //var filename = ZN.soundengine.triggerSampler(0);
+
 
     },
 

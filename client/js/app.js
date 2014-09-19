@@ -29,9 +29,10 @@ ZN.App = function () {
     // rendering
     this.canvasContainerId = "canvas-container";
     this.renderer = null;
-    this.soundEngine = null;
     this.runProjectGraph = true;
 
+    //sound
+    this.volume = 1.0;
 
 }
 
