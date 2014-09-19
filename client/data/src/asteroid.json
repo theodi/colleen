@@ -8,34 +8,22 @@
     "bgScaleAnim":{"type":"scale","data":"min","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
 
     "animation":[
-<<<<<<< HEAD
-        {"type":"_sound_loop_trigger","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
+
+        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
         {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[30.0,30.0], "time":0}
-=======
-        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
-        {"type":"sound_intensity","dataType":"c","data":"min","tween":"linear","range":[0.2,1.0],"duration":[10.0,10.0], "time":0}
->>>>>>> ee39c50d76127c6f9eee4d24730e218e4787f6a8
 
     ],
 
     "shape_animation":
     [
         {"_comment":"small asteroid shapes","shape_ids":["1","2","3","4","5","11","12"],"animation":
-<<<<<<< HEAD
-            [{"type":"asteroid","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min", "time_fn":"random", "sound":0},
-=======
             [{"type":"asteroid","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.0,5.0],"duration":[10.0,60.0], "duration_data":"min", "time_fn":"random",
                 "loop_sound":0},
->>>>>>> ee39c50d76127c6f9eee4d24730e218e4787f6a8
             {"type":"trail","trail_type":"path","fade":0.98,"duration":[1.0,3.0], "time":0}]
         },
 
         {"_comment":"medium shapes","shape_ids":["6","7","8","9","13","14"],"animation":
-<<<<<<< HEAD
-            [{"type":"asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "duration_data":"min", "time_fn":"random", "sound":0},
-=======
             [{"type":"asteroid","dataType":"u","data":"min","series_len":2,"tween":"linear","fn":"id","range":[0.0,5.0],"duration":[100.0,200.0], "duration_data":"min", "time_fn":"random"},
->>>>>>> ee39c50d76127c6f9eee4d24730e218e4787f6a8
                 {"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[220.0,320.0], "duration_data":"hour", "time_fn":"random"}]
         }
     ],
