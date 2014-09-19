@@ -5,6 +5,7 @@ var config = require('../config/config');
 var debug = require('debug')('soundengine');
 var async = require('async');
 var path = require('path');
+var fs = require('fs');
 
 exports.test = function(req, res) {
   res.sendfile(path.resolve('client/sound.html'));
@@ -17,10 +18,27 @@ exports.config = function(req, res) {
       res.status(500).send('An error occurred when compiling sound configuration'+err.message);
       return;
     }
+      saveConfig(result)
+
     res.status(200).json(result);
   });
 };
 
+
+function saveConfig(json){
+
+    var filename = '/../client/data/sound_config.json';
+    var str = JSON.stringify(json,null,'\t');
+
+    fs.writeFile(__dirname + filename, str, function(err) {
+        if(err) {
+            debug(err);
+        } else {
+            debug("sound_config.json was saved!");
+        }
+    });
+
+}
 //============ PASTE FROM ORIGINAL ========
 
 function listDirectories(dir, extension, cb){
