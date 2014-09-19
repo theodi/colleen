@@ -310,6 +310,9 @@ ZN.Rules.prototype = {
             var dataStr = anim.duration_data.toUpperCase();
             var interval = this.model.SECS[dataStr];
             var series = project.timeseries[dataType][interval].series;
+            //if(anim.series_len){
+            //    series = (project.timeseries[dataType][interval].series).slice(series.length-anim.series_len);
+            //}
             anim.loop %= series.length;
 
             var valueMax = project.timeseries[dataType][interval].max;
@@ -806,7 +809,7 @@ ZN.Rules.prototype = {
             var duration = this.getDuration(project,anim);
 
             if(this.isFocusProject(project)){
-                var filename = ZN.soundengine.triggerSampler(anim.sound);
+                var filename = ZN.soundengine.triggerSampler(anim.sample);
             }
         }
     },
