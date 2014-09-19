@@ -76,7 +76,7 @@ ZN.Rules.prototype = {
                         case "rotate":
                             this.rotateRule(project,project,anim);
                             break;
-                        case "sound_loop_trigger":
+                        case "loop_sound":
                             if(this.isFocusProject(project)){
                                 this.soundLoopTriggerRule(project,project,anim);
                             }
@@ -327,6 +327,10 @@ ZN.Rules.prototype = {
         else{
 
             anim.loop = 0;
+        }
+
+        if(anim.hasOwnProperty('loop_sound') && this.isFocusProject(project)){
+            var filename = ZN.soundengine.triggerSampler(anim.sound);
         }
 
         return duration;
@@ -759,15 +763,12 @@ ZN.Rules.prototype = {
             obj.vx = Math.cos(theta)*s;
             obj.vy = Math.sin(theta)*s;
 
-            if(anim.hasOwnProperty('sound') && this.isFocusProject(project)){
-                var filename = ZN.soundengine.triggerSampler(anim.sound);
-            }
             //console.log("start_anim id",obj.id,obj.vx,obj.vy)
 
 
         }
 
-        var n = this.getSeriesValue(project, obj, anim);
+        //var n = this.getSeriesValue(project, obj, anim);
 
         var dt = this.frameTime/1000;
 

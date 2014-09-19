@@ -25,7 +25,7 @@
 
         { "_comment":"Translate X block 3",
             "id":"1","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"min15","tween":"id","fn":"id","dir":"x","range":[-30,30] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"translate","data":"min15","tween":"id","fn":"id","dir":"x","range":[-30,30] ,"duration":[8.0,12.0], "time":0, "loop_sound":0}]},
 
         { "_comment":"Scale X only, top block",
             "id":"2","rotation":0,"opacity":0.7,
