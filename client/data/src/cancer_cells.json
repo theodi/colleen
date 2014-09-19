@@ -8,6 +8,9 @@
     "_comment":"Project level animations",
 
     "animation":[
+        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+
     ],
 
     "shape_animation":
@@ -19,14 +22,14 @@
     	},
 
     	{"_comment":"dark purple cells","shape_ids":["11","12","13","14","15","16","17","18","19","20"],"animation":
-            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#8E026A","4F003E"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour"},
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#8E026A","4F003E"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour", "loop_sound":0},
             {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
             {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.1,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}
             ]
     	},
 
         {"_comment":"light purple cells","shape_ids":["21","22","23","24","25"],"animation":
-            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#4F003E","EFDE0C"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour"},
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#4F003E","EFDE0C"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour", "loop_sound":1},
             {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0], "time":0},
             {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.05,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}]
     	},

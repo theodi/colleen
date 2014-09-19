@@ -9,14 +9,16 @@
 
     "bgScaleAnim":{"type":"scale","data":"min","sx":[0.2,0.3],"sy":[0.2,0.3],"tween":"linear","fn":"sqrt"},
 
+    "animation":[
+        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
 
-    "_animation":[
-        {"type":"rotate","dataType":"c","data":"min","series_len":5,"tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0}
-        ],
+    ],
+
 
     "shape_animation":
         [{"shape_ids":["1","2","4","5","6","7","10","11"],"animation":
-            [{"type":"rotate","dataType":"c","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[60.0,400.0], "time":0}]
+            [{"type":"rotate","dataType":"c","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[60.0,400.0], "time":0, "loop_sound":1}]
         }],
 
     "shapes":[
@@ -35,7 +37,7 @@
 
         { "_comment":"Scale long duration",
             "id":"4","rotation":-6.0,"opacity":0.85,
-            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
+            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0,"loop_sound":0}]},
 
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
@@ -48,15 +50,15 @@
 
         { "_comment":"Translate",
             "id":"7","opacity":0.8,
-            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0],"loop_sound":0, "time":0}]},
 
         { "_comment":"Rotation on vertical 2",
             "id":"8","opacity":0.9,
-            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,222.0], "time":0}]},
+            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,120.0],"time":0,"loop_sound":0}]},
         
         { "_comment":"Rotation on vertical 1",
             "id":"9","opacity":0.9,
-            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,359],"duration":[20.0,222.0], "time":0}]},
+            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,359],"duration":[20.0,20.0], "time":0,"loop_sound":0}]},
 
         { "_comment":"Opacity",
             "id":"10","rotation":0,"opacity":0.8,
