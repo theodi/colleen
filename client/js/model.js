@@ -225,7 +225,7 @@ ZN.Model.prototype = {
                     timeseries[type][interval].max = Math.max(_.max(timeseries[type][interval].series),1.0);
                 }
 
-                console.log('incTimeSeries',project.name,type,interval,count,time);
+                //console.log('incTimeSeries',project.name,type,interval,count,time);
 
             }
             else{

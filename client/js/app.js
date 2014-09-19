@@ -52,7 +52,7 @@ ZN.App.prototype = {
 
         if(this.debug){
             $(document.body).append(
-                '<div id="diagnostics" style="position:absolute;z-index:10;"></div>'+
+                '<div id="diagnostics" style="position:absolute;z-index:10;bottom:0"></div>'+
                 '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
             );
         }
@@ -275,6 +275,12 @@ ZN.App.prototype = {
     initInterface:function(){
         var self = this;
 
+        $("#mute-button").click(function(e){
+            self.volume=self.volume>0?0:1.0;
+            ZN.soundengine.setSceneLayersMix(self.volume);
+            ZN.soundengine.setBaseLayersMix(self.volume);
+            e.preventDefault()
+        });
 
         $(window).resize(function(){
             self.renderer.resize();
@@ -373,6 +379,7 @@ ZN.App.prototype = {
             return prev + cur;
         });
         var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
+
         if(this.debug){
             var projectName = "";
             if(this.model.focusProject) projectName=this.model.focusProject.name;
