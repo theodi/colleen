@@ -37,6 +37,20 @@
 			"smplr_b": []
 		},
 		{
+			"id": "radio",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [],
+			"smplr_a": [],
+			"smplr_b": []
+		},
+		{
 			"id": "planet_four",
 			"volumes": {
 				"layers": [
@@ -52,20 +66,6 @@
 		},
 		{
 			"id": "plankton",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [],
-			"smplr_a": [],
-			"smplr_b": []
-		},
-		{
-			"id": "radio",
 			"volumes": {
 				"layers": [
 					0
@@ -158,8 +158,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_rumble_base_version2.mp3",
-				"2_rumble_base_2min_flattened_HFonly.mp3"
+				"2_rumble_base_2min_flattened_HFonly.mp3",
+				"1_rumble_base_version2.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": []
@@ -203,8 +203,8 @@
 				"drone_chord_pulse_loop.mp3"
 			],
 			"smplr_a": [
-				"cosmic-ray-solo_loop.mp3",
-				"clickecho.mp3"
+				"clickecho.mp3",
+				"cosmic-ray-solo_loop.mp3"
 			],
 			"smplr_b": []
 		},
@@ -220,8 +220,8 @@
 			},
 			"layers": [
 				"fields2_loop.mp3",
-				"fields_loop.mp3",
-				"fields3_loop.mp3"
+				"fields3_loop.mp3",
+				"fields_loop.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": [
@@ -256,8 +256,8 @@
 				"6_carp_unpop.mp3"
 			],
 			"smplr_b": [
-				"2_low_metallic_clang2_loop.mp3",
 				"1_low_metallic_clang_loop.mp3",
+				"2_low_metallic_clang2_loop.mp3",
 				"3_low_metallic_clang3_loop.mp3",
 				"4_carp_swim.mp3"
 			]
@@ -290,31 +290,6 @@
 			]
 		},
 		{
-			"id": "milky_way",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": -3
-			},
-			"layers": [
-				"1_hydrophone-waterfall5_loop.mp3"
-			],
-			"smplr_a": [
-				"water-ding2_loop.mp3",
-				"water-ding3_loop.mp3",
-				"water-ding_loop.mp3"
-			],
-			"smplr_b": [
-				"smp_tone_ring10.mp3",
-				"smp_tone_ring11.mp3",
-				"smp_tone_ring9.mp3",
-				"smp_tone_ring12.mp3"
-			]
-		},
-		{
 			"id": "cancer_cells",
 			"volumes": {
 				"layers": [
@@ -338,6 +313,31 @@
 				"cello-pluck2.mp3",
 				"cello-pluck3.mp3",
 				"cello-pluck4.mp3"
+			]
+		},
+		{
+			"id": "milky_way",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": -3
+			},
+			"layers": [
+				"1_hydrophone-waterfall5_loop.mp3"
+			],
+			"smplr_a": [
+				"water-ding2_loop.mp3",
+				"water-ding3_loop.mp3",
+				"water-ding_loop.mp3"
+			],
+			"smplr_b": [
+				"smp_tone_ring10.mp3",
+				"smp_tone_ring11.mp3",
+				"smp_tone_ring9.mp3",
+				"smp_tone_ring12.mp3"
 			]
 		}
 	]

@@ -87,7 +87,7 @@ ZN.App.prototype = {
         this.dataSource = ZN.Config.dataSource;
         this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
-        this.loadSoundConfig();
+        this.loadProjectRules();
 
     },
 
@@ -151,29 +151,48 @@ ZN.App.prototype = {
 
     },
 
+    loadProjectRules:function () {
+        var url = "data/"+this.ruleFile+".json";
+        this.loadUrl(url, "json",this.projectRulesLoaded);
+
+    },
+
+    projectRulesLoaded:function(data){
+        this.model.initProjects(data);
+        this.loadSoundConfig();
+
+    },
+
     loadSoundConfig:function () {
         var url = ZN.Config.soundConfigPath;
         this.loadUrl(url, "json", this.soundConfigLoaded);
 
     },
-    soundConfigLoaded:function (config) {
+    soundConfigLoaded:function (data) {
         var self = this;
-        ZN.soundengine.init(config, function(err, progress){
+        var config = this.model.processSoundConfig(data);
+        var startOnLoadCount = 3;
+
+        ZN.soundengine.init(config, function(err, progress, projectId, loadCounter){
             if(err){
                 window.alert('Soundengine failed to load:'+ err.message);
                 return;
             }
+
 
             if(self.debug){
                 var txt = progress!=100?'sound files...'+progress+'%':'';
                 $('#sound-progress').text(txt);
             }
 
-            if(progress === 100){
+            //if(progress === 100){
+            self.model.setSoundLoaded(projectId);
+
+            if(loadCounter==startOnLoadCount){
                 self.soundLoadComplete();
             }
         });
-        this.loadProjectRules();
+        this.loadTimeSeries();
     },
 
     soundLoadComplete: function(){
@@ -183,22 +202,11 @@ ZN.App.prototype = {
 
         ZN.soundengine.start();
         this.startApp();
-        ZN.soundengine.setSceneLayersMix(ZN.Config.sceneLayersMix);
-        ZN.soundengine.setBaseLayersMix(ZN.Config.baseLayersMix);
+        this.setLayerVolume(1.0);
 
     },
 
-    loadProjectRules:function () {
-        var url = "data/"+this.ruleFile+".json";
-        this.loadUrl(url, "json",this.projectRulesLoaded);
 
-    },
-
-    projectRulesLoaded:function(data){
-        this.model.initProjects(data);
-        this.loadTimeSeries();
-
-    },
 
     /*
     loadProjectAnalytics:function() {
@@ -277,8 +285,7 @@ ZN.App.prototype = {
 
         $("#mute-button").click(function(e){
             self.volume=self.volume>0?0:1.0;
-            ZN.soundengine.setSceneLayersMix(self.volume);
-            ZN.soundengine.setBaseLayersMix(self.volume);
+            self.setLayerVolume(self.volume);
             e.preventDefault()
         });
 
@@ -389,12 +396,19 @@ ZN.App.prototype = {
     },
 
 
-
     getParameterByName:function(name){
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    },
+
+
+    setLayerVolume: function(volume){
+        var vol = (this.model.isFocusSoundLoaded())?1.0:0.0;
+        vol*=volume;
+        ZN.soundengine.setSceneLayersMix(vol);
+        ZN.soundengine.setBaseLayersMix(vol);
     }
 
 

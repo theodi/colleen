@@ -3,7 +3,7 @@ ZN.Model = function () {
     this.projectDict = {};
     this.projectGraph = null;
     this.classifications = [];// classifications order by timestamp
-    //this.classificationIds = {};
+
     this.analytics={
         clsCount:{},
         userCount:{}
@@ -15,6 +15,7 @@ ZN.Model = function () {
     };
     // [<type>][<interval>] = {series:[],count:0,max:0}
 
+    // focus project
     this.focusProject = null;
     this.lastFocusProject = null;
     this.focusList = [];
@@ -22,6 +23,9 @@ ZN.Model = function () {
     this.lastChangeFocus = 0;
     this.changeFocusTime = 0;
     this.maxSeriesTime = 0;
+
+    // sound
+    this.soundConfig = null;
 
 
     this.SECS = {
@@ -54,6 +58,7 @@ ZN.Model.prototype = {
         },this);
 
 
+        // create random project focus order
         var indices = [];
         _.each(projects,function(project,index){
             indices.push(index);
@@ -68,70 +73,44 @@ ZN.Model.prototype = {
 
     },
 
-    parseAnalytics: function(data){
+    processSoundConfig: function(data){
 
-        _.each(data,function(item,index){
-            var projectName = item.project;
-            var project = this.projectDict[projectName];
-            if(project){
+        var scenes = [];
+        // add base sound
+        scenes.push( _.find(data.scenes,{"id":'__base'}));
 
-                var analytics = project.timeseries;
-                var analyticObj = {
-                    country:item.country,
-                    count:item.count,
-                    interval:item.interval
-                };
-                switch(item.type_id){
-                    case 'c':
-                        if(!analytics.clsCount[item.interval]) analytics.clsCount[item.interval] = 0;
-                        analytics.clsCount[item.interval]+=item.count;
-                        analytics.clsData.push(analyticObj);
-
-                        if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
-                        this.analytics.clsCount[item.interval]+=item.count;
-
-                        break;
-                    case 'u':
-                        if(!analytics.userCount[item.interval]) analytics.userCount[item.interval] = 0;
-                        analytics.userCount[item.interval]+=item.count;
-                        analytics.userData.push(analyticObj);
-
-                        if(!this.analytics.userCount[item.interval]) this.analytics.userCount[item.interval] = 0;
-                        this.analytics.userCount[item.interval]+=item.count;
-                        break;
-
-                }
-            }
-            else{
-                console.log('no project:', projectName);
-            }
-
-
+        // add active projects in focus order
+        _.each(this.focusList,function(projectIndex){
+            var projectId = this.projects[projectIndex].id;
+            var soundObj = _.find(data.scenes,{"id":projectId});
+            scenes.push(soundObj);
 
         },this);
 
-        _.each(this.projects,function(project,index){
-            _.each(this.analytics.clsCount,function(value,key){
-                if(project.analytics.clsCount[key]){
-                    project.analytics.clsPercent[key] = project.analytics.clsCount[key]/this.analytics.clsCount[key];
-                    console.log(project.name, key, project.analytics.clsPercent[key]);
-                }
-            },this);
+        data.scenes = scenes;
+        this.soundConfig = data;
+        return data;
 
-        },this);
-
-        /* test percentages
-        var percentTotal = _.reduce(this.projects, function(sum, project) {
-            var value = 0;
-            if(project.analytics.clsPercent['d']){
-                value = project.analytics.clsPercent['d'];
-            }
-            return sum + value;
-        },0);
-
-        console.log('percent sum:',percentTotal);
-         */
     },
+
+    setSoundLoaded: function(projectId){
+        if(this.projectDict[projectId]){
+            this.projectDict[projectId].soundLoaded = true;
+        }
+    },
+
+    getSoundLoaded: function(projectId){
+        return this.projectDict[projectId].soundLoaded;
+    },
+    isFocusSoundLoaded: function(){
+        var ret = false;
+        if(this.focusProject){
+            ret =  this.focusProject.soundLoaded;
+        }
+        return ret;
+    },
+
+
 
     initProjectGraph: function(csvData){
         this.projectGraph = new ZN.ProjectGraph();
@@ -239,6 +218,72 @@ ZN.Model.prototype = {
 
 
 
+    },
+
+
+    parseAnalytics: function(data){
+
+        _.each(data,function(item,index){
+            var projectName = item.project;
+            var project = this.projectDict[projectName];
+            if(project){
+
+                var analytics = project.timeseries;
+                var analyticObj = {
+                    country:item.country,
+                    count:item.count,
+                    interval:item.interval
+                };
+                switch(item.type_id){
+                    case 'c':
+                        if(!analytics.clsCount[item.interval]) analytics.clsCount[item.interval] = 0;
+                        analytics.clsCount[item.interval]+=item.count;
+                        analytics.clsData.push(analyticObj);
+
+                        if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
+                        this.analytics.clsCount[item.interval]+=item.count;
+
+                        break;
+                    case 'u':
+                        if(!analytics.userCount[item.interval]) analytics.userCount[item.interval] = 0;
+                        analytics.userCount[item.interval]+=item.count;
+                        analytics.userData.push(analyticObj);
+
+                        if(!this.analytics.userCount[item.interval]) this.analytics.userCount[item.interval] = 0;
+                        this.analytics.userCount[item.interval]+=item.count;
+                        break;
+
+                }
+            }
+            else{
+                console.log('no project:', projectName);
+            }
+
+
+
+        },this);
+
+        _.each(this.projects,function(project,index){
+            _.each(this.analytics.clsCount,function(value,key){
+                if(project.analytics.clsCount[key]){
+                    project.analytics.clsPercent[key] = project.analytics.clsCount[key]/this.analytics.clsCount[key];
+                    console.log(project.name, key, project.analytics.clsPercent[key]);
+                }
+            },this);
+
+        },this);
+
+        /* test percentages
+         var percentTotal = _.reduce(this.projects, function(sum, project) {
+         var value = 0;
+         if(project.analytics.clsPercent['d']){
+         value = project.analytics.clsPercent['d'];
+         }
+         return sum + value;
+         },0);
+
+         console.log('percent sum:',percentTotal);
+         */
     },
 
     addClassifications:function(classifications){

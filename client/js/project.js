@@ -43,6 +43,9 @@ ZN.Project = function () {
     // background scale animation
     this.bgScaleAnim = {};
 
+    // sound
+    this.soundLoaded = false;
+
 
 
 

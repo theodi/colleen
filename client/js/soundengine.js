@@ -87,7 +87,7 @@ function init(config, cbProgress) {
   async.eachSeries(config.scenes, function(def, callback) {
     // Calculate how much we still need to load
     var percent = (loadCounter++/ config.scenes.length) * 100;
-    cbProgress(null, Math.floor(percent), def.id);
+    cbProgress(null, Math.floor(percent), def.id, loadCounter);
     loadSceneFiles(def, callback);
     },
     function(err) {
@@ -494,7 +494,9 @@ function stopLayers(sceneId) {
     }
     // data.fade.gain.setValueCurveAtTime(epCurveOut, 0.01, fadeTime);
     // stop layer when done fading
-    layer.source.stop(now + fadeTime);
+    if(layer.source){
+        layer.source.stop(now + fadeTime);
+    }
   });
 }
 

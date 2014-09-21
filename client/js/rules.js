@@ -798,7 +798,9 @@ ZN.Rules.prototype = {
         // set intensity from anim rule range and normalised value
         var n = this.getNextSeriesValue(project, obj, anim);
         var intensity = anim.range[0] + (anim.range[1]-anim.range[0])*n;
-        ZN.soundengine.setSceneLayersMix(intensity*this.app.volume);
+        if(this.model.isFocusSoundLoaded()){
+            ZN.soundengine.setSceneLayersMix(intensity*this.app.volume);
+        }
 
     },
 
@@ -818,7 +820,7 @@ ZN.Rules.prototype = {
 
     triggerSound: function(sample){
 
-        if(this.app.volume>0){
+        if(this.app.volume>0&&this.model.isFocusSoundLoaded()){
             var filename = ZN.soundengine.triggerSampler(sample);
 
         }
@@ -946,10 +948,14 @@ ZN.Rules.prototype = {
     },
 
     setProjectSound: function(project){
-        var info = ZN.soundengine.moveToScene(project.id);
-        var layersMix = info.layersMix;
-        ZN.soundengine.setSceneLayersMix(this.app.volume);
-        ZN.soundengine.setBaseLayersMix(this.app.volume);
+        console.log('setProjectSound:', project.id);
+        if(this.model.getSoundLoaded(project.id)){
+            var info = ZN.soundengine.moveToScene(project.id);
+            var layersMix = info.layersMix;
+            this.app.setLayerVolume(this.app.volume);
+        }
+
+
         //var filename = ZN.soundengine.triggerSampler(0);
 
 
