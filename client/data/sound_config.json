@@ -244,8 +244,8 @@
 				"1_crickets-waves-quiet_loop.mp3",
 				"2_crickets-waves-quiet5_loop.mp3",
 				"3_crickets-waves-quiet3_loop.mp3",
-				"4_crickets-waves-quiet4_loop.mp3",
-				"5_crickets-waves-quiet2_loop.mp3"
+				"5_crickets-waves-quiet2_loop.mp3",
+				"4_crickets-waves-quiet4_loop.mp3"
 			],
 			"smplr_a": [
 				"1_carp_slow.mp3",
@@ -335,8 +335,8 @@
 			],
 			"smplr_b": [
 				"smp_tone_ring10.mp3",
-				"smp_tone_ring12.mp3",
 				"smp_tone_ring11.mp3",
+				"smp_tone_ring12.mp3",
 				"smp_tone_ring9.mp3"
 			]
 		}

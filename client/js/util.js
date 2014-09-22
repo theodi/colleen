@@ -50,6 +50,16 @@
     }
 
 
+    window.detectWebAudio = function(){
+        return (typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined");
+
+    }
+
+    window.detectCanvas = function(){
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+
 }());
 
 
