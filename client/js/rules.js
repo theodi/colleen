@@ -872,7 +872,7 @@ ZN.Rules.prototype = {
 
         this.model.focusProject = project;
 
-        $("#project-name").html(project.id);
+        $("#project-name").html(project.title);
 
         // sound
         this.setProjectSound(project);

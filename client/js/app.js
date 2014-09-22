@@ -9,6 +9,8 @@ ZN.App = function () {
     this.xhr = null;
     this.timeoutTime = 20 * 1000;
     this.timeoutCount = 0;
+
+    // api
     this.dataType = "json";
     this.apiUrl = "";
     this.ruleFile = "project_rules";
@@ -34,6 +36,10 @@ ZN.App = function () {
     //sound
     this.volume = 1.0;
 
+    // interface
+    this.guiTimeout = null;
+
+
 }
 
 ZN.App.prototype = {
@@ -44,7 +50,6 @@ ZN.App.prototype = {
         this.model.init();
         this.rules = new ZN.Rules();
 
-
         var rules = this.getParameterByName("rules");
         if(rules!=""){
             this.ruleFile += "_" + rules;
@@ -52,8 +57,8 @@ ZN.App.prototype = {
 
         if(this.debug){
             $(document.body).append(
-                '<div id="diagnostics" style="position:absolute;z-index:10;bottom:0"></div>'+
-                '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
+                '<div id="diagnostics" style="position:absolute;z-index:10;bottom:0"></div>'
+                //+ '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
             );
         }
 
@@ -181,7 +186,7 @@ ZN.App.prototype = {
 
 
             if(self.debug){
-                var txt = progress!=100?'sound files...'+progress+'%':'';
+                var txt = progress!=100?'Sound loading: '+progress+'%':'';
                 $('#sound-progress').text(txt);
             }
 
@@ -285,9 +290,30 @@ ZN.App.prototype = {
 
         $("#mute-button").click(function(e){
             self.volume=self.volume>0?0:1.0;
+
+            $("#mute-button i").toggleClass("fa-volume-up fa-volume-off");
+
             self.setLayerVolume(self.volume);
             e.preventDefault()
         });
+
+        $("#full-screen-button").click(function(e){
+            window.launchIntoFullscreen(document.documentElement);
+            e.preventDefault()
+        });
+
+        $("#gui").hover(
+            function(){self.showControls(true);},
+            function(){self.showControls(false);}
+        );
+
+        this.guiTimeout = setTimeout(function(){
+            self.showControls(false);
+        },5000);
+
+        // Launch fullscreen for browsers that support it!
+
+
 
         $(window).resize(function(){
             self.renderer.resize();
@@ -306,6 +332,35 @@ ZN.App.prototype = {
 
 
         });
+
+    },
+
+    showControls:function(bShow){
+
+        var left, delay;
+        if(bShow){
+            left = 0,delay = 1;
+        }
+        else{
+            left = -200, delay = 500;
+            if ($('#gui:hover').length != 0) {
+                //console.log('gui hover')
+                return;
+            }
+        }
+
+        $("#gui").delay(delay).animate({
+            left: left
+        }, 250, function() {
+            // Animation complete.
+        });
+
+        if(this.guiTimeout){
+            clearTimeout(this.guiTimeout);
+            this.guiTimeout = null;
+        }
+
+        //console.log('showControls',bShow,left);
 
     },
 

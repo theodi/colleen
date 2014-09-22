@@ -37,20 +37,6 @@
 			"smplr_b": []
 		},
 		{
-			"id": "radio",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [],
-			"smplr_a": [],
-			"smplr_b": []
-		},
-		{
 			"id": "planet_four",
 			"volumes": {
 				"layers": [
@@ -66,6 +52,20 @@
 		},
 		{
 			"id": "plankton",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [],
+			"smplr_a": [],
+			"smplr_b": []
+		},
+		{
+			"id": "radio",
 			"volumes": {
 				"layers": [
 					0
@@ -158,8 +158,8 @@
 				"master": 0
 			},
 			"layers": [
-				"2_rumble_base_2min_flattened_HFonly.mp3",
-				"1_rumble_base_version2.mp3"
+				"1_rumble_base_version2.mp3",
+				"2_rumble_base_2min_flattened_HFonly.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": []
@@ -336,8 +336,8 @@
 			"smplr_b": [
 				"smp_tone_ring10.mp3",
 				"smp_tone_ring11.mp3",
-				"smp_tone_ring9.mp3",
-				"smp_tone_ring12.mp3"
+				"smp_tone_ring12.mp3",
+				"smp_tone_ring9.mp3"
 			]
 		}
 	]

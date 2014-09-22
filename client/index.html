@@ -8,7 +8,9 @@
     <title>We Need Us</title>
 
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
+
 
     <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -52,12 +54,20 @@
 
 <div id="wrapper">
     <div id="header"></div>
-    <div id="controls">
-        <div ><a id="mute-button" href="">Mute</a></div>
-        <div id="project-name"></div>
-    </div>
+
     <div id="canvas-container"></div>
     <div id="footer"></div>
+</div>
+
+<div id="gui">
+    <div class="gui-inner">
+        <div id="project-name">We Need Us&nbsp;</div>
+        <div class="gui-buttons">
+            <a id="full-screen-button" title="Full Screen" href=""><i class="fa fa-arrows-alt fa-lg"></i></a>
+            <a id="mute-button" title="Mute" href=""><i class="fa fa-volume-up fa-lg"></i></a>
+        </div>
+        <div id="sound-progress"></div>
+    </div>
 </div>
 
 </body>
