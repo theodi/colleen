@@ -50,8 +50,6 @@ ZN.App.prototype = {
         this.model.init();
         this.rules = new ZN.Rules();
 
-        var aud = window.detectWebAudio();
-
         var rules = this.getParameterByName("rules");
         if(rules!=""){
             this.ruleFile += "_" + rules;
