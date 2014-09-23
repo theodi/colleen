@@ -33,11 +33,11 @@ ZN.App = function () {
     this.renderer = null;
     this.runProjectGraph = true;
 
-    //sound
-    this.volume = 1.0;
-
     // interface
     this.guiTimeout = null;
+    this.volume = 1.0;
+    this.isSound = true;
+    this.isFullScreen = false;
 
 
 }
@@ -192,7 +192,6 @@ ZN.App.prototype = {
                 $('#sound-progress').text(txt);
             }
 
-            //if(progress === 100){
             self.model.setSoundLoaded(projectId);
 
             if(loadCounter==startOnLoadCount){
@@ -203,9 +202,6 @@ ZN.App.prototype = {
     },
 
     soundLoadComplete: function(){
-        // set scene
-
-        // start sound
 
         ZN.soundengine.start();
         this.startApp();
@@ -291,17 +287,14 @@ ZN.App.prototype = {
         var self = this;
 
         $("#mute-button").click(function(e){
-            self.volume=self.volume>0?0:1.0;
-
-            $("#mute-button i").toggleClass("fa-volume-up fa-volume-off");
-
-            self.setLayerVolume(self.volume);
+            self.toggleSound();
             e.preventDefault()
         });
 
         $("#full-screen-button").click(function(e){
-            window.launchIntoFullscreen(document.documentElement);
-            e.preventDefault()
+            //self.toggleFullScreen();
+            self.setFullScreen(true);
+            e.preventDefault();
         });
 
         $("#gui").hover(
@@ -321,13 +314,19 @@ ZN.App.prototype = {
             self.renderer.resize();
         });
 
-        $(window).keypress(function( event ) {
-            //console.log(event.which);
+        $(window).keydown(function( event ) {
+            console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
+                case 37: // left arrow
+                case 38: // up arrow
+                case 33: // page up
                     self.rules.incFocusProject(-1);
                     break;
                 case 112: // 'p'
+                case 39: // right arrow
+                case 40: // down arrow
+                case 34: // page down
                     self.rules.incFocusProject(1);
                     break;
             }
@@ -466,6 +465,54 @@ ZN.App.prototype = {
         vol*=volume;
         ZN.soundengine.setSceneLayersMix(vol);
         ZN.soundengine.setBaseLayersMix(vol);
+    },
+
+
+    toggleSound: function(){
+        var s = !this.isSound
+        this.setSound(s);
+    },
+
+    setSound: function(s){
+
+        this.isSound = s;
+        if(this.isSound){
+            $("#mute-button i").addClass("fa-volume-up");
+            $("#mute-button i").removeClass("fa-volume-off");
+        }
+        else{
+            $("#mute-button i").addClass("fa-volume-off");
+            $("#mute-button i").removeClass("fa-volume-up");
+        }
+        this.volume = this.isSound?1.0:0.0;
+        this.setLayerVolume(this.volume);
+
+    },
+
+    toggleFullScreen: function(){
+        var fs = !this.isFullScreen;
+        this.setFullScreen(fs);
+    },
+
+    setFullScreen: function(fs){
+
+        this.isFullScreen = fs;
+        window.launchIntoFullscreen(document.documentElement);
+
+        /*
+        if(fs){
+            $("#full-screen-button i").addClass("fa-compress");
+            $("#full-screen-button i").removeClass("fa-arrows-alt");
+            window.launchIntoFullscreen(document.documentElement);
+
+        }
+        else{
+            $("#full-screen-button i").addClass("fa-arrows-alt");
+            $("#full-screen-button i").removeClass("fa-compress");
+            window.exitFromFullscreen();
+
+        }
+        */
     }
 
 

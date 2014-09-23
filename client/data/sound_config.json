@@ -244,8 +244,8 @@
 				"1_crickets-waves-quiet_loop.mp3",
 				"2_crickets-waves-quiet5_loop.mp3",
 				"3_crickets-waves-quiet3_loop.mp3",
-				"5_crickets-waves-quiet2_loop.mp3",
-				"4_crickets-waves-quiet4_loop.mp3"
+				"4_crickets-waves-quiet4_loop.mp3",
+				"5_crickets-waves-quiet2_loop.mp3"
 			],
 			"smplr_a": [
 				"1_carp_slow.mp3",
@@ -301,8 +301,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_nz-birds_loop.mp3",
-				"2_nz-birds2_loop.mp3"
+				"2_nz-birds2_loop.mp3",
+				"1_nz-birds_loop.mp3"
 			],
 			"smplr_a": [
 				"1_string-ping1_loop.mp3",
