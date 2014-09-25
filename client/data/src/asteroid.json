@@ -10,7 +10,7 @@
 
     "animation":[
 
-        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
+        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
         {"type":"sound_intensity","dataType":"c","data":"min","tween":"linear","range":[0.2,1.0],"duration":[30.0,30.0], "time":0}
 
 
