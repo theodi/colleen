@@ -8,7 +8,7 @@
     "_fills":["#000","#fff"],
     "_comment":"Project level animation",
 
-    "bgScaleAnim":{"type":"scale","data":"min","sx":[0.2,0.3],"sy":[0.2,0.3],"tween":"linear","fn":"sqrt"},
+    "bgScaleAnim":{"type":"scale","data":"hour","sx":[0.2,0.6],"sy":[0.2,0.6],"tween":"linear","fn":"sqrt"},
 
     "animation":[
         {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},

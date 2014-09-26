@@ -7,6 +7,9 @@
     "y":0,
     "rotation":0,
 
+    "bgScaleAnim":{"type":"scale","data":"day","sx":[0.4,0.6],"sy":[0.4,0.6],"tween":"linear","fn":"sqrt"},
+
+
     "animation":[
         {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[1.0,60.0], "sample":0,"time":0},
         {"type":"_loop_sound","dataType":"c","duration_data":"hour","duration":[1.0,20.0],"sample":0,"time":0},

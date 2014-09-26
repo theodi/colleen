@@ -10,6 +10,8 @@
     "_comment":"Project level animations",
     "_animation":[""],
 
+    "_bgScaleAnim":{"type":"scale","data":"day","sx":[0.5,0.8],"sy":[0.5,0.8],"tween":"linear","fn":"sqrt"},
+
     "shape_animation":
     [
         {"shape_ids":["1"],"animation":

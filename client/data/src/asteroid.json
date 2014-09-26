@@ -6,7 +6,7 @@
     "y":0,
     "rotation":0,
 
-    "bgScaleAnim":{"type":"scale","data":"min","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
+    "bgScaleAnim":{"type":"scale","data":"day","sx":[0.7,0.9],"sy":[0.7,0.9],"tween":"linear","fn":"sqrt"},
 
     "animation":[
 

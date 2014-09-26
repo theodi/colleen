@@ -8,6 +8,8 @@
     "_fills":["#951114","#951114"],
     "_comment":"Project level animations",
 
+    "_bgScaleAnim":{"type":"scale","data":"min","sx":[0.5,0.8],"sy":[0.5,0.8],"tween":"linear","fn":"sqrt"},
+
     "animation":[
         {"type":"loop_sound","dataType":"u","duration_data":"day","duration":[1.0,20.0],"sample":0,"time":0},
         {"type":"loop_sound","dataType":"c","duration_data":"hour","duration":[1.0,20.0],"sample":1,"time":0},
