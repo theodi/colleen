@@ -1,14 +1,14 @@
 ZN.Config = {
     // Data source
-    dataSource:"live", //json_file" //"live",//"archive"
+    dataSource:"json_file", //json_file" //"live",//"archive"
     timeseriesJson:"timeseries_20140904.json",
 
     // Composition dimensions
     assetBB:{left:0,bottom:1080,right:1920,top:0,width:1920,height:1080},
 
     // Sound
-    soundConfigPath:"sound/config",
-    //soundConfigPath:"data/sound_config.json",
+    //soundConfigPath:"sound/config",
+    soundConfigPath:"data/sound_config.json",
     //sceneLayersMix:1.0,
     //baseLayersMix:1.0,
 
