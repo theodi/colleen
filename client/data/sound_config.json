@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "audio/wnu",
+		"baseUrl": "http://s3.amazonaws.com/weneedus/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -206,6 +206,32 @@
 			]
 		},
 		{
+			"id": "notes_from_nature",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [
+				"jf_07.mp3",
+				"jf_08.mp3",
+				"jf_09.mp3"
+			],
+			"smplr_a": [
+				"jf_01.mp3",
+				"jf_02.mp3",
+				"jf_03.mp3"
+			],
+			"smplr_b": [
+				"jf_04.mp3",
+				"jf_05.mp3",
+				"jf_06.mp3"
+			]
+		},
+		{
 			"id": "planet_four",
 			"volumes": {
 				"layers": [
@@ -333,31 +359,6 @@
 			]
 		},
 		{
-			"id": "war_diary",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [
-				"131707__jobro__dusty-caverns.mp3",
-				"boring-men_loop.mp3"
-			],
-			"smplr_a": [
-				"jf_01.mp3",
-				"jf_02.mp3",
-				"jf_03.mp3"
-			],
-			"smplr_b": [
-				"jf_04.mp3",
-				"jf_05.mp3",
-				"jf_06.mp3"
-			]
-		},
-		{
 			"id": "sunspot",
 			"volumes": {
 				"layers": [
@@ -371,6 +372,31 @@
 				"jf_07.mp3",
 				"jf_08.mp3",
 				"jf_09.mp3"
+			],
+			"smplr_a": [
+				"jf_01.mp3",
+				"jf_02.mp3",
+				"jf_03.mp3"
+			],
+			"smplr_b": [
+				"jf_04.mp3",
+				"jf_05.mp3",
+				"jf_06.mp3"
+			]
+		},
+		{
+			"id": "war_diary",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [
+				"131707__jobro__dusty-caverns.mp3",
+				"boring-men_loop.mp3"
 			],
 			"smplr_a": [
 				"jf_01.mp3",
@@ -411,32 +437,6 @@
 		},
 		{
 			"id": "worms",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [
-				"jf_07.mp3",
-				"jf_08.mp3",
-				"jf_09.mp3"
-			],
-			"smplr_a": [
-				"jf_01.mp3",
-				"jf_02.mp3",
-				"jf_03.mp3"
-			],
-			"smplr_b": [
-				"jf_04.mp3",
-				"jf_05.mp3",
-				"jf_06.mp3"
-			]
-		},
-		{
-			"id": "notes_from_nature",
 			"volumes": {
 				"layers": [
 					0
