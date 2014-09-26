@@ -876,6 +876,10 @@ ZN.Rules.prototype = {
 
         // sound
         this.setProjectSound(project);
+        // interface
+        if(ZN.Config.showControlsOnProjectChange){
+            this.app.showControls(true,ZN.Config.showControlsDuration*1000);
+        }
 
 
         var self = this;
@@ -953,11 +957,16 @@ ZN.Rules.prototype = {
             var info = ZN.soundengine.moveToScene(project.id);
             var layersMix = info.layersMix;
             this.app.setLayerVolume(this.app.volume);
+<<<<<<< HEAD
         }
 
 
         var filename = ZN.soundengine.triggerSampler(0);  //transition sounds
+=======
+>>>>>>> 1618b47bc22e03c9fa85f7beadbc83c3096bdb9a
 
+            this.triggerSound(0);
+        }
 
     },
 
