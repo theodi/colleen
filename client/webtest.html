@@ -1,99 +1,30 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="keywords" content="Zooniverse" />
-    <meta name="description" content="" />
-    <title>We Need Us</title>
-
-    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/app.css"/>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Testing</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-	<link href="css/styles.css" rel="stylesheet">
 
-    <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
-    <!--<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>-->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
+				
+	</head>
+	<body>
+<div class="page-container">
 
-    <!--(if target dev)><!-->
-    <script src="lib/lodash/lodash.compat.min.js"></script>
-    <script src="lib/snap/snap.svg-min.js"></script>
-    <script src="lib/chroma/chroma.min.js"></script>
-    <script src="lib/springy/springy.js"></script>
-    <script src="js/util.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/model.js"></script>
-    <script src="js/project.js"></script>
-    <script src="js/rules.js"></script>
-    <script src="js/canvas_renderer.js"></script>
-    <script src="js/soundengine.js"></script>
-    <script src="js/project_graph.js"></script>
-	<!-- website scripts (more code in footer) -->
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/scripts.js"></script>	
-	
-    <!--<!(endif)-->
-    <!--(if target dist)>
-      <script src="js/wnu.min.js"></script>
-    <!(endif)-->
-
-
-
-    <script type="text/javascript">
-        $(window).load(function() {
-            var app = new ZN.App();
-            app.init();
-        });
-    </script>
-
-</head>
-<body scroll="no">
-
-
-<div id="loader">
-    <img src="images/black-square-rotate.gif" width="32px" height="32px">
-</div>
-
-
-<div id="wrapper">
-    <div id="header"></div>
-
-    <div id="canvas-container"></div>
-    <div id="footer"></div>
-</div>
-
-
-<!-- website buttons -->
 <div id="controls">
-    <div id="gui">
-        <div class="gui-inner">
-
-        <div id="project-name">We Need Us&nbsp;</div>
-        <div class="gui-buttons">
-       		<a id="main_button" class="btn popoverData topButton" href="#"  data-content="Information" rel="popover" data-placement="bottom" data-trigger="hover">
-			<i class="fa fa-info fa-2x"></i></a>
-            <a id="full-screen-button" class="btn popoverData topButton" data-content="Full Screen" href="#" style="font-size: 14px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-arrows-alt fa-lg"></i></a>
-            <a id="mute-button" class="btn popoverData topButton" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
-        </div>
-        <div id="sound-progress"></div>
-
-
-        
-        </div>
-    </div>
+<a id="main_button" class="btn popoverData topButton" href="#" data-content="Information" rel="popover" data-placement="bottom" data-trigger="hover">
+<i class="fa fa-info fa-2x"></i></a>
 </div>
-<!-- /website buttons -->
 
-
-
-<!-- website -->
 <div id="about_weneedus_div" class="about-weneedus">
-          <div class="col-sm-12">
+          <div class="col-sm-8">
               <div class="panel panel-default">
                  <div class="panel-heading">                      
                  	  <ul class="nav">
@@ -125,7 +56,7 @@
                       <div class="tabbable">
                         <div class="tab-content">
                           <div class="tab-pane active" id="main">
-                            <iframe id="mainFrame" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/about.htm"></iframe>
+                            <iframe id="mainFrame" name="mainContent" width="100%" height="60%" frameborder="0" scrolling="no" allowtransparency="true" src="webpages/about.htm"></iframe>
                           </div>
                         </div>
                       </div> <!-- /tabbable -->
@@ -134,40 +65,15 @@
                </div> <!--/panel-->
             </div><!--/col-6-->
 </div><!-- /.about-weneedus -->            
-
-
-<!-- /website -->
-
-
-
-
-
-
+            
+            
+</div><!--/.page-container-->
 
 	<!-- website scripts -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
 		<script language="javascript">
-		
-		// make the window as big as possible when loaded...
-		window.onload = maxWindow;
-
-			function maxWindow() {
-			    window.moveTo(0, 0);
-			
-			
-			    if (document.all) {
-			        top.window.resizeTo(screen.availWidth, screen.availHeight);
-			    }
-			
-			    else if (document.layers || document.getElementById) {
-			        if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
-			            top.window.outerHeight = screen.availHeight;
-			            top.window.outerWidth = screen.availWidth;
-			        }
-			    }
-			}
-
-		
-		
 		$(document).ready(function () {
 			
 			$('.popoverData').popover();
@@ -211,8 +117,8 @@
 			});
 		
 		</script>
-		<!-- /website scripts -->
 		
-
-</body>
-</html>
+		
+		
+	</body>
+</html>	
