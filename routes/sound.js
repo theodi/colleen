@@ -18,11 +18,21 @@ exports.config = function(req, res) {
       res.status(500).send('An error occurred when compiling sound configuration'+err.message);
       return;
     }
-      saveConfig(result)
+    saveConfig(result);
 
     res.status(200).json(result);
   });
 };
+
+exports.outputConfig = function(){
+    compileSoundConfig(config.soundOptions, function(err, result){
+        if(err){
+            console.log('Error: '+err.message);
+            return;
+        }
+        saveConfig(result);
+    });
+}
 
 
 function saveConfig(json){
