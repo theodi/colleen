@@ -17,7 +17,7 @@ ZN.Config = {
 
     // Rules to select focus project
     focusOpacity:1.0, // opacity of focused project
-    bgOpacity:0.03, // opacity of background projects
+    bgOpacity:0.04, // opacity of background projects
     focusDuration:2.5, // transition duration from bgd project to become in focus (seconds)
 
     bgScaleAnim:{"type":"scale","data":"day","sx":[0.6,0.9],"sy":[0.6,0.9],"tween":"linear","fn":"sqrt"}, // background animation scale rule OLD:{"type":"scale","data":"day","sx":[0.02,0.1],"sy":[0.02,0.1],"tween":"linear","fn":"id"}

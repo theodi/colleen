@@ -444,7 +444,7 @@ ZN.App.prototype = {
         if(this.debug){
             var projectName = "";
             if(this.model.focusProject) projectName=this.model.focusProject.name;
-            $("#diagnostics").html(fps+" : "+ projectName);
+           // $("#diagnostics").html(fps+" : "+ projectName);
         }
 
     },

@@ -57,7 +57,7 @@
         { "_comment":"Large Shape Left",
             "id":"10","rotation":0,"opacity":0.1,
             "animation":[{"type":"rotate","data":"day","tween":"linear","fn":"id","rotation":[0,90],"duration":[360.0,360.0], "time":0,"loop_sound":1},
-            {"type":"point_translate","data":"min15","tween":"linear","fn":"id","duration":[40.0,40.0],"rangeX":[-3.0,3.0],"rangeY":[-3.0,3.0],"time":0}]},
+            {"type":"point_translate","data":"min15","tween":"linear","fn":"id","duration":[40.0,40.0],"rangeX":[-20.0,20.0],"rangeY":[-20.0,20.0],"time":0}]},
 
         { "_comment":"medium shape",
             "id":"13","rotation":0,"opacity":0.9
