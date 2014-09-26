@@ -9,11 +9,13 @@ ZN.Config = {
     // Sound
     //soundConfigPath:"sound/config",
     soundConfigPath:"data/sound_config.json",
-    //sceneLayersMix:1.0,
-    //baseLayersMix:1.0,
 
     // Debug
-    debug:true,
+    debug:false,
+
+    // Interface
+    showControlsOnProjectChange:true,
+    showControlsDuration:3, // duration to show controls on project change (seconds)
 
     // Rules to select focus project
     focusOpacity:1.0, // opacity of focused project

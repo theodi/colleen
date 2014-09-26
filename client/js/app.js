@@ -184,11 +184,8 @@ ZN.App.prototype = {
                 return;
             }
 
-
-            if(self.debug){
-                var txt = progress!=100?'Sound loading: '+progress+'%':'';
-                $('#sound-progress').text(txt);
-            }
+            var txt = progress!=100?'Sound loading: '+progress+'%':'';
+            $('#sound-progress').text(txt);
 
             self.model.setSoundLoaded(projectId);
 
@@ -334,7 +331,7 @@ ZN.App.prototype = {
 
     },
 
-    showControls:function(bShow){
+    showControls:function(bShow, time){
 
         var left, delay;
         if(bShow){
@@ -357,6 +354,13 @@ ZN.App.prototype = {
         if(this.guiTimeout){
             clearTimeout(this.guiTimeout);
             this.guiTimeout = null;
+        }
+
+        if(time){
+            var self = this;
+            this.guiTimeout = setTimeout(function(){
+                self.showControls(false);
+            },time);
         }
 
         //console.log('showControls',bShow,left);
