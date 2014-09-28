@@ -961,7 +961,6 @@ ZN.Rules.prototype = {
 
         var filename = ZN.soundengine.triggerSampler(0);  //transition sounds
             this.triggerSound(0);
-        }
 
     },
 

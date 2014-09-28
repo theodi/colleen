@@ -1,40 +1,49 @@
 {
     "name":"notes_from_nature",
     "title":"Notes From Nature",
-    "sx":0.15,
-    "sy":0.15,
     "x":400,
     "y":0,
-    "rotation":0,
-    "_fills":["#951114","#951114"],
+
     "_comment":"Project level animations",
-    "_animation":[
-        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
-        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
+
+    "animation":[
+        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0}
+    ],
 
 
     "shape_animation":
     [
 
-    	{"shape_ids":["2","3","4","5","6","7","8","9","10","11","17","18","19","20"],"animation":
-            [{"type":"scale","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"sx":[0.8,1.5],"sy":[0.8,1.5],"duration":[3.0,10.0], "time":0}]
-    	},
-        {"shape_ids":["12","14"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,120.0], "time":0}]
-    	},
-        {"shape_ids":["15","16"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,120.0], "time":0}]
-    	}
+    	{"_comment":"vertical stack","shape_ids":["2","3","4","5","6","7","8","9","10","11","17","18","19","20"],"animation":
+            [{"type":"scale","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"sx":[0.8,1.5],"sy":[0.8,1.5],"duration":[3.0,10.0], "time_fn":"index"},
+            {"type":"point_translate","data":"day","tween":"linear","fn":"sqrt","duration":[3.0,10.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"time":0}]},
+            
+        {"_comment":"two medium blocks","shape_ids":["12","14"],"animation":
+            [{"type":"colour","dataType":"u","data":"min","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,30.0], "time":0},
+            {"type":"serengeti","dataType":"u","data":"min","tween":"linear","fn":"sqrt","duration":[20.0,20.0], "rangeX":[-1.0,2.0],"rangeY":[-2.0,1.0],"time_fn":"random"},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.6,0.7], "duration":[20.0,120.0],"duration_data":"min","time_fn":"random"}]},
+
+        {"_comment":"two horizontal sticks 16 short","shape_ids":["15","16"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,120.0], "time":0}]}
     ],
 
 
     "shapes":
     [
-        { "_comment":"Scale X and Y",
+        { "_comment":"large block",
             "id":"1","rotation":0,"opacity":0.8,
-            "animation":[{"type":"scale","dataType":"c","data":"min","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
+            "animation":[{"type":"scale","dataType":"c","data":"day","tween":"linear","fn":"sqrt","sx":[0.8,1.2],"sy":[0.8,1.2] ,"duration":[120.0,240.0],"duration_data":"day","time":0},
+            {"type":"point_translate","data":"min15","duration_data":"min15","tween":"linear","fn":"sqrt","duration":[20.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0}]},
 
-        { "_comment":"Scale X and Y",
+        { "_comment":"large horiz stick",
+            "id":"15","rotation":0,"opacity":0.8,
+            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,5.0],"sy":[1.0,1.0] ,"duration":[60.0,80.0], "duration_data":"hour","time":0}]},
+
+        { "_comment":"small horiz stick",
+            "id":"16","rotation":0,"opacity":0.8,
+            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[1.0,1.0],"sy":[1.0,20.0] ,"duration":[60.0,80.0], "duration_data":"hour","time":0}]},
+
+        { "_comment":"vertical stick on right",
             "id":"13","rotation":0,"opacity":0.8,
             "animation":[{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]}
     ]
