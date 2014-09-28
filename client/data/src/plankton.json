@@ -47,7 +47,7 @@
 
         { "_comment":"Rotation",
             "id":"2","rotation":17.3, "animation":[
-            {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,60],"radius":400,"duration":[6.0,32.0],"angle":30, "time":0}]},
+            {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,60],"radius":400,"duration":[6.0,32.0],"angle":-30, "time":0}]},
 
         { "_comment":"Rotation",
             "id":"2.1","rotation":29.5},
@@ -57,7 +57,8 @@
 
         { "_comment":"Rotation",
             "id":"4","rotation":-3.5, "animation":[
-            {"type":"point_translate","data":"hour","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0}]},
+            {"type":"point_translate","data":"hour","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,200],"radius":80,"duration":[10.0,10.0],"angle":10, "time":0}]},
 
         { "_comment":"Rotation",
             "id":"4.1","rotation":54},
