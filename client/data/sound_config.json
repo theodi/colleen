@@ -25,33 +25,26 @@
 			"smplr_b": []
 		},
 		{
-			"id": "asteroid",
+			"id": "cyclone_center",
 			"volumes": {
 				"layers": [
-					0,
 					0
 				],
 				"smplr_a": 0,
+				"smplr_b": 0,
 				"master": 0
 			},
 			"layers": [
-				"1_crickets-waves-quiet_loop.mp3",
-				"2_0595_bsb_fakewind.mp3",
-				"3_crickets-waves-quiet3_loop.mp3"
+				"1_fields_loop.mp3",
+				"2_kite-beach-wind2reverb_loop.mp3",
+				"3_kite-beach-wind3_loop.mp3"
 			],
 			"smplr_a": [
-				"1_carp_slow.mp3",
-				"2_carp_trans.mp3",
-				"3_carp_slow.mp3",
-				"4_crucian_unpop.mp3",
-				"5_warp_loop.mp3",
-				"6_carp_unpop.mp3"
+				"15_tench_unpop.mp3",
+				"thunder_clip_loop.mp3",
+				"tone1_wobble_loop.mp3"
 			],
-			"smplr_b": [
-				"1_low_metallic_clang_loop.mp3",
-				"2_low_metallic_clang2_loop.mp3",
-				"3_low_metallic_clang3_loop.mp3"
-			]
+			"smplr_b": []
 		},
 		{
 			"id": "bat_detective",
@@ -82,31 +75,6 @@
 			]
 		},
 		{
-			"id": "cancer_cells",
-			"volumes": {
-				"layers": [
-					12,
-					0
-				],
-				"smplr_a": -1,
-				"smplr_b": -2,
-				"master": 0
-			},
-			"layers": [
-				"0770_bsb_heartbeat.mp3",
-				"95266__department64__jingling-braids.mp3"
-			],
-			"smplr_a": [
-				"double_drumbeat.mp3",
-				"double_drumbeat_fast.mp3"
-			],
-			"smplr_b": [
-				"cello-pluck2.mp3",
-				"cello-pluck3.mp3",
-				"cello-pluck4.mp3"
-			]
-		},
-		{
 			"id": "condor",
 			"volumes": {
 				"layers": [
@@ -131,28 +99,6 @@
 				"jf_05.mp3",
 				"jf_06.mp3"
 			]
-		},
-		{
-			"id": "cyclone_center",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_fields_loop.mp3",
-				"2_kite-beach-wind2reverb_loop.mp3",
-				"3_kite-beach-wind3_loop.mp3"
-			],
-			"smplr_a": [
-				"15_tench_unpop.mp3",
-				"thunder_clip_loop.mp3",
-				"tone1_wobble_loop.mp3"
-			],
-			"smplr_b": []
 		},
 		{
 			"id": "galaxy_zoo",
@@ -199,11 +145,40 @@
 				"3_string-vibrate_loop.mp3"
 			],
 			"smplr_a": [
-				"insect-chirrup2.mp3",
-				"insect-chirrup.mp3"
+				"insect-chirrup.mp3",
+				"insect-chirrup2.mp3"
 			],
 			"smplr_b": [
 				"1_fast-sparkling-whoosh.mp3"
+			]
+		},
+		{
+			"id": "asteroid",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_crickets-waves-quiet_loop.mp3",
+				"2_0595_bsb_fakewind.mp3",
+				"3_crickets-waves-quiet3_loop.mp3"
+			],
+			"smplr_a": [
+				"1_carp_slow.mp3",
+				"2_carp_trans.mp3",
+				"3_carp_slow.mp3",
+				"4_crucian_unpop.mp3",
+				"5_warp_loop.mp3",
+				"6_carp_unpop.mp3"
+			],
+			"smplr_b": [
+				"1_low_metallic_clang_loop.mp3",
+				"2_low_metallic_clang2_loop.mp3",
+				"3_low_metallic_clang3_loop.mp3"
 			]
 		},
 		{
@@ -230,6 +205,31 @@
 				"jf_04.mp3",
 				"jf_05.mp3",
 				"jf_06.mp3"
+			]
+		},
+		{
+			"id": "cancer_cells",
+			"volumes": {
+				"layers": [
+					12,
+					0
+				],
+				"smplr_a": -1,
+				"smplr_b": -2,
+				"master": 0
+			},
+			"layers": [
+				"0770_bsb_heartbeat.mp3",
+				"95266__department64__jingling-braids.mp3"
+			],
+			"smplr_a": [
+				"double_drumbeat.mp3",
+				"double_drumbeat_fast.mp3"
+			],
+			"smplr_b": [
+				"cello-pluck2.mp3",
+				"cello-pluck3.mp3",
+				"cello-pluck4.mp3"
 			]
 		},
 		{
@@ -354,8 +354,8 @@
 				"bee02.mp3"
 			],
 			"smplr_b": [
-				"tui-chirp-springy_loop.mp3",
 				"tui-chirp-warped_loop.mp3",
+				"tui-chirp-springy_loop.mp3",
 				"tui-chirp_loop.mp3"
 			]
 		},

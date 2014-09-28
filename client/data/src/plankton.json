@@ -47,7 +47,7 @@
 
         { "_comment":"Rotation",
             "id":"2","rotation":17.3, "animation":[
-            {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,60],"radius":400,"duration":[6.0,32.0],"angle":30}]},
+            {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,60],"radius":400,"duration":[6.0,32.0],"angle":30, "time":0}]},
 
         { "_comment":"Rotation",
             "id":"2.1","rotation":29.5},

@@ -59,7 +59,7 @@
 
         { "_comment":"nucleus of top left shape = NOTE THIS CIRCLE ISN'T WORKING, but it does if I add id 6 to the shape animation group above",
             "id":"6","animation":[
-            {"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,20],"radius":100,"duration":[15.0,50.0],"duration_data":"hour","time_fn":"random", "angle":-60},
+            {"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,20],"radius":100,"duration":[15.0,50.0],"duration_data":"hour","time":0, "angle":-60},
             {"type":"asteroid","dataType":"c","data":"hour","tween":"linear","fn":"id","range":[0.0,20.0],"duration":[60.0,100.0], "duration_data":"hour", "time":0, "loop_sound":1}]},
 
         { "_comment":"Scale X and Y",
