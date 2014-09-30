@@ -49,13 +49,20 @@
 			],
 			"smplr_b": [
 				"1_low_metallic_clang_loop.mp3",
-				"2_low_metallic_clang2_loop.mp3",
-				"3_low_metallic_clang3_loop.mp3"
+				"3_low_metallic_clang3_loop.mp3",
+				"2_low_metallic_clang2_loop.mp3"
 			]
 		},
 		{
 			"id": "bat_detective",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_bat_rmbl.mp3",
 				"1_bat_rumble.mp3"
@@ -81,29 +88,6 @@
 				"bat_chrp1.mp3",
 				"bat_chrp2.mp3",
 				"bat_chrp3.mp3"
-			]
-		},
-		{
-			"id": "cancer_cells",
-			"volumes": {},
-			"layers": [
-				"1_cnr_heartbeat.mp3",
-				"2_cnr_ancient1.mp3",
-				"3_cnr_ancient2.mp3",
-				"4_cnr_ancient3.mp3"
-			],
-			"smplr_a": [
-				"cnr_bells1.mp3",
-				"cnr_bells2.mp3",
-				"cnr_bells3.mp3",
-				"cnr_bells4.mp3",
-				"cnr_bells5.mp3"
-			],
-			"smplr_b": [
-				"cnr_bells6.mp3",
-				"cnr_bells7.mp3",
-				"cnr_bells8.mp3",
-				"cnr_bells9.mp3"
 			]
 		},
 		{
@@ -133,8 +117,45 @@
 			]
 		},
 		{
+			"id": "cancer_cells",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_cnr_heartbeat.mp3",
+				"2_cnr_ancient1.mp3",
+				"3_cnr_ancient2.mp3",
+				"4_cnr_ancient3.mp3"
+			],
+			"smplr_a": [
+				"cnr_bells1.mp3",
+				"cnr_bells2.mp3",
+				"cnr_bells3.mp3",
+				"cnr_bells4.mp3",
+				"cnr_bells5.mp3"
+			],
+			"smplr_b": [
+				"cnr_bells6.mp3",
+				"cnr_bells7.mp3",
+				"cnr_bells8.mp3",
+				"cnr_bells9.mp3"
+			]
+		},
+		{
 			"id": "cyclone_center",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_cln_field.mp3",
 				"2_cln_wind.mp3",
@@ -159,7 +180,14 @@
 		},
 		{
 			"id": "galaxy_zoo",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_gal_rumble.mp3",
 				"2_gal_motornoise.mp3",
@@ -176,7 +204,14 @@
 		},
 		{
 			"id": "milky_way",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_mky_noise.mp3",
 				"2_mky_tones1.mp3",
@@ -264,8 +299,8 @@
 			},
 			"layers": [
 				"jf_07.mp3",
-				"jf_08.mp3",
-				"jf_09.mp3"
+				"jf_09.mp3",
+				"jf_08.mp3"
 			],
 			"smplr_a": [
 				"jf_01.mp3",
@@ -274,8 +309,8 @@
 			],
 			"smplr_b": [
 				"jf_04.mp3",
-				"jf_05.mp3",
-				"jf_06.mp3"
+				"jf_06.mp3",
+				"jf_05.mp3"
 			]
 		},
 		{
@@ -306,7 +341,14 @@
 		},
 		{
 			"id": "sea_floor",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_sea_water.mp3",
 				"1_sea_water_jf.mp3"
@@ -330,7 +372,14 @@
 		},
 		{
 			"id": "serengeti",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_ser_crickets.mp3",
 				"2_ser_bison.mp3",
@@ -345,6 +394,31 @@
 				"ser_bison2.mp3",
 				"ser_bison3.mp3",
 				"ser_bison4.mp3"
+			]
+		},
+		{
+			"id": "war_diary",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [
+				"131707__jobro__dusty-caverns.mp3",
+				"boring-men_loop.mp3"
+			],
+			"smplr_a": [
+				"jf_01.mp3",
+				"jf_02.mp3",
+				"jf_03.mp3"
+			],
+			"smplr_b": [
+				"jf_04.mp3",
+				"jf_05.mp3",
+				"jf_06.mp3"
 			]
 		},
 		{
@@ -374,7 +448,7 @@
 			]
 		},
 		{
-			"id": "war_diary",
+			"id": "wise",
 			"volumes": {
 				"layers": [
 					0
@@ -383,24 +457,6 @@
 				"smplr_b": 0,
 				"master": 0
 			},
-			"layers": [
-				"131707__jobro__dusty-caverns.mp3",
-				"boring-men_loop.mp3"
-			],
-			"smplr_a": [
-				"jf_01.mp3",
-				"jf_02.mp3",
-				"jf_03.mp3"
-			],
-			"smplr_b": [
-				"jf_04.mp3",
-				"jf_05.mp3",
-				"jf_06.mp3"
-			]
-		},
-		{
-			"id": "wise",
-			"volumes": {},
 			"layers": [
 				"1_wse_kara2.mp3",
 				"1_wse_radionoise.mp3",
