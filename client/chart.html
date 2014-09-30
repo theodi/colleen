@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="css/chart.css"/>
     <link rel="stylesheet" type="text/css" href="css/d3/nv.d3.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <!--<link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.min.css"/>-->
     <link rel="stylesheet" type="text/css" href="lib/jquery/datetimepicker/jquery.datetimepicker.css"/>
 
@@ -33,8 +34,17 @@
 
 </head>
 <body  scroll="no">
+<div align="center">
+<h1>We Need Us: Zooniverse data tool</h1>
+<p>During development of <a href="http://www.weneedus.org">We Need Us</a>, this tool was used to explore the data harvested from all the different projects in the <a href="http://zooniverse.org">Zooniverse</a>. 
 
-<div id="menu">
+It helped to reveal patterns and rhythms in the data which influenced how the compositions and sounds were created.</p>
+<p>
+This tool used data archived from the last month. Please enter a recent date range to explore project data at different intervals.
+</p>
+</div>
+
+<div id="menu" align="center" >
     <span>Start Date: <input type="text" id="start-date"></span>
     <span>End Date: <input type="text" id="end-date"></span>
 
@@ -51,8 +61,14 @@
 
 </div>
 
-<div id="chart-container">
-    <svg style="width:1200px;height:650px" ></svg>
+<div id="chart-container" align="center" >
+    <svg style="width:1200px;height:500px" ></svg>
 </div> <!-- close wrapper -->
+
+<div img>
+    <a href="http://www.thespace.org"><img class="leftFloat" src="webpages/images/the-space_plogo_vert_blue.jpg" alt="the space logo"></a>
+    <a href="http://www.theodi.org"><img class="rightFloat" src="webpages/images/odi_culture-url-72-250px.jpg" alt="the ODI logo"></a>
+</div>
+
 </body>
 </html>

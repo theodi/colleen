@@ -66,7 +66,7 @@
         { "_comment":"Large plankton rotation + point_translate",
             "id":"5","animation":[
             {"type":"point_translate","data":"min","tween":"linear","fn":"sqrt","duration":[10.0,10.0],"rangeX":[-4.0,3.0],"rangeY":[-3.0,4.0],"time":0},
-            {"type":"_translate","dataType":"c","data":"hour","tween":"linear","fn":"id","dir":"x","range":[-200,200],"duration":[10.0,20.0],"duration_data":"hour"},
+            {"type":"translate","dataType":"c","data":"hour","tween":"linear","fn":"id","dir":"x","range":[-200,200],"duration":[10.0,20.0],"duration_data":"hour"},
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]},
 
         { "_comment":"Rotation",
