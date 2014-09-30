@@ -14,7 +14,7 @@ var compression = require('compression');
 var app = express();
 app.use(compression());
 
-var webRoot = 'client'; // 'web';//
+var webRoot = 'client'; //'web';//
 if(process.env.NODE_ENV=='prod'){
     webRoot = 'web';
 }

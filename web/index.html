@@ -1,400 +1,248 @@
 <!DOCTYPE html>
-<!--[if lt IE 8 ]><html class="no-js ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="no-js ie ie8" lang="en"> <![endif]-->
-<!--[if IE 9 ]><html class="no-js ie ie9" lang="en"> <![endif]-->
-<!--[if (gte IE 8)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="Zooniverse" />
+    <meta name="description" content="" />
+    <title>We Need Us</title>
 
-   <!--- Basic Page Needs
-   ================================================== -->
-   <meta charset="utf-8">
-	<title>We Need Us</title>
-	<meta name="description" content="">  
-	<meta name="author" content="">
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	<link href="css/styles.css" rel="stylesheet">
 
-   <!-- Mobile Specific Metas
-   ================================================== -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
+    <!--<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    
+    
+      <script src="js/wnu.min.js"></script>
+    
 
-	<!-- CSS
-    ================================================== -->
-   <link rel="stylesheet" href="css/default.css">
-	<link rel="stylesheet" href="css/layout.css">
-   <link rel="stylesheet" href="css/media-queries.css">
-   <link rel="stylesheet" href="css/animate.css">
-   <link rel="stylesheet" href="css/prettyPhoto.css">
 
-   <!-- Script
-   ================================================== -->
-	<script src="js/modernizr.js"></script>
 
-   <!-- Favicons
-	================================================== -->
-	<link rel="shortcut icon" href="favicon.png" >
+    <script type="text/javascript">
+        $(window).load(function() {
+            var app = new ZN.App();
+            app.init();
+
+            $( "#project-left" ).click(function() {
+            app.rules.incFocusProject(-1);
+            });
+
+            $( "#project-right" ).click(function() {
+            app.rules.incFocusProject(1);
+            });
+
+
+            $("body").on("swipeleft",function(){
+             app.rules.incFocusProject(-1);
+            });
+
+            $("body").on("swiperight",function(){
+             app.rules.incFocusProject(1);
+            });
+            
+        });
+        
+        
+        
+        // If you add or delete projects, add/change their name and site to open up here (case sensitive!):
+        var dataSources = {
+        "Cyclone Center":"http://www.cyclonecenter.org/", 
+        "Cell Slider":"http://www.cellslider.net/", 
+        "Snapshot Serengeti":"http://www.snapshotserengeti.org/", 
+        "Asteroid Zoo":"http://www.asteroidzoo.org/", 
+        "Bat Detective":"http://www.batdetective.org/",
+        "Milky Way":"http://www.milkywayproject.org/", 
+        "Galaxy Zoo":"http://www.galaxyzoo.org/"  
+        };
+        
+    </script>
 
 </head>
+<body scroll="no">
+
+<div id="logo" class="coverAll">
+<img src="webpages/images/wnu_intro_logos.gif" width="80%" >
+</div>
+
+<div id="loader">
+    <img src="images/black-square-rotate.gif" width="32px" height="32px">
+</div>
+
+
+<div id="wrapper">
+    <div id="header"></div>
+
+    <div id="canvas-container"></div>
+    <div id="footer"></div>
+</div>
+
+
+<!-- website buttons -->
+<div id="controls">
+
+<a id="full-screen-button" class="btn popoverData windowTop" data-content="Full Screen" href="#" style="font-size: 14px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-arrows-alt fa-lg"></i></a>
+
+<a id="project-left" class="btn popoverData windowTop" href="#" data-content="Previous" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_left" class="fa fa-arrow-left"></i></a>
+<a id="project-title" class="btn popoverData windowTop" href="" target="mainContent" data-content="Project Website" rel="popover" data-placement="bottom" data-trigger="hover" onclick='openProjectInfo();'>
+<div id="project-name"> We Need Us&nbsp;</div></a>
+<a id="project-right" class="btn popoverData windowTop" href="#" onclick="app.rules.incFocusProject(1);" data-content="Next" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_right" class="fa fa-arrow-right"></i></a>
+        <a id="mute-button" class="btn popoverData windowTop" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
+		<div id="sound-progress">Loading sounds...</div>
+        
+		
+		 <ul class="nav top-left">
+    	  <li>
+        <a id="AboutB" class="btn popoverData leftButton" href="webpages/about.htm" target="mainContent" data-content="About" rel="popover" data-placement="right" data-trigger="hover" >
+        <i class="fa fa-info fa-lg"></i></a></li>
+    	  <li>    
+        <a id="ArtistB" class="btn popoverData leftButton" href="webpages/artist.htm" target="mainContent" data-content="Artist" rel="popover" data-placement="right" data-trigger="hover" >
+        <i class="fa fa-lightbulb-o fa-lg"></i></a></li>
+    <li>     
+    	<a id="DataB" class="btn popoverData leftButton" href="webpages/data.htm" target="mainContent" data-content="Data" rel="popover" data-placement="right" data-trigger="hover" >
+    	<i class="fa fa-bar-chart fa-lg"></i></a></li>
+    <li> 	
+    	<a id="LicenceB"class="btn popoverData leftButton" href="webpages/licence.htm" target="mainContent" data-content="Licence" rel="popover" data-placement="right" data-trigger="hover" >
+    	<i class="fa fa-code-fork fa-lg"></i></a></li>
+    <li> 	
+    	<a id="FaqB" class="btn popoverData leftButton" href="webpages/faqs.htm" target="mainContent" data-content="FAQs" rel="popover" data-placement="right" data-trigger="hover">
+    	<i class="fa fa-newspaper-o fa-lg"></i></a></li>
+    <li> 	
+    	<a id="CreditsB" class="btn popoverData leftButton" href="webpages/credits.htm" target="mainContent" data-content="Credits" rel="popover" data-placement="right" data-trigger="hover" >							
+    	<i class="fa fa-star-o fa-lg"></i></a></li>
+    <li> 	
+    	<a id="ContactB" class="btn popoverData leftButton" href="webpages/contact.htm" target="mainContent" data-content="Contact" rel="popover" data-placement="right" data-trigger="hover" >
+    	<i class="fa fa-comments-o fa-lg"></i></a></li>
+  </ul>
+
+
+</div>
+<!-- /website buttons -->
+
+
+
+<!-- website -->
+<div id="about_weneedus_div" class="about-weneedus">
+          <div class="col-sm-12">
+              <div class="panel panel-default">
+                 <div class="panel-heading">                      
+                 	  <button id="closeBtton" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      </div>
+                  <div class="panel-body">
+                      <div class="tabbable">
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="main">
+                            <iframe id="mainFrame" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/about.htm" style="height:30em;"></iframe>
+                          </div>
+                        </div>
+                      </div> <!-- /tabbable -->
+                    
+                  </div><!--/panel-body-->
+               </div> <!--/panel-->
+            </div><!--/col-6-->
+</div><!-- /.about-weneedus -->            
+
+
+<!-- /website -->
+
+
+
+
+
+
+
+	<!-- website scripts -->
+		<script language="javascript">
+		
+
+		function openProjectInfo() {
+		var link = $('#project-name').html();
+		window.open(dataSources[link]);
+		return false;
+		}
+		
+		$(document).ready(function () {
+			
+			
+			
+			$('.popoverData').popover();
+			$('.popoverOption').popover({ trigger: "hover" });
+			
+			$( ".leftButton" ).click(function() {
+	  		$( "#about_weneedus_div" ).fadeIn( "slow", "linear" );
+			});
+			
+			$( "#closeBtton" ).click(function() {
+	  		$( "#about_weneedus_div" ).fadeOut( "slow", "linear" );
+			});
+			
+		
+			
+			$(function () {
+				    var timer;
+				    var infoWindowTimer;
+				    var fadeInBuffer = false;
+				    $(document).mousemove(function () {
+				        if (!fadeInBuffer) {
+				            if (timer) {
+				                clearTimeout(timer);
+				                timer = 0;
+				                clearTimeout(infoWindowTimer);
+				                infoWindowTimer = 0;
+				            }
+				            $('#controls').fadeIn();
+				            $('body').css({
+				                cursor: ''
+				            });
+				            
+				            
+				        } else {
+				            fadeInBuffer = false;
+				        }
+				
+				
+				        timer = setTimeout(function () {
+				            $('#controls').fadeOut();
+				            $('#logo').fadeOut();
+				            $('body').css({
+				                cursor: 'none'
+				            });
+				            fadeInBuffer = true;
+				            infoWindowTimer = setTimeout(function () {
+				            $('#about_weneedus_div').fadeOut()
+				        }, 60000);
+				        }, 5000)
+				    });
+				});
+			});
+		
+		</script>
+		<!-- /website scripts -->
+		
+
+	<!-- Google tracker -->
+	<script>
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-34573394-15', 'www.weneedus.org');
+	ga('send', 'pageview');
+	ga('create', 'UA-49181439-1', 'auto', { 'allowLinker': true, 'name' : 'the_space' });
+	ga('the_space.send', 'pageview');
+	
+	</script>
+	<!-- end google tracker -->
 
-<body>
-
-   <div id="preloader">      
-      <div id="status">
-         <img src="images/black-square-rotate.gif" height="64" width="64" alt="">
-      </div>
-   </div>
-
-   <!-- Header
-   ================================================== -->
-   <header>
-
-      <!-- <div class="logo">
-         <a class="smoothscroll" href="#hero"><img alt="" src="images/logo.png"></a>
-      </div> -->
-
-      <nav id="nav-wrap">         
-         
-         <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
-	      <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>         
-
-         <ul id="nav" class="nav">
-            <li><a class="smoothscroll" href="#screenshots">About</a></li>
-            <li><a class="smoothscroll" href="#features">Team</a></li>
-            <li><a class="smoothscroll" href="#subscribe">Newsletter</a></li>
-         </ul> <!-- end #nav -->
-
-      </nav> <!-- end #nav-wrap -->
-
-      <ul class="header-social">
-         <li><a href="http://twitter.com/translatingdata"><i class="fa fa-twitter"></i></a></li>
-      </ul>
-
-   </header> <!-- Header End -->
-
-
-   <!-- Homepage Hero
-   ================================================== -->
-   <section id="hero">
-
-	   <div class="row">
-
-		   <div class="twelve columns">
-
-			   <div class="hero-text">
-				   <h1 class="responsive-headline">We Need Us</h1>
-
-				   <p>A 2014 co-commisson by THE SPACE and the Open Data Institute</p>
-			   </div>
-
-            <div class="buttons">
-               <a class="button learn-more smoothscroll" href="#screenshots">Learn more</a>
-            </div>
-
-            <div class="hero-image">
-               <img src="images/wnu_hero-image.jpg" alt="" />
-            </div>
-
-		   </div>
-
-	   </div>
-
-   </section> <!-- Homepage Hero end -->
-
-
-<!-- Subscribe
-   ================================================== -->
-   <section id="subscribe">
-
-      <div class="row section-head">
-
-         <div class="twelve columns">
-
-            <h1>Newsletter sign-up</h1>
-
-            <p><!-- Begin MailChimp Signup Form -->
-            <div id="mc_embed_signup">
-            <form action="http://theodi.us6.list-manage.com/subscribe/post?u=84bd941af2f1389b9b88c66bb&amp;id=4d8c7940ea" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-            <label for="mce-EMAIL">Join the We Need Us mailing list for project updates and launch details</label>
-            <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="enter email address" required>
-            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-            <div style="position: absolute; left: -5000px;"><input type="text" name="b_84bd941af2f1389b9b88c66bb_4d8c7940ea" tabindex="-1" value=""></div>
-            <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-            </form>   
-            </div>
-
-            <!--End mc_embed_signup-->
-            </p>
-            <p><small>We never share your information or use it to spam you.</small></p>
-         </div>
-
-      </div>
-
-   </section>  <!-- Subscribe Section End-->
-
-
-<!-- Screenshots
-   ================================================== -->
-   <section id="screenshots">
-
-      <div class="row section-head">
-
-         <h1>We Need Us</h1>
-
-         <p>‘We Need Us’ is a live online animated artwork that explores big data, by artist Julie Freeman in collaboration with the Open Data Institute and Zooniverse, the largest citizen science initiative in the world. ‘We Need Us’ concentrates specifically on metadata which it draws from the activities of Zooniverse’s million+ participants, to create an ever-growing dynamic environment of sounds and animated forms. Unlike traditional data-visualisation which helps us understand and make sense of information from large data sets, ‘We Need Us’ considers the unique properties of the data itself. Through the work, Freeman asks us to consider the distinct, living qualities and particular characteristics data might have, such as growth, velocity and fragility. She asks us to consider what the meaning of data might be beyond its content. We Need Us is a framework, a system, that exists in the knowledge that it will change when the metadata flows through it in ways that are unpredictable and unknowable. It reminds us of the humanity in technology, and that we need ‘us’ as much as we need it.
-         </p>
-
-      </div>
-
-      <div class="row">
-
-         <div class="twelve columns">
-
-            <!-- screenshots-wrapper -->
-            <div id="screenshots-wrapper" class="bgrid-quarters s-bgrid-thirds cf">
-
-               <div class="columns item">
-                  <div class="item-wrap">
-
-                     <a href="images/screenshots/big/wnu_solar_01_lores.jpg" data-imagelightbox="a" >
-                        <img src="images/screenshots/wnu_solar_01_700x700.jpg" alt="Line Icons">
-                        <div class="overlay"></div> 
-                        <div class="link-icon"><i class="icon-plus"></i></div>
-                     </a>
-
-                  </div>
-               </div> <!-- item end -->
-
-               <div class="columns item">
-                  <div class="item-wrap">
-
-                     <a href="images/screenshots/big/wnu_redcomp_01_lores.jpg" data-imagelightbox="a" >
-                        <img src="images/screenshots/wnu_redcomp_01_700x700.jpg" alt="Hipster">
-                        <div class="overlay"></div>
-                        <div class="link-icon"><i class="icon-plus"></i></div>
-                     </a>
-
-                  </div>
-               </div> <!-- item end -->
-
-               <div class="columns item">
-                  <div class="item-wrap">
-
-                     <a href="images/screenshots/big/wnu_worms_01_lores.jpg" data-imagelightbox="a" >
-                        <img src="images/screenshots/wnu_worms_01_700x700.jpg" alt="Authentic Vintage">                        
-                        <div class="overlay"></div>
-                        <div class="link-icon"><i class="icon-plus"></i></div>
-                     </a>
-
-                  </div>
-               </div> <!-- item end -->
-
-               <div class="columns item">
-                  <div class="item-wrap">
-
-                     <a href="images/screenshots/big/wnu_blacksquare_1280x720.jpg" data-imagelightbox="a" >
-                        <img src="images/screenshots/wnu_blacksquare_700x700.jpg" alt="Spot UV Logo">
-                        <div class="overlay"></div>
-                        <div class="link-icon"><i class="icon-plus"></i></div>
-                     </a>
-
-                  </div>
-               </div> <!-- item end -->
-
-            </div> <!-- portfolio-wrapper end -->
-
-         </div> <!-- twelve columns end -->
-
-      </div>  <!-- end row -->
-
-   </section> <!-- Screenshots End -->
-
-   <!-- Features Section
-   ================================================== -->
-   <section id='features'>
-
-      <div class="row feature design">
-
-         <div class="six columns right">
-            <h3>The artist</h3>
-
-            <p><a href="http://www.translatingnature.org">Julie Freeman</a> is an artist who uses complex processes and data from natural sources to create kinetic sculptures, physical objects, images, sound compositions and animations. Her work explores relationship between us, science and the natural world; questioning the use of technology in how we connect to, and translate, nature.
- 
-            Over the past 15 years, her work has been shown at leading institutions including: the V&A, ICA, Kinetica, Barbican Centre, and the Science Museum, as well as internationally in Brazil, Croatia, Lithuania, Luxembourg, Russia and the USA. Based in London, Julie is a <a href="http://ted.com">TED</a> Senior Fellow, a Nesta Fellow, and a doctoral student in Media & Arts Technology at Queen Mary University of London. She leads the <a href="http://theodi.org/culture">Data as Culture</a> art programme at the Open Data Institute.
-            </p>
-         </div>
-
-         <div class="six columns feature-media right">
-            <a href="http://www.translatingnature.org">
-             <img src="images/wnu_artist_130201.jpg" alt="" />
-          </a>
-         </div>
-
-      </div>
-
-      <div class="row feature responsive">
-
-         <div class="six columns right">
-            <h3>Team Credits</h3>
-
-            <p>
-               <li>Developers: <a href="https://www.linkedin.com/profile/view?id=8952365">Kass Schmitt</a> and <a href="http://www.tracemedia.co.uk">Gavin Baily</a></li>
-               <li>Amazing Intern: Harley-Jo Avery</li>
-               <li>Video Production: <a href="http://www.mattjarvis.co.uk/">Matt Jarvis</a></li>
-               <li>Curator: <a href="https://www.linkedin.com/pub/hannah-redler/17/905/84">Hannah Redler</a></li>
-               <li>Project Director: <a href="http://theodi.org/team/gavin-starks">Gavin Starks</a></li>
-               <li>Working space, finance, marketing, & admin support: <a href="http://theodi.org/">ODI</a>
-            </p>
-         </div>
-
-         <div class="six columns feature-media right">
-             <img src="images/team-bluestarfish.jpg" alt="" />
-         </div>
-
-      </div>
-
-      <div class="row feature cross-browser">
-
-         <div class="six columns right">
-            <h3>Co-commissioner: The Open Data Institute</h3>
-
-            <p><a href="http://www.theodi.org">The Open Data Institute</a> is catalysing the evolution of open data culture to create economic, environmental, and social value. It helps unlock supply, generates demand, creates and disseminates knowledge to address local and global issues. We convene world-class experts to collaborate, incubate, nurture and mentor new ideas, and promote innovation. We enable anyone to learn and engage with open data, and empower our teams to help others through professional coaching and mentoring.
-            Founded by Sir Tim Berners-Lee and Sir Nigel Shadbolt, the ODI is an independent, non-profit, non-partisan, limited by guarantee company.
-            </p>
-         </div>
-
-         <div class="six columns feature-media left">
-            <a href="http://www.theodi.org">
-             <img src="images/odi_culture-url-72-250px.png" alt="" />
-          </a>
-         </div>
-
-      </div>
-
-      <div class="row feature video">
-
-         <div class="six columns right">
-            <h3>Co-commissioner: The Space</h3>
-
-            <p><a href="http://www.thespace.org">The Space</a> will be a place where anyone can engage with the world’s best digital art as it is created. Following a successful pilot season that ended in October last year, The Space will be launching in early Summer of 2014.
-            The Space will be a creative laboratory, showcasing new ideas promising talent and the world’s best artists. By bringing together the worlds of art and code we hope to inspire the invention of completely new, exciting forms of creativity. You can pre-register interest here.
-            The Space wants to unearth breakthrough ideas and talent and will be running Open Calls for the world's best emerging artists. We don’t expect you to already be a household name, but we do expect you to have the passion, drive and skills to create things that have never been seen before.</p>
-         </div>
-
-         <div class="six columns feature-media right">
-            <a href="http://www.thespace.org">
-             <img src="images/the-space_plogo_vert_blue.png" alt="" />
-          </a>
-         </div>
-
-      </div>
-
-      <div class="row feature cross-browser">
-
-         <div class="six columns right">
-            <h3>Data Partner: Zooniverse</h3>
-
-            <p><a href="http://www.zooniverse.org">The Zooniverse</a> is the world's largest and most successful citizen science platform. Working with researchers around the world, they create websites to crowdsource scientific problems that cannot be solved by computers alone. Since 2007 the Zooniverse has recruited more than one million volunteers to assist in tasks such as finding animals in the Serengeti, mapping our galaxy, decoding ancient papyri, and discovering exoplanets. Learn more at zooniverse.org where you can also find their current list of citizen science projects in topics from astronomy to zoology.
-            </p>
-         </div>
-
-         <div class="six columns feature-media left">
-            <a href="http://www.zooniverse.org">
-             <img src="images/zooniverse-logo-black.png" alt="" />
-          </a>
-         </div>
-
-      </div>
-
-   </section> <!-- Homepage Hero end -->
-
-
-
-   <!-- Call-To-Action Section-->
-   <!-- Call-To-Action Section End-->
-
-   <!-- Testimonials Section -->
-   <!-- Testimonials Section End-->   
-
-
-   <!-- Footer
-   ================================================== -->
-   <footer>
-
-      <div class="row">         
-
-         <div class="six columns info">
-
-            <div class="footer-logo">
-               <a href="http://theodi.org">
-                  <img src="images/odi_basic_white.png" height="43" width="100" alt="ODI logo" />
-
-               </a>
-            </div>
-
-            <p>
-            </p>
-
-         </div>
-
-         <div class="six columns right-cols">
-
-            <div class="row">
-
-               <div class="columns">
-                  <h3 class="address">Visit the ODI</h3>
-                  <p>
-                  65 Clifton Street<br>
-                  London<br>
-                  EC2A 4JE, UK
-                  </p>
-               </div>
-
-               <div class="columns">
-                  <h3 class="social">socialize</h3>
-                  <ul>
-                     <li><a href="http://twitter.com/misslake">Julie Freeman</a></li>
-                     <li><a href="http://twitter.com/ukODI">The ODI</a></li>
-                     <li><a href="http://twitter.com/thespacearts">The Space</a></li>
-                     <li><a href="http://twitter.com/the_zooniverse">Zooniverse</a></li>
-                  </ul>
-               </div>
-
-               <div class="columns last">
-                  <h3 class="contact">Contact Us</h3>
-                  <ul>
-                    <li><a href="tel:020 3598 9395">+44 (0) 20 3598 9395</a></li>
-                    <li><a href="mailto:weneedus@theodi.org">weneedus@theodi.org</a></li>
-                  </ul>
-               </div>
-
-            </div> <!-- Nested Row End -->
-
-         </div>
-
-         <p class="copyright">&copy; CC BY-SA</p>
-
-         <div id="go-top">
-            <a class="smoothscroll" title="Back to Top" href="#hero"><i class="icon-up-open"></i></a>
-         </div>
-
-      </div> <!-- Row End -->
-
-   </footer> <!-- Footer End-->
-
-
-   <!-- Java Script
-   ================================================== -->
-   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-   <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
-   <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
-
-   <script src="js/jquery.flexslider.js"></script>
-   <script src="js/waypoints.js"></script>
-   <script src="js/jquery.fittext.js"></script>
-   <script src="js/jquery.fitvids.js"></script>
-   <script src="js/imagelightbox.js"></script>
-   <script src="js/main.js"></script>
-
-   <!-- <script src="js/jquery.prettyPhoto.js"></script>   -->
 
 </body>
-
 </html>
