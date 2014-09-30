@@ -16,8 +16,6 @@
 		<![endif]-->
 	<link href="css/styles.css" rel="stylesheet">
 
-    <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
-    <!--<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
     <!--(if target dev)><!-->
@@ -42,58 +40,6 @@
       <script src="js/wnu.min.js"></script>
     <!(endif)-->
 
-
-
-    <script type="text/javascript">
-        $(window).load(function() {
-            var app = new ZN.App();
-            app.init();
-            
-             	$(window).keydown(function( event ) {
-                console.log(event.which);
-                switch(event.which){
-                    case 77: // 'm'
-                        app.rules.incFocusProject(-1);
-                        break;
-                    case 78: // 'n'
-                        app.rules.incFocusProject(1);
-                        break;
-                }
-            	});
-            	
-            	$( "#project-left" ).click(function() {
-	  			app.rules.incFocusProject(-1);
-				});
-			
-				$( "#project-right" ).click(function() {
-	  			app.rules.incFocusProject(1);
-				});	
-				
-				
-				$("body").on("swipeleft",function(){
- 				 app.rules.incFocusProject(-1);
-				});
-            
-            	$("body").on("swiperight",function(){
- 				 app.rules.incFocusProject(1);
-				});
-            
-        });
-        
-        
-        
-        // If you add or delete projects, add/change their name and site to open up here (case sensitive!):
-        var dataSources = {
-        "Cyclone Center":"http://www.cyclonecenter.org/", 
-        "Cell Slider":"http://www.cellslider.net/", 
-        "Snapshot Serengeti":"http://www.snapshotserengeti.org/", 
-        "Asteroid Zoo":"http://www.asteroidzoo.org/", 
-        "Bat Detective":"http://www.batdetective.org/",
-        "Milky Way":"http://www.milkywayproject.org/", 
-        "Galaxy Zoo":"http://www.galaxyzoo.org/"  
-        };
-        
-    </script>
 
 </head>
 <body scroll="no">
@@ -183,25 +129,69 @@
 <!-- /website -->
 
 
-
-
-
-
-
 	<!-- website scripts -->
-		<script language="javascript">
-		
+    <script language="javascript">
+
+        // If you add or delete projects, add/change their name and site to open up here (case sensitive!):
+        var dataSources = {
+            "Cyclone Center":"http://www.cyclonecenter.org/",
+            "Cell Slider":"http://www.cellslider.net/",
+            "Snapshot Serengeti":"http://www.snapshotserengeti.org/",
+            "Asteroid Zoo":"http://www.asteroidzoo.org/",
+            "Bat Detective":"http://www.batdetective.org/",
+            "Milky Way":"http://www.milkywayproject.org/",
+            "Galaxy Zoo":"http://www.galaxyzoo.org/"
+        };
+
+        function browserTest(){
+
+            var isAudio =  (typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined");
+            var elem = document.createElement('canvas');
+            var isCanvas =  !!(elem.getContext && elem.getContext('2d'));
+
+            return isAudio && isCanvas;
+        }
+
+        var isCompatible = browserTest();
+
+
+        $(window).load(function() {
+
+            if(isCompatible){
+
+                var app = new ZN.App();
+                app.init();
+
+                $( "#project-left" ).click(function() {
+                    app.rules.incFocusProject(-1);
+                });
+
+                $( "#project-right" ).click(function() {
+                    app.rules.incFocusProject(1);
+                });
+
+
+                $("body").on("swipeleft",function(){
+                    app.rules.incFocusProject(-1);
+                });
+
+                $("body").on("swiperight",function(){
+                    app.rules.incFocusProject(1);
+                });
+            }
+
+
+        });
 
 		function openProjectInfo() {
-		var link = $('#project-name').html();
-		window.open(dataSources[link]);
-		return false;
+            var link = $('#project-name').html();
+            window.open(dataSources[link]);
+            return false;
 		}
 		
 		$(document).ready(function () {
 			
-			
-			
+
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
 			
@@ -213,8 +203,7 @@
 	  		$( "#about_weneedus_div" ).fadeOut( "slow", "linear" );
 			});
 			
-		
-			
+
 			$(function () {
 				    var timer;
 				    var infoWindowTimer;
@@ -236,8 +225,7 @@
 				        } else {
 				            fadeInBuffer = false;
 				        }
-				
-				
+
 				        timer = setTimeout(function () {
 				            $('#controls').fadeOut();
 				            $('#logo').fadeOut();
@@ -252,6 +240,15 @@
 				    });
 				});
 			});
+
+
+            if(!isCompatible){
+
+                // hide loading and app buttons
+
+                // show website
+
+            }
 		
 		</script>
 		<!-- /website scripts -->
