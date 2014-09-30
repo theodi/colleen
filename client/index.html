@@ -8,7 +8,7 @@
     <title>We Need Us</title>
 
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
     <link href="css/bootstrap.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
@@ -18,8 +18,8 @@
 
     <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
     <!--<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>-->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
     <!--(if target dev)><!-->
     <script src="lib/lodash/lodash.compat.min.js"></script>
     <script src="lib/snap/snap.svg-min.js"></script>
@@ -98,8 +98,8 @@
 </head>
 <body scroll="no">
 
-<div class="coverAll">
-<img src="webpages/images/wnu_intro_logos.png" width="80%" >
+<div id="logo" class="coverAll">
+<img src="webpages/images/wnu_intro_logos.gif" width="80%" >
 </div>
 
 <div id="loader">
@@ -195,6 +195,7 @@
 		function openProjectInfo() {
 		var link = $('#project-name').html();
 		window.open(dataSources[link]);
+		return false;
 		}
 		
 		$(document).ready(function () {
@@ -238,7 +239,8 @@
 				
 				
 				        timer = setTimeout(function () {
-				            $('#controls').fadeOut()
+				            $('#controls').fadeOut();
+				            $('#logo').fadeOut();
 				            $('body').css({
 				                cursor: 'none'
 				            });

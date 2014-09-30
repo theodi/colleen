@@ -214,13 +214,12 @@ h3,h4,h5,.panel {
 }
 
 .panel-heading {
-	min-width: 31em;
 	height: 3.3em;
 }
 
 div.panel-body {
 	height:32em;
-	overflow:auto;
+
 }
 
 div.panel.panel-default {
