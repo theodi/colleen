@@ -42,6 +42,11 @@
             "id":"3","rotation":0,"opacity":0.8,
             "animation":[{"type":"scale","data":"hour","tween":"id","fn":"id","sx":[0.2,0.8],"sy":[1.0,1.0],"duration":[20.0,20.0],"time":0}]},
 
+        { "_comment":"small middle plankton",
+            "id":"1", "animation":[
+            {"type":"point_translate","data":"min15","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"circle","dataType":"u","data":"min15","tween":"linear","fn":"sqrt","deg_per_sec":[0,300],"radius":500,"duration":[40.0,60.0],"angle":70, "time":20}]},
+
         { "_comment":"Rotation",
             "id":"1.1","rotation":-35.5},
 
@@ -55,7 +60,7 @@
         { "_comment":"Rotation",
             "id":"2.2","rotation":43.7},
 
-        { "_comment":"Rotation",
+        { "_comment":"top left plankton",
             "id":"4","rotation":-3.5, "animation":[
             {"type":"point_translate","data":"hour","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
             {"type":"circle","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,200],"radius":80,"duration":[10.0,10.0],"angle":10, "time":0}]},
@@ -66,7 +71,6 @@
         { "_comment":"Large plankton rotation + point_translate",
             "id":"5","animation":[
             {"type":"point_translate","data":"min","tween":"linear","fn":"sqrt","duration":[10.0,10.0],"rangeX":[-4.0,3.0],"rangeY":[-3.0,4.0],"time":0},
-            {"type":"translate","dataType":"c","data":"hour","tween":"linear","fn":"id","dir":"x","range":[-200,200],"duration":[10.0,20.0],"duration_data":"hour"},
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]},
 
         { "_comment":"Rotation",
@@ -76,7 +80,12 @@
             "id":"5.2","rotation":-1.7},
 
         { "_comment":"Rotation",
-            "id":"5.3","rotation":6} 
+            "id":"5.3","rotation":6},
+
+        { "_comment":"small middle plankton",
+            "id":"8", "animation":[
+            {"type":"point_translate","data":"min15","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"circle","dataType":"u","data":"min15","tween":"linear","fn":"sqrt","deg_per_sec":[0,120],"radius":500,"duration":[30.0,50.0],"angle":40, "time":30}]}
 
     ]
 }
