@@ -5,7 +5,7 @@ var config = require('../config/config');
 var debug = require('debug')('soundengine');
 var async = require('async');
 var path = require('path');
-var fs = require('fs');
+
 
 exports.test = function(req, res) {
   res.sendfile(path.resolve('client/sound.html'));

@@ -145,7 +145,7 @@
 
         function browserTest(){
 
-            var isAudio =  (typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined");
+            var isAudio =  !(typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined");
             var elem = document.createElement('canvas');
             var isCanvas =  !!(elem.getContext && elem.getContext('2d'));
 
@@ -247,6 +247,8 @@
                 // hide loading and app buttons
 
                 // show website
+                $('#AboutB').tab('show');
+
 
             }
 		
