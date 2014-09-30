@@ -1,10 +1,35 @@
-/* @override http://127.0.0.1/~matt/weneedus/client/css/styles.css */
+/* @override 
+	http://127.0.0.1/~matt/weneedus/client/css/styles.css
+	http://127.0.0.1/~matt/gits/colleen/client/css/styles.css
+*/
 
 /*
 A custom Bootstrap 3.2 theme for weneedus.org
 
 
 */
+
+#scene_control_left {
+	float: left;
+	display: inline-block;
+	padding-top: 1px;
+	margin: 0;
+}
+
+#project-name {
+	display: inline-block;
+	float: left;
+	font-weight: bold;
+	margin: 0;
+}
+
+
+#scene_control_right {
+	float: left;
+	display: inline-block;
+	padding-top: 1px;
+	margin: 0;
+}
 
 
 
@@ -124,28 +149,61 @@ h3,h4,h5,.panel {
    border-color:#efefef;
 }
 
-li {
+
+#controls li {
+		padding: 2px;
+	float: left;
+	clear: left;
+	text-align: center;
+}
+
+#controls li a {
+	font-size: 0.8em;
 	display: inline-block;
 	float: left;
-	
+	clear: left;
 }
 
 .topButton {
+	float: left;
 	color: silver;
 }
 
-.about-weneedus {
+.topButton i {
 	display: none;
-	padding-left: 5%;
-	top: 0;
-	z-index: 10;
-	opacity: 0.9;
+	float: left;
+	color: silver;
 }
 
+
+#sound-progress {
+	margin-top: 0.6em;
+	display: inline-block;
+	padding: 4px;
+}
+
+
+
+.about-weneedus {
+	margin-top: 12%;
+	display: none;
+	width: 70% ;
+	height: 50% ;
+  	margin-left: auto ;
+  	margin-right: auto ;
+	padding-left: 5%;
+	top: 10%;
+	z-index: 20;
+	opacity: 0.95;
+}
+
+
+
 #main {
-height: 80%;
-	border-style: solid;
+	width: 100%;
+    height: 80%;
 	border-width: 1px;
+	
 }
 
 #controls {
@@ -156,8 +214,99 @@ height: 80%;
 }
 
 .panel-heading {
-	min-width: 31em;
+	height: 3.3em;
+}
+
+div.panel-body {
+	height:32em;
+
+}
+
+div.panel.panel-default {
+	height:100%;
+	overflow:auto;
 }
 
 
 
+a {
+	color: #8a1201;
+	font-size: 1em;
+	text-decoration: none;
+}
+
+a hover{
+	color: #d12101;
+	font-weight: bold;
+	font-size: 1em;
+	text-decoration: none;
+}
+
+
+img.leftFloat {
+	display: inline-block;
+	padding: 1em;
+	float: left;
+}
+
+div.coverAll {
+	width: 100%;
+	text-align: center;
+
+	z-index: 0;
+	position: fixed;
+	top: 20%;
+}
+
+
+div.coverAll img {
+	width: 60%;
+	text-align: center;
+
+}
+
+body {
+	width: 100%;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+li {
+	list-style-type: none;
+	padding: 1em;
+}
+
+h1 {
+   font: 20px/36px 'montserrat-bold', sans-serif;
+   color: #333;
+   text-transform: uppercase;
+   letter-spacing: 1.5px;
+   margin-bottom: 12px;
+	text-align: center;
+	clear: both;
+}
+
+p {
+	padding: 10px;
+}
+
+h2 {
+   font: 16px/28px 'montserrat-bold', sans-serif;
+   color: #333;
+   text-transform: uppercase;
+   letter-spacing: 1.5px;
+   margin-bottom: 12px;
+   clear: both;
+}
+
+h3 {
+   font: 14px/20px 'montserrat-bold', sans-serif;
+   color: #333;
+   text-transform: uppercase;
+   letter-spacing: 1.5px;
+   margin-bottom: 12px;
+   clear: both;
+}
+
+hr {
+	clear: both;
+}

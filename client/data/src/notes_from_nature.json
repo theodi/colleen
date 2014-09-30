@@ -7,9 +7,10 @@
     "_comment":"Project level animations",
 
     "animation":[
-        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0}
+        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[4.0,10.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
     ],
-
 
     "shape_animation":
     [
