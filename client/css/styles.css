@@ -249,6 +249,12 @@ img.leftFloat {
 	float: left;
 }
 
+img.rightFloat {
+  display: inline-block;
+  padding: 2em;
+  float: right;
+}
+
 div.coverAll {
 	width: 100%;
 	text-align: center;
@@ -272,7 +278,8 @@ body {
 
 li {
 	list-style-type: none;
-	padding: 1em;
+	padding: 0em;
+  padding-left: 2em;
 }
 
 h1 {

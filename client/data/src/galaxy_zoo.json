@@ -19,8 +19,8 @@
 
     "shape_animation":[
         {"_comment":"three large blocks","shape_ids":["3","4","7"],"animation":
-            [{"type":"rotate","dataType":"u","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[20.0,60.0],"duration_data":"min","time_fn":"random", "_loop_sound":0},
-            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.2,1.0] ,"duration":[60.0,120.0],"duration_data":"min", "time":0}]},
+            [{"type":"rotate","dataType":"u","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[60.0,120.0],"duration_data":"min","time_fn":"random", "_loop_sound":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.2,1.0] ,"duration":[30.0,120.0],"duration_data":"min", "time":0}]},
         
         {"_comment":"blue sticks","shape_ids":["1","2"],"animation":
             [{"type":"serengeti","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","duration":[24.0,60.0], "rangeX":[-5.0,5.0],"rangeY":[-3.0,3.0],"time_fn":"random"},
