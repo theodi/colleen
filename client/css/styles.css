@@ -197,6 +197,13 @@ h3,h4,h5,.panel {
 	opacity: 0.95;
 }
 
+#alt-content .about-weneedus {
+    display: block;
+    opacity: 1.0;
+    width: 80% ;
+    height: 60% ;
+
+}
 
 
 #main {
@@ -207,7 +214,7 @@ h3,h4,h5,.panel {
 }
 
 #controls {
-	display: inline-block;
+	display: none;
 	top: 0;
 	left: 0;
 	position: fixed;
