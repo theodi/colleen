@@ -33,6 +33,7 @@ html{
     height: 32px;
     margin: auto;
     position:absolute;
+    display: none;
 
 }
 

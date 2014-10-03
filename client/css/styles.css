@@ -33,7 +33,9 @@ A custom Bootstrap 3.2 theme for weneedus.org
 	margin: 0;
 }
 
-
+#logo{
+    display:none;
+}
 
 
 
@@ -202,9 +204,6 @@ h3,h4,h5,.panel {
 #alt-content .about-weneedus {
     display: block;
     opacity: 1.0;
-    width: 80% ;
-    height: 60% ;
-
 }
 
 
