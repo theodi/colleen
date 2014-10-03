@@ -61,17 +61,19 @@
 </div>
 
 
+
 <!-- website buttons -->
 <div id="controls">
+<div id="app-buttons">
+    <a id="full-screen-button" class="btn popoverData windowTop" data-content="Full Screen" href="#" style="font-size: 14px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-arrows-alt fa-lg"></i></a>
 
-<a id="full-screen-button" class="btn popoverData windowTop" data-content="Full Screen" href="#" style="font-size: 14px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-arrows-alt fa-lg"></i></a>
-
-<a id="project-left" class="btn popoverData windowTop" href="#" data-content="Previous" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_left" class="fa fa-arrow-left"></i></a>
-<a id="project-title" class="btn popoverData windowTop" href="" target="mainContent" data-content="Project Website" rel="popover" data-placement="bottom" data-trigger="hover" onclick='openProjectInfo();'>
-<div id="project-name"> We Need Us&nbsp;</div></a>
-<a id="project-right" class="btn popoverData windowTop" href="#" onclick="app.rules.incFocusProject(1);" data-content="Next" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_right" class="fa fa-arrow-right"></i></a>
-        <a id="mute-button" class="btn popoverData windowTop" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
-		<div id="sound-progress">Loading sounds...</div>
+    <a id="project-left" class="btn popoverData windowTop" href="#" data-content="Previous" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_left" class="fa fa-arrow-left"></i></a>
+    <a id="project-title" class="btn popoverData windowTop" href="" target="mainContent" data-content="Project Website" rel="popover" data-placement="bottom" data-trigger="hover" onclick='openProjectInfo();'>
+    <div id="project-name"> We Need Us&nbsp;</div></a>
+    <a id="project-right" class="btn popoverData windowTop" href="#" onclick="app.rules.incFocusProject(1);" data-content="Next" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_right" class="fa fa-arrow-right"></i></a>
+            <a id="mute-button" class="btn popoverData windowTop" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
+            <div id="sound-progress">Loading sounds...</div>
+    </div>
         
 		
 		 <ul class="nav top-left">
@@ -102,7 +104,20 @@
 </div>
 <!-- /website buttons -->
 
+<noscript>
+    <div id="alt-content">
+        <div class="about-weneedus">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <iframe id="fra" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</noscript>
 
 <!-- website -->
 <div id="about_weneedus_div" class="about-weneedus">
@@ -194,7 +209,9 @@
 		}
 		
 		$(document).ready(function () {
-			
+
+
+            $("#loader, #logo").css('display','block');
 
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
@@ -207,6 +224,7 @@
 	  		$( "#about_weneedus_div" ).fadeOut( "slow", "linear" );
 			});
 			
+
 
 			$(function () {
 				    var timer;
@@ -237,9 +255,11 @@
 				                cursor: 'none'
 				            });
 				            fadeInBuffer = true;
-				            infoWindowTimer = setTimeout(function () {
-				            $('#about_weneedus_div').fadeOut()
-				        }, 60000);
+                            if(isCompatible){
+                                infoWindowTimer = setTimeout(function () {
+                                    $('#about_weneedus_div').fadeOut()
+                                }, 60000);
+                            }
 				        }, 5000)
 				    });
 				});
@@ -247,12 +267,12 @@
 
 
             if(!isCompatible){
-
                 // hide loading and app buttons
+                $("#loader, #logo, #app-buttons, #about_weneedus_div .panel-heading").css('display','none');
 
                 // show website
-
-
+                $("#mainFrame").attr("src","webpages/compatibility.htm" );
+                $("#about_weneedus_div").css('display','block');
 
             }
 		
