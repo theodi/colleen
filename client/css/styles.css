@@ -20,6 +20,8 @@ A custom Bootstrap 3.2 theme for weneedus.org
 	display: inline-block;
 	float: left;
 	font-weight: bold;
+    width:120px;
+    align:center;
 	margin: 0;
 }
 
