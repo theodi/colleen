@@ -9,15 +9,15 @@
     "bgScaleAnim":{"type":"scale","data":"day","sx":[0.7,1.2],"sy":[0.7,1.2],"tween":"linear","fn":"sqrt"},
 
     "animation":[
-        {"type":"loop_sound","dataType":"c","duration_data":"day","duration":[12.0,30.0], "sample":0,"time":0},
-        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[8.0,12.0], "sample":0,"time":0},
+        {"type":"_loop_sound","dataType":"c","duration_data":"day","duration":[12.0,30.0], "sample":0,"time":0},
+        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[8.0,12.0], "sample":0,"time":0},
         {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
 
     ],
 
     "shape_animation":
         [{"shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"animation":
-            [{"type":"scale","dataType":"c","data":"day","series_len":30,"fn":"id","sx":[0.8,8.0],"sy":[0.8,8.0],"duration":[12.0,30.0],"duration_data":"day","time_fn":"random", "_loop_sound":0},
+            [{"type":"scale","dataType":"c","data":"day","series_len":30,"fn":"id","sx":[0.8,8.0],"sy":[0.8,8.0],"duration":[12.0,30.0],"duration_data":"day","time_fn":"random", "loop_sound":0},
             {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.6,0.7], "duration":[10.0,120.0],"duration_data":"min","time_fn":"random"}]},
 
         {"shape_ids":["16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"],"animation":

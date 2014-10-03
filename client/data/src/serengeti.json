@@ -11,7 +11,7 @@
 
     "animation":[
         {"type":"loop_sound","dataType":"c","duration_data":"min","duration":[30.0,200.0], "sample":0,"time":0},
-        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.25],"duration":[60.0,60.0], "time":0}
 
     ],
 
@@ -39,6 +39,6 @@
 
         {"_comment":"translate y - large animal shape",
             "id":"21","rotation":0,
-            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-50,300],"duration":[400.0,0.0],"time_fn":"random"}]}
+            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-50,300],"duration":[100.0,130.0],"duration_data":"min","time":0,"loop_sound":1}]}
     ]
 }

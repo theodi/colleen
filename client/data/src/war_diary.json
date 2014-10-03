@@ -7,8 +7,9 @@
     "rotation":0,
     
     "animation":[
-        {"_comment":"align with id 5","type":"loop_sound","dataType":"u","duration_data":"hour","duration":[0.0,100.0],"sample":0,"time":10},
-        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+        {"_comment":"align with id 5","type":"loop_sound","dataType":"u","duration_data":"hour","duration":[20.0,100.0],"sample":0,"time":10},
+        {"_comment":"align with ids 2,5,10,11","type":"loop_sound","dataType":"c","duration_data":"day","duration":[200.0,400.0],"sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.2],"duration":[60.0,60.0], "time":0}
 
     ],
 
@@ -44,7 +45,7 @@
 
         { "_comment":"Rotation",
             "id":"5","rotation":-34.3,"animation":[
-            {"type":"rotate","dataType":"u","data":"hour","tween":"id","fn":"sqrt","rotation":[-40,-35],"duration_data":"hour","duration":[0.0,100.0],"time":10}]},
+            {"type":"rotate","dataType":"u","data":"hour","tween":"id","fn":"sqrt","rotation":[-40,-35],"duration_data":"hour","duration":[20.0,100.0],"time":10}]},
 
         { "_comment":"Rotation",
             "id":"6","rotation":-5.5},
