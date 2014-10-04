@@ -110,8 +110,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <iframe id="fra" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
-
+                        <iframe name="altContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
                     </div>
                 </div>
             </div>
@@ -209,8 +208,18 @@
 		
 		$(document).ready(function () {
 
+            if(isCompatible){
+                $("#loader, #logo").css('display','block');
+            }
+            else{
+                // hide loading and app buttons
+                $("#loader, #logo, #app-buttons, #about_weneedus_div .panel-heading").css('display','none');
 
-            $("#loader, #logo").css('display','block');
+                // show website
+                $("#mainFrame").attr("src","webpages/compatibility.htm" );
+                $("#about_weneedus_div").css('display','block');
+
+            }
 
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
@@ -265,15 +274,7 @@
 			});
 
 
-            if(!isCompatible){
-                // hide loading and app buttons
-                $("#loader, #logo, #app-buttons, #about_weneedus_div .panel-heading").css('display','none');
 
-                // show website
-                $("#mainFrame").attr("src","webpages/compatibility.htm" );
-                $("#about_weneedus_div").css('display','block');
-
-            }
 		
 		</script>
 		<!-- /website scripts -->
