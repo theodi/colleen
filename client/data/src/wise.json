@@ -13,7 +13,7 @@
 
     "animation":[
         {"_comment":"match to id 1","type":"loop_sound","dataType":"c","duration_data":"min","duration":[8.0,70.0],"sample":0,"time":0},
-        {"_comment":"daily classifications","type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+        {"_comment":"daily classifications","type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.2],"duration":[60.0,60.0], "time":0}
 
     ],
 
@@ -29,7 +29,7 @@
         },
 
         {"shape_ids":["6.2","6.4"],"animation":
-            [{"type":"rotate","dataType":"u","data":"min15","tween":"linear","fn":"sqrt","rotation":[0,360],"duration_data":"min15","duration":[130.0,700.0],"time_fn":"index"}]
+            [{"type":"rotate","dataType":"u","data":"min15","tween":"linear","fn":"sqrt","rotation":[0,360],"duration_data":"min15","duration":[130.0,700.0],"time_fn":"index", "loop_sound":0}]
         },
 
         {"shape_ids":["2","4"],"animation":
@@ -57,7 +57,7 @@
             "animation":[{"type":"scale","dataType":"u","data":"min","tween":"linear","fn":"id","sx":[0.9,2],"sy":[0.9,2] ,"duration":[10.0,80.0], "time":0}
             ]},
 
-        { "_comment":"nucleus of top left shape = NOTE THIS CIRCLE ISN'T WORKING, but it does if I add id 6 to the shape animation group above",
+        { "_comment":"nucleus of top left shape",
             "id":"6","animation":[
             {"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,20],"radius":100,"duration":[15.0,50.0],"duration_data":"hour","time":0, "angle":-60},
             {"type":"asteroid","dataType":"c","data":"hour","tween":"linear","fn":"id","range":[0.0,20.0],"duration":[60.0,100.0], "duration_data":"hour", "time":0, "loop_sound":1}]},
@@ -72,7 +72,7 @@
 
         { "_comment":"Scale X and Y",
             "id":"8",
-            "animation":[{"type":"scale","dataType":"u","data":"min","tween":"linear","fn":"id","sx":[0.2,1.0],"sy":[0.2,1.0] ,"duration":[10.0,80.0], "time":0, "loop_sound":1}]},
+            "animation":[{"type":"scale","dataType":"u","data":"min","tween":"linear","fn":"id","sx":[0.2,1.0],"sy":[0.2,1.0] ,"duration":[10.0,80.0], "duration_data":"min15","time":0, "loop_sound":0}]},
 
         { "_comment":"Scale X and Y",
             "id":"8.1",
