@@ -948,7 +948,7 @@ ZN.Rules.prototype = {
     },
 
     setProjectSound: function(project){
-        console.log('setProjectSound:', project.id);
+        //console.log('setProjectSound:', project.id);
         if(this.model.getSoundLoaded(project.id)){
             var info = ZN.soundengine.moveToScene(project.id);
             var layersMix = info.layersMix;

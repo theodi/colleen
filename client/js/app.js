@@ -310,7 +310,7 @@ ZN.App.prototype = {
         });
 
         $(window).keydown(function( event ) {
-            console.log(event.which);
+            //console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
                 case 37: // left arrow
