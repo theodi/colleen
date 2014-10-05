@@ -1,4 +1,4 @@
-To connect to the *started* MySQL db in Sequel Pro:
+To connect to the local *started* MySQL db in Sequel Pro:
 
 Connect as standard
 
@@ -8,3 +8,23 @@ Username: colleen
 password: xxxxxx
 database: zoon
 port: whatever is default 
+
+
+When running worker locally you need to run this query in MYSQL:
+SET @@global.time_zone='+00:00';
+
+If you don't have correct permissions to set the time zone, try this on the command line when logged in as root to mysql -->   $ mysql -u root):
+
+mysql> GRANT ALL PRIVILEGES ON zoon.* TO 'colleen'@'localhost' WITh GRANT OPTION;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SET PASSWORD FOR colleen@localhost = PASSWORD('galaxy');
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec) 
+
+Then run the query: SET @@global.time_zone='+00:00'; 

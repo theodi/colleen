@@ -25,7 +25,7 @@ ZN.App = function () {
 
     // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
-    this.timeSeriesLatency = 2*60*1000 // in ms
+    this.timeSeriesLatency = 3*60*1000 // in ms
     this.dataSource = "archive"; // "live"
 
     // rendering
@@ -310,7 +310,7 @@ ZN.App.prototype = {
         });
 
         $(window).keydown(function( event ) {
-            console.log(event.which);
+            //console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
                 case 37: // left arrow

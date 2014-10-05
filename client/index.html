@@ -70,7 +70,7 @@
     <a id="project-left" class="btn popoverData windowTop" href="#" data-content="Previous" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_left" class="fa fa-arrow-left"></i></a>
     <a id="project-title" class="btn popoverData windowTop" href="" target="mainContent" data-content="Project Website" rel="popover" data-placement="bottom" data-trigger="hover" onclick='openProjectInfo();'>
     <div id="project-name"> We Need Us&nbsp;</div></a>
-    <a id="project-right" class="btn popoverData windowTop" href="#" onclick="app.rules.incFocusProject(1);" data-content="Next" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_right" class="fa fa-arrow-right"></i></a>
+    <a id="project-right" class="btn popoverData windowTop" href="#" data-content="Next" rel="popover" data-placement="bottom" data-trigger="hover"><i id="scene_control_right" class="fa fa-arrow-right"></i></a>
             <a id="mute-button" class="btn popoverData windowTop" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
             <div id="sound-progress">Loading sounds...</div>
     </div>
@@ -110,8 +110,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <iframe id="fra" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
-
+                        <iframe name="altContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
                     </div>
                 </div>
             </div>
@@ -147,6 +146,8 @@
 	<!-- website scripts -->
     <script language="javascript">
 
+        var app;
+
         // If you add or delete projects, add/change their name and site to open up here (case sensitive!):
         var dataSources = {
             "Cyclone Center":"http://www.cyclonecenter.org/",
@@ -178,7 +179,7 @@
 
             if(isCompatible){
 
-                var app = new ZN.App();
+                app = new ZN.App();
                 app.init();
 
                 $( "#project-left" ).click(function() {
@@ -210,8 +211,18 @@
 		
 		$(document).ready(function () {
 
+            if(isCompatible){
+                $("#loader, #logo").css('display','block');
+            }
+            else{
+                // hide loading and app buttons
+                $("#loader, #logo, #app-buttons, #about_weneedus_div .panel-heading").css('display','none');
 
-            $("#loader, #logo").css('display','block');
+                // show website
+                $("#mainFrame").attr("src","webpages/compatibility.htm" );
+                $("#about_weneedus_div").css('display','block');
+
+            }
 
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
@@ -266,15 +277,7 @@
 			});
 
 
-            if(!isCompatible){
-                // hide loading and app buttons
-                $("#loader, #logo, #app-buttons, #about_weneedus_div .panel-heading").css('display','none');
 
-                // show website
-                $("#mainFrame").attr("src","webpages/compatibility.htm" );
-                $("#about_weneedus_div").css('display','block');
-
-            }
 		
 		</script>
 		<!-- /website scripts -->

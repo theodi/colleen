@@ -7,16 +7,16 @@ GUI Tools - Sequel Pro for Mac, HeidiSQL for PC
 
 
 install node
-in server directory:
-$ npm install
+in server directory (redo this everytime new node modules are added):
+> npm install
 which looks at package.json and installs dependencies
-$ node server
+> node server
 to run app on port 3000
 
 
 If you have issues with MySQL not starting
 
-> sudo /usr/local/mysql/support-files/mysql.server 
+> sudo /usr/local/mysql/support-files/mysql.server start
 
 ensure present working directory is the project directory (i.e. colleen), then
 
@@ -25,3 +25,6 @@ ensure present working directory is the project directory (i.e. colleen), then
 > foreman start
 
 where node commend compiles the .js and foreman starts the node server
+
+To set timezone to global:
+> mysql -e "SELECT @@global.time_zone;"

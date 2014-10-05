@@ -23,7 +23,7 @@ var sceneData = {};
 var mix; // mixbus
 
 function init(config, cbProgress) {
-  debug('Initializing soundengine');
+  debug('Initializing soundengine', config);
 
   if('AudioContext' in window) {
      context = new window.AudioContext();

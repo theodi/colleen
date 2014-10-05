@@ -15,7 +15,7 @@ var app = express();
 app.use(compression());
 
 var webRoot = 'client'; //'web';//
-if(process.env.NODE_ENV=='prod'){
+if(process.env.NODE_ENV=='prod' || process.env.NODE_ENV=='staging'){
     webRoot = 'web';
 }
 app.use('/', express.static(__dirname +'/'+webRoot));
