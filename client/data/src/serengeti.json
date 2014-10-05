@@ -25,9 +25,9 @@
 
     	{"_comment":"hidden blocks","shape_ids":["20","21"],"animation":
             [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#634e0d","#474611"],"duration":[30.0,120.0],"time":0},
-            {"type":"translate","data":"min","tween":"id","fn":"id","dir":"x","range":[-200,400],"duration":[200.0,240.0],"time_fn":"random","duration_data":"min","loop_sound":1},
-            {"type":"scale","data":"hour","fn":"id","sx":[0.98,1.02],"sy":[0.98,1.02] ,"duration":[100.0,2000.0],"duration_data":"min","time_fn":"random"},
-            {"type":"opacity","data":"day","tween":"linear","fn":"id","range":[0.1,0.9],"duration":[300.0,600.0],"duration_data":"day","time_fn":"random"}]
+            {"type":"translate","data":"min","tween":"id","fn":"id","dir":"x","range":[-200,400],"duration":[200.0,240.0],"time_fn":"random","duration_data":"min", "series_len":2, "loop_sound":1},
+            {"type":"scale","data":"hour","fn":"id","sx":[0.98,1.03],"sy":[0.98,1.03] ,"duration":[200.0,240.0],"duration_data":"min","series_len":2, "time_fn":"random"},
+            {"type":"opacity","data":"day","tween":"linear","fn":"id","range":[0.1,0.9],"duration":[100.0,600.0],"duration_data":"day","time_fn":"random"}]
     	}
     ],
 
