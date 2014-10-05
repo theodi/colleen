@@ -590,7 +590,8 @@ function updateTimeSeries(series){
                 updateNextTimeSeries();
             }
             else{
-                to = from+interval;
+                var nIntervals = Math.floor((to-from)/interval);
+                to = from+(interval*nIntervals);
                 //console.log('updateTimeSeries: from, to, interval',from, to, interval, new Date(from*1000), new Date(to*1000) );
 
                 updateTimeSeriesInterval(series,from,to);
