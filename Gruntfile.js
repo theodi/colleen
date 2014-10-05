@@ -6,14 +6,14 @@ module.exports = function(grunt) {
         clean: {
             hooks: ['.git/hooks/pre-commit'],
             build: {
-                src: [ 'web/wnu/' ]
+                src: [ 'web/' ]
             }
         },
 
         targethtml: {
             dist: {
                 files: {
-                    'web/wnu/index.html': 'client/index.html'
+                    'web/index.html': 'client/index.html'
                 }
             }
         },
@@ -22,21 +22,22 @@ module.exports = function(grunt) {
             main: {
                 files: [
 
-                    {expand: true, cwd: 'client/css/', src: ['**'], dest: 'web/wnu/css/'},
-                    {expand: true, cwd: 'client/images/', src: ['**'], dest: 'web/wnu/images/'},
-                    {expand: true, cwd: 'client/audio/wnu', src: ['**'], dest: 'web/wnu/audio/wnu/'},
+                    {expand: true, cwd: 'client/css/', src: ['**'], dest: 'web/css/'},
+                    {expand: true, cwd: 'client/images/', src: ['**'], dest: 'web/images/'},
+                    //{expand: true, cwd: 'client/audio/wnu', src: ['**'], dest: 'web/audio/wnu/'},
+                    {expand: true, cwd: 'client/webpages/', src: ['**'], dest: 'web/webpages/'},
                     // wnu data
-                    {expand: true, cwd: 'client/data/', src: ['*.json','*.csv'], dest: 'web/wnu/data/', filter: 'isFile'},
-                    {src:'client/js/config.js', dest:'web/wnu/js/config.js' },
+                    {expand: true, cwd: 'client/data/', src: ['*.json','*.csv'], dest: 'web/data/', filter: 'isFile'},
+                    {src:'client/js/config.js', dest:'web/js/config.js' },
 
                     // chart
-                    {src:'client/chart.html', dest:'web/wnu/chart.html' },
-                    {expand: true, cwd: 'client/lib/', src: ['**'], dest: 'web/wnu/lib/'},
-                    {src:'client/js/chart.js',dest:'web/wnu/js/chart.js'}
+                    {src:'client/chart.html', dest:'web/chart.html' },
+                    {expand: true, cwd: 'client/lib/', src: ['**'], dest: 'web/lib/'},
+                    {src:'client/js/chart.js',dest:'web/js/chart.js'}
                     /*
-                    { src:'client/lib/lodash/lodash.compat.min.js',dest:'web/wnu/lib/lodash/lodash.compat.min.js'},
-                    { src:'client/lib/jquery/datetimepicker/jquery.datetimepicker.js',dest:'web/wnu/lib/jquery/datetimepicker/jquery.datetimepicker.js'},
-                    { src:'client/lib/d3/nv.d3.min.js', dest:'web/wnu/lib/d3/nv.d3.min.js'},
+                    { src:'client/lib/lodash/lodash.compat.min.js',dest:'web/lib/lodash/lodash.compat.min.js'},
+                    { src:'client/lib/jquery/datetimepicker/jquery.datetimepicker.js',dest:'web/lib/jquery/datetimepicker/jquery.datetimepicker.js'},
+                    { src:'client/lib/d3/nv.d3.min.js', dest:'web/lib/d3/nv.d3.min.js'},
 
                     */
                 ]
@@ -46,7 +47,7 @@ module.exports = function(grunt) {
         uglify: {
 
             js: {
-                files: { 'web/wnu/js/wnu.min.js': [
+                files: { 'web/js/wnu.min.js': [
                     'client/lib/lodash/lodash.compat.min.js',
                     'client/lib/snap/snap.svg-min.js',
                     'client/lib/chroma/chroma.min.js',

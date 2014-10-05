@@ -750,10 +750,6 @@ ZN.Rules.prototype = {
         var endLoop = this.updateAnimTime(anim);
         if(endLoop){
 
-            // set random duration
-            //var n = Math.random();
-            //var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
-            //anim.curDuration = duration;
             var duration = this.getDuration(project,anim);
 
             // start shooting star
@@ -798,7 +794,9 @@ ZN.Rules.prototype = {
         // set intensity from anim rule range and normalised value
         var n = this.getNextSeriesValue(project, obj, anim);
         var intensity = anim.range[0] + (anim.range[1]-anim.range[0])*n;
-        ZN.soundengine.setSceneLayersMix(intensity*this.app.volume);
+        if(this.model.isFocusSoundLoaded() && this.app.isSound){
+            ZN.soundengine.setSceneLayersMix(intensity*this.app.volume);
+        }
 
     },
 
@@ -818,7 +816,7 @@ ZN.Rules.prototype = {
 
     triggerSound: function(sample){
 
-        if(this.app.volume>0){
+        if(this.app.isSound&&this.model.isFocusSoundLoaded()){
             var filename = ZN.soundengine.triggerSampler(sample);
 
         }
@@ -870,8 +868,14 @@ ZN.Rules.prototype = {
 
         this.model.focusProject = project;
 
+        $("#project-name").html(project.title);
+
         // sound
         this.setProjectSound(project);
+        // interface
+        if(ZN.Config.showControlsOnProjectChange){
+            this.app.showControls(true,ZN.Config.showControlsDuration*1000);
+        }
 
 
         var self = this;
@@ -944,12 +948,14 @@ ZN.Rules.prototype = {
     },
 
     setProjectSound: function(project){
-        var info = ZN.soundengine.moveToScene(project.id);
-        var layersMix = info.layersMix;
-        ZN.soundengine.setSceneLayersMix(this.app.volume);
-        ZN.soundengine.setBaseLayersMix(this.app.volume);
-        //var filename = ZN.soundengine.triggerSampler(0);
+        //console.log('setProjectSound:', project.id);
+        if(this.model.getSoundLoaded(project.id)){
+            var info = ZN.soundengine.moveToScene(project.id);
+            var layersMix = info.layersMix;
+            this.app.setLayerVolume(this.app.volume);
+        }
 
+        this.triggerSound(0); //transition sound
 
     },
 

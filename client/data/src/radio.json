@@ -1,10 +1,16 @@
 {
     "name":"radio",
+    "title":"Radio Galaxy Zoo",
     "sx":1.0,
     "sy":1.0,
     "x":0,
     "y":0,
     "rotation":0,
+
+    "animation":[
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[4.0,10.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+    ],
 
     "shape_animation":[
 

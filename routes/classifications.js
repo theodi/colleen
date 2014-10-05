@@ -703,7 +703,7 @@ exports.isUpdating = function (req, res) {
             //console.log(rows[0]);
             var curUnixTime = parseInt((new Date()).valueOf()/1000);
             var dt = curUnixTime-lastUpdate;
-            console.log("isUpdating dt",dt,"seconds");
+            //console.log("isUpdating dt",dt,"seconds");
             if(dt>gMaxUpdateInterval){
                 res.send({status: 0});
             }

@@ -1,0 +1,59 @@
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Data</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="../css/styles.css" rel="stylesheet">
+				
+	</head>
+	<body>
+	
+	
+	<h1> Data </h1>
+	
+	<p>
+		‘We Need Us’ uses classification and user data from Zooniverse.org. The data is accessed in real-time via an a <a href="http://en.wikipedia.org/wiki/Application_programming_interface" target="_blank">API</a> (application programming interface). Each time a user logins and classifies a piece of data on any project in the Zooniverse, some metadata about that action is stored in a database and is published as a live feed.</p>
+
+		<p>‘We Need Us’ take the Zooniverse metadata and stores it in a useful format in a new database. The metadata is processed to create more metadata, which we call timeseries data. We store eight different types of timeseries data for the ‘We Need Us’ sound and animation engines to use, that are constantly updated:</p>
+
+	<li>* min - the number of classifications per minute, over 60 minutes</li>
+	<li>* min15 - the number of classifications per 15 minute intervals over 15 hours</li>
+	<li>* hour - the number of classifications per hour over 24 hours</li>
+	<li>* day - the number of classifications per day over 30 days</li>
+	<li>* min - the number of users per minute, over 60 minutes</li>
+	<li>* min15 - the number of users per 15 minute intervals over 15 hours</li>
+	<li>* hour - the number of users per hour over 24 hours</li>
+	<li>* day - the number of users per day over 30 days</li>
+</p>
+
+You can see the data in our <a href="../chart.html" target="_blank">chart tool</a>.
+<p/>
+	
+	<!-- Google tracker -->
+	<script>
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-34573394-15', 'www.weneedus.org');
+	ga('send', 'pageview');
+	ga('create', 'UA-49181439-1', 'auto', { 'allowLinker': true, 'name' : 'the_space' });
+	ga('the_space.send', 'pageview');
+	
+	</script>
+	<!-- end google tracker -->	
+	
+	
+	</body>
+	
+</html>

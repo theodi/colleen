@@ -23,7 +23,7 @@ var sceneData = {};
 var mix; // mixbus
 
 function init(config, cbProgress) {
-  debug('Initializing soundengine');
+  debug('Initializing soundengine', config);
 
   if('AudioContext' in window) {
      context = new window.AudioContext();
@@ -87,7 +87,7 @@ function init(config, cbProgress) {
   async.eachSeries(config.scenes, function(def, callback) {
     // Calculate how much we still need to load
     var percent = (loadCounter++/ config.scenes.length) * 100;
-    cbProgress(null, Math.floor(percent), def.id);
+    cbProgress(null, Math.floor(percent), def.id, loadCounter);
     loadSceneFiles(def, callback);
     },
     function(err) {
@@ -164,29 +164,28 @@ function setSceneLayersMix(v) {
   if(activeSceneId === '__none__')
     return;
 
-  // debug('set layersMix for', activeSceneId);
-
-
-  if(!settings.sceneLayersMixMode)
+  if(!settings.sceneLayersMixMode){
     mixLayersKeep1(activeSceneId, v);
-  else
+  }else{
     mixLayersAllOff(activeSceneId, v);
+  }
 }
 
 function setBaseLayersMix(v){
-  // sceneData.__base.layersMix = v;
   mixLayersAllOff('__base', v);
 }
 
 function mixLayersKeep1(sceneId, v){
-  // var vnorm = v / 100;
   var data = sceneData[sceneId];
   data.layersMix = v;
   var numLayers = data.layers.length;
-  if(numLayers <= 1) return; // nothing to do with one layer
 
  data.layers.forEach(function(layer, index, arr){
-  if(!index) return; // always play layer 0
+  if(index === 0){
+    layer.mix.gain.value = 1;
+    debug('mode0 layer', index, 'volume', 1, '(fixed)');
+    return; // always play layer 0
+  }
 
   var delta = 1 / (numLayers-1);
   var offset = v - delta * (index-1);
@@ -200,7 +199,6 @@ function mixLayersKeep1(sceneId, v){
 }
 
 function mixLayersAllOff(sceneId, v){
-  // var vnorm = v / 100;
   var data = sceneData[sceneId];
   data.layersMix = v;
   var numLayers = data.layers.length;
@@ -216,26 +214,6 @@ function mixLayersAllOff(sceneId, v){
   debug(sceneId, 'mode1 layer', index, 'offset', offset, 'volume', vol);
  });
 }
-
-
-// function mapIntensityToBaseLayers(v){
-//   // var vnorm = v / 100;
-//   var data = sceneData.__base;
-//   if(!data) return;
-
-//   var numLayers = data.layers.length;
-
-//  data.layers.forEach(function(layer, index, arr){
-//   var delta = 1 / numLayers;
-//   var offset = v - delta * index;
-//   offset = clamp(offset, 0, 1);
-//   var vol = offset / delta;
-//   vol = clamp(vol, 0, 1); // clip to 1
-//   vol = Math.cos((1-vol) * 0.5*Math.PI); // equal power
-//   layer.mix.gain.value = vol;
-//   // debug('mode1 layer', index, 'offset', offset, 'volume', vol);
-//  });
-// }
 
 function dbToGain(db){
   return Math.pow(10, (db/10));
@@ -492,9 +470,10 @@ function stopLayers(sceneId) {
     }catch(err){
       // oh shut up already firefox
     }
-    // data.fade.gain.setValueCurveAtTime(epCurveOut, 0.01, fadeTime);
     // stop layer when done fading
-    layer.source.stop(now + fadeTime);
+    if(layer.source){ // allows start/stop before sounds are loaded
+        layer.source.stop(now + fadeTime);
+    }
   });
 }
 
@@ -1379,13 +1358,13 @@ module.exports = {
         };
         return q;
     };
-    
+
     async.priorityQueue = function (worker, concurrency) {
-        
+
         function _compareTasks(a, b){
           return a.priority - b.priority;
         };
-        
+
         function _binarySearch(sequence, item, compare) {
           var beg = -1,
               end = sequence.length - 1;
@@ -1399,7 +1378,7 @@ module.exports = {
           }
           return beg;
         }
-        
+
         function _insert(q, data, priority, callback) {
           if (!q.started){
             q.started = true;
@@ -1421,7 +1400,7 @@ module.exports = {
                   priority: priority,
                   callback: typeof callback === 'function' ? callback : null
               };
-              
+
               q.tasks.splice(_binarySearch(q.tasks, item, _compareTasks) + 1, 0, item);
 
               if (q.saturated && q.tasks.length === q.concurrency) {
@@ -1430,15 +1409,15 @@ module.exports = {
               async.setImmediate(q.process);
           });
         }
-        
+
         // Start with a normal queue
         var q = async.queue(worker, concurrency);
-        
+
         // Override push to accept second parameter representing priority
         q.push = function (data, priority, callback) {
           _insert(q, data, priority, callback);
         };
-        
+
         // Remove unshift function
         delete q.unshift;
 

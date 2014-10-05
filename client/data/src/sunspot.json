@@ -1,5 +1,6 @@
 {
     "name":"sunspot",
+    "title":"Sunspotter",
     "sx":0.2,
     "sy":0.2,
     "x":0,
@@ -7,7 +8,11 @@
     "rotation":0,
     "_fills":[ ],
     "_comment":"Project level animations",
-    "_animation":[ ],
+    
+    "animation":[
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[4.0,10.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+    ],
 
     "shapes":[
         { "id":"1","rotation":-20,

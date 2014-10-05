@@ -1,8 +1,8 @@
 ZN.Project = function () {
     this.id="";
     this.name="";
+    this.title="";
 
-    this.position=[];
     this.analytics = {
 
         clsCount:{},
@@ -43,10 +43,8 @@ ZN.Project = function () {
     // background scale animation
     this.bgScaleAnim = {};
 
-
-
-
-
+    // sound
+    this.soundLoaded = false;
 
 }
 

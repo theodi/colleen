@@ -1,35 +1,40 @@
 {
     "name":"galaxy_zoo",
+    "title":"Galaxy Zoo",
     "sx":1.0,
     "sy":1.0,
     "x":0,
     "y":0,
     "rotation":0,
 
+    "bgScaleAnim":{"type":"scale","data":"day","sx":[0.4,0.6],"sy":[0.4,0.6],"tween":"linear","fn":"sqrt"},
+
+
     "animation":[
-        {"type":"_loop_sound","dataType":"u","duration_data":"min","duration":[3.0,6.0], "sample":0,"time":0},
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[20.0,60.0],"sample":0,"time":0},
+        {"type":"_loop_sound","dataType":"c","duration_data":"hour","duration":[1.0,20.0],"sample":0,"time":0},
         {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
 
     ],
 
     "shape_animation":[
-        {"shape_ids":["3","4","7"],"animation":
-            [{"type":"rotate","dataType":"u","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[60.0,60.0],"time_fn":"random", "loop_sound":0},
-            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.2,1.0] ,"duration":[60.0,120.0], "time":0}]},
+        {"_comment":"three large blocks","shape_ids":["3","4","7"],"animation":
+            [{"type":"rotate","dataType":"u","data":"min","tween":"linear","fn":"sqrt","rotation":[0,270],"duration":[60.0,120.0],"duration_data":"min","time_fn":"random", "_loop_sound":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.2,1.0] ,"duration":[30.0,120.0],"duration_data":"min", "time":0}]},
         
-        {"shape_ids":["1","2"],"animation":
+        {"_comment":"blue sticks","shape_ids":["1","2"],"animation":
             [{"type":"serengeti","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","duration":[24.0,60.0], "rangeX":[-5.0,5.0],"rangeY":[-3.0,3.0],"time_fn":"random"},
-            {"type":"translate","dataType":"c","data":"hour","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[200.0,0.0],"time_fn":"index"},
+            {"type":"translate","dataType":"c","data":"hour","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[100.0,200.0],"duration_data":"hour","time_fn":"index","loop_sound":1},
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]},
 
-        {"shape_ids":["5","6"],"animation":
+        {"_comment":"yellow sticks","shape_ids":["5","6"],"animation":
             [{"type":"serengeti","dataType":"u","data":"min15","tween":"linear","fn":"sqrt","duration":[60.0,60.0], "rangeX":[-10.0,10.0],"rangeY":[-3.0,3.0],"time_fn":"random"},
-            {"type":"translate","dataType":"c","data":"min15","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[300.0,0.0],"time_fn":"index"},
+            {"type":"translate","dataType":"c","data":"min15","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[300.0,0.0],"duration_data":"min15","loop_sound":1,"time_fn":"index"},
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]},
 
-        {"shape_ids":["10","11","12"],"animation":
+        {"_comment":"black sticks","shape_ids":["10","11","12"],"animation":
             [{"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[30.0,60.0], "rangeX":[-3.0,3.0],"rangeY":[-10.0,10.0],"time_fn":"index"},
-            {"type":"translate","dataType":"c","data":"day","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[400.0,400.0],"time_fn":"index"},
+            {"type":"translate","dataType":"c","data":"day","tween":"linear","fn":"id","dir":"x","range":[-200,200] ,"duration":[400.0,400.0],"time_fn":"index","duration_data":"day","loop_sound":1},
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]}
     ],
 
@@ -37,9 +42,7 @@
     "shapes":[
 
         { "_comment":"2nd blue stick",
-            "id":"1","rotation":-22.0,
-            "animation":[{"type":"_rotate","dataType":"u","data":"day","tween":"linear","fn":"sqrt","rotation":[-70,70],"duration":[6.0,9.0], "time":0}]},
-
+            "id":"1","rotation":-22.0},
         { "_comment":"1st blue stick",
             "id":"2","rotation":-22.0},
         { "_comment":"large blue shape",
@@ -53,14 +56,12 @@
         { "_comment":"large red shape",
             "id":"7","rotation":0},
 
-        { "_comment":"small yellow shape",
-            "id":"8","rotation":0,
-             "animation":[{"type":"translate","data":"min","series_len":2,"tween":"linear","fn":"sqrt","dir":"x","range":[-800,300],"duration":[60.0,0.0],"time":0, "loop_sound":0},
+        { "_comment":"small yellow shape","id":"8","rotation":0,
+             "animation":[{"type":"translate","data":"min","series_len":2,"tween":"linear","fn":"sqrt","dir":"x","range":[-800,300],"duration":[1.0,10.0],"duration_data":"min","time":0,"loop_sound":0},
              {"type":"trail","trail_type":"path","fade":0.95,"duration":[2.0,3.0], "time":0},
              {"type":"_circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
 
-        { "_comment":"large black shape",
-            "id":"9","rotation":0,
+        { "_comment":"large black shape","id":"9","rotation":0,
             "animation":[{"type":"opacity","dataType":"u","data":"day","tween":"linear","fn":"sqrt","range":[0.85,1.0] ,"duration":[100.0,100.0], "time":0},
             {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[100.0,100.0], "rangeX":[-3.0,3.0],"rangeY":[-3.0,3.0],"time":0}]},
 

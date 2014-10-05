@@ -4,7 +4,7 @@ body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    color: #999;
+    color: #666;
     background-color: #fefdfc;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -12,8 +12,13 @@ body {
 
 
 body a, body a:visited {
+    color: #666;
+}
+
+body a:hover {
     color: #333;
 }
+
 html{
     height:100%;
 }
@@ -28,11 +33,36 @@ html{
     height: 32px;
     margin: auto;
     position:absolute;
+    display: none;
 
 }
 
 #wrapper{
     display:none;
+}
+
+#gui{
+    display:block;
+    position:absolute;
+    width:400px;
+    height:80px;
+    z-index: 10;
+}
+
+.gui-inner{
+    padding:10px;
+}
+.gui-buttons{
+    padding:5px 0 10px 2px;
+
+}
+#gui a{
+    padding-right:10px;
+}
+
+#sound-progress{
+    font-size: 12px;
+    color: #999;
 }
 
 #footer{

@@ -9,6 +9,8 @@ ZN.App = function () {
     this.xhr = null;
     this.timeoutTime = 20 * 1000;
     this.timeoutCount = 0;
+
+    // api
     this.dataType = "json";
     this.apiUrl = "";
     this.ruleFile = "project_rules";
@@ -23,7 +25,7 @@ ZN.App = function () {
 
     // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
-    this.timeSeriesLatency = 2*60*1000 // in ms
+    this.timeSeriesLatency = 3*60*1000 // in ms
     this.dataSource = "archive"; // "live"
 
     // rendering
@@ -31,8 +33,12 @@ ZN.App = function () {
     this.renderer = null;
     this.runProjectGraph = true;
 
-    //sound
+    // interface
+    this.guiTimeout = null;
     this.volume = 1.0;
+    this.isSound = true;
+    this.isFullScreen = false;
+
 
 }
 
@@ -44,7 +50,6 @@ ZN.App.prototype = {
         this.model.init();
         this.rules = new ZN.Rules();
 
-
         var rules = this.getParameterByName("rules");
         if(rules!=""){
             this.ruleFile += "_" + rules;
@@ -52,8 +57,8 @@ ZN.App.prototype = {
 
         if(this.debug){
             $(document.body).append(
-                '<div id="diagnostics" style="position:absolute;z-index:10;"></div>'+
-                '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
+                '<div id="diagnostics" style="position:absolute;z-index:10;bottom:0"></div>'
+                //+ '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
             );
         }
 
@@ -87,7 +92,7 @@ ZN.App.prototype = {
         this.dataSource = ZN.Config.dataSource;
         this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
-        this.loadSoundConfig();
+        this.loadProjectRules();
 
     },
 
@@ -151,43 +156,6 @@ ZN.App.prototype = {
 
     },
 
-    loadSoundConfig:function () {
-        var url = ZN.Config.soundConfigPath;
-        this.loadUrl(url, "json", this.soundConfigLoaded);
-
-    },
-    soundConfigLoaded:function (config) {
-        var self = this;
-        ZN.soundengine.init(config, function(err, progress){
-            if(err){
-                window.alert('Soundengine failed to load:'+ err.message);
-                return;
-            }
-
-            if(self.debug){
-                var txt = progress!=100?'sound files...'+progress+'%':'';
-                $('#sound-progress').text(txt);
-            }
-
-            if(progress === 100){
-                self.soundLoadComplete();
-            }
-        });
-        this.loadProjectRules();
-    },
-
-    soundLoadComplete: function(){
-        // set scene
-
-        // start sound
-
-        ZN.soundengine.start();
-        this.startApp();
-        ZN.soundengine.setSceneLayersMix(ZN.Config.sceneLayersMix);
-        ZN.soundengine.setBaseLayersMix(ZN.Config.baseLayersMix);
-
-    },
-
     loadProjectRules:function () {
         var url = "data/"+this.ruleFile+".json";
         this.loadUrl(url, "json",this.projectRulesLoaded);
@@ -196,9 +164,47 @@ ZN.App.prototype = {
 
     projectRulesLoaded:function(data){
         this.model.initProjects(data);
-        this.loadTimeSeries();
+        this.loadSoundConfig();
 
     },
+
+    loadSoundConfig:function () {
+        var url = ZN.Config.soundConfigPath;
+        this.loadUrl(url, "json", this.soundConfigLoaded);
+
+    },
+    soundConfigLoaded:function (data) {
+        var self = this;
+        var config = this.model.processSoundConfig(data);
+        var startOnLoadCount = 3;
+
+        ZN.soundengine.init(config, function(err, progress, projectId, loadCounter){
+            if(err){
+                window.alert('Soundengine failed to load:'+ err.message);
+                return;
+            }
+
+            var txt = progress!=100?'Sound loading: '+progress+'%':'';
+            $('#sound-progress').text(txt);
+
+            self.model.setSoundLoaded(projectId);
+
+            if(loadCounter==startOnLoadCount){
+                self.soundLoadComplete();
+            }
+        });
+        this.loadTimeSeries();
+    },
+
+    soundLoadComplete: function(){
+
+        ZN.soundengine.start();
+        this.startApp();
+        this.setLayerVolume(1.0);
+
+    },
+
+
 
     /*
     loadProjectAnalytics:function() {
@@ -275,24 +281,89 @@ ZN.App.prototype = {
     initInterface:function(){
         var self = this;
 
+        $("#mute-button").click(function(e){
+            self.toggleSound();
+            e.preventDefault()
+        });
+
+        $("#full-screen-button").click(function(e){
+            //self.toggleFullScreen();
+            self.setFullScreen(true);
+            e.preventDefault();
+        });
+
+        $("#gui").hover(
+            function(){self.showControls(true);},
+            function(){self.showControls(false);}
+        );
+
+        this.guiTimeout = setTimeout(function(){
+            self.showControls(false);
+        },5000);
+
+        // Launch fullscreen for browsers that support it!
+
+
 
         $(window).resize(function(){
             self.renderer.resize();
         });
 
-        $(window).keypress(function( event ) {
+        $(window).keydown(function( event ) {
             //console.log(event.which);
             switch(event.which){
                 case 111: // 'o'
+                case 37: // left arrow
+                case 38: // up arrow
+                case 33: // page up
                     self.rules.incFocusProject(-1);
                     break;
                 case 112: // 'p'
+                case 39: // right arrow
+                case 40: // down arrow
+                case 34: // page down
                     self.rules.incFocusProject(1);
                     break;
             }
 
 
         });
+
+    },
+
+    showControls:function(bShow, time){
+
+        var left, delay;
+        if(bShow){
+            left = 0,delay = 1;
+        }
+        else{
+            left = -200, delay = 500;
+            if ($('#gui:hover').length != 0) {
+                //console.log('gui hover')
+                return;
+            }
+        }
+
+        $("#gui").delay(delay).animate({
+            left: left
+        }, 250, function() {
+            // Animation complete.
+        });
+
+        if(this.guiTimeout){
+            clearTimeout(this.guiTimeout);
+            this.guiTimeout = null;
+        }
+
+        if(time){
+            var self = this;
+            this.guiTimeout = setTimeout(function(){
+                self.showControls(false);
+            },time);
+        }
+
+        //console.log('showControls',bShow,left);
 
     },
 
@@ -373,6 +444,7 @@ ZN.App.prototype = {
             return prev + cur;
         });
         var fps = (1.0/((sum/this.frameDurations.length)/1000)).toFixed(2) + " fps";
+
         if(this.debug){
             var projectName = "";
             if(this.model.focusProject) projectName=this.model.focusProject.name;
@@ -382,12 +454,67 @@ ZN.App.prototype = {
     },
 
 
-
     getParameterByName:function(name){
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    },
+
+
+    setLayerVolume: function(volume){
+        var vol = (this.model.isFocusSoundLoaded())?1.0:0.0;
+        vol*=volume;
+        ZN.soundengine.setSceneLayersMix(vol);
+        ZN.soundengine.setBaseLayersMix(vol);
+    },
+
+
+    toggleSound: function(){
+        var s = !this.isSound
+        this.setSound(s);
+    },
+
+    setSound: function(s){
+
+        this.isSound = s;
+        if(this.isSound){
+            $("#mute-button i").addClass("fa-volume-up");
+            $("#mute-button i").removeClass("fa-volume-off");
+        }
+        else{
+            $("#mute-button i").addClass("fa-volume-off");
+            $("#mute-button i").removeClass("fa-volume-up");
+        }
+        this.volume = this.isSound?1.0:0.0;
+        this.setLayerVolume(this.volume);
+
+    },
+
+    toggleFullScreen: function(){
+        var fs = !this.isFullScreen;
+        this.setFullScreen(fs);
+    },
+
+    setFullScreen: function(fs){
+
+        this.isFullScreen = fs;
+        window.launchIntoFullscreen(document.documentElement);
+
+        /*
+        if(fs){
+            $("#full-screen-button i").addClass("fa-compress");
+            $("#full-screen-button i").removeClass("fa-arrows-alt");
+            window.launchIntoFullscreen(document.documentElement);
+
+        }
+        else{
+            $("#full-screen-button i").addClass("fa-arrows-alt");
+            $("#full-screen-button i").removeClass("fa-compress");
+            window.exitFromFullscreen();
+
+        }
+        */
     }
 
 

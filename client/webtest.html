@@ -1,0 +1,124 @@
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Testing</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    	<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
+				
+	</head>
+	<body>
+<div class="page-container">
+
+<div id="controls">
+<a id="main_button" class="btn popoverData topButton" href="#" data-content="Information" rel="popover" data-placement="bottom" data-trigger="hover">
+<i class="fa fa-info fa-2x"></i></a>
+</div>
+
+<div id="about_weneedus_div" class="about-weneedus">
+          <div class="col-sm-8">
+              <div class="panel panel-default">
+                 <div class="panel-heading">                      
+                 	  <ul class="nav">
+                 	  <button id="closeBtton" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <li class="active">
+                            <a id="AboutB" class="btn popoverData topButton" href="webpages/about.htm" target="mainContent" data-content="About" rel="popover" data-placement="bottom" data-trigger="hover">
+                            <i class="fa fa-info fa-2x"></i></a></li>
+                        <li>    
+                            <a id="ArtistB" class="btn popoverData topButton" href="webpages/artist.htm" target="mainContent" data-content="Artist" rel="popover" data-placement="bottom" data-trigger="hover">
+                            <i class="fa fa-lightbulb-o fa-2x"></i></a></li>
+                        <li>     
+							<a id="DataB" class="btn popoverData topButton" href="webpages/data.htm" target="mainContent" data-content="Data" rel="popover" data-placement="bottom" data-trigger="hover">
+							<i class="fa fa-bar-chart fa-2x"></i></a></li>
+						<li> 	
+							<a id="LicenceB"class="btn popoverData topButton" href="webpages/licence.htm" target="mainContent" data-content="Licence" rel="popover" data-placement="bottom" data-trigger="hover">
+							<i class="fa fa-code-fork fa-2x"></i></a></li>
+						<li> 	
+							<a id="NewsB" class="btn popoverData topButton" href="webpages/news.htm" target="mainContent" data-content="News" rel="popover" data-placement="bottom" data-trigger="hover">
+							<i class="fa fa-newspaper-o fa-2x"></i></a></li>
+						<li> 	
+							<a id="CreditsB" class="btn popoverData topButton" href="webpages/credits.htm" target="mainContent" data-content="Credits" rel="popover" data-placement="bottom" data-trigger="hover">							<i class="fa fa-star-o fa-2x"></i></a></li>
+						<li> 	
+							<a id="ContactB" class="btn popoverData topButton" href="webpages/contact.htm" target="mainContent" data-content="Contact" rel="popover" data-placement="bottom" data-trigger="hover">
+							<i class="fa fa-comments-o fa-2x"></i></a></li>
+                      </ul>
+                      
+                      </div>
+                  <div class="panel-body">
+                      <div class="tabbable">
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="main">
+                            <iframe id="mainFrame" name="mainContent" width="100%" height="60%" frameborder="0" scrolling="no" allowtransparency="true" src="webpages/about.htm"></iframe>
+                          </div>
+                        </div>
+                      </div> <!-- /tabbable -->
+                    
+                  </div><!--/panel-body-->
+               </div> <!--/panel-->
+            </div><!--/col-6-->
+</div><!-- /.about-weneedus -->            
+            
+            
+</div><!--/.page-container-->
+
+	<!-- website scripts -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
+		<script language="javascript">
+		$(document).ready(function () {
+			
+			$('.popoverData').popover();
+			$('.popoverOption').popover({ trigger: "hover" });
+			
+			$( "#main_button" ).click(function() {
+	  		$( "#about_weneedus_div" ).fadeToggle( "slow", "linear" );
+			});
+			
+			$( "#closeBtton" ).click(function() {
+	  		$( "#about_weneedus_div" ).fadeOut( "slow", "linear" );
+			});
+			
+			$(function () {
+				    var timer;
+				    var fadeInBuffer = false;
+				    $(document).mousemove(function () {
+				        if (!fadeInBuffer) {
+				            if (timer) {
+				                clearTimeout(timer);
+				                timer = 0;
+				            }
+				            $('#controls').fadeIn();
+				            $('body').css({
+				                cursor: ''
+				            });
+				        } else {
+				            fadeInBuffer = false;
+				        }
+				
+				
+				        timer = setTimeout(function () {
+				            $('#controls').fadeOut()
+				            $('body').css({
+				                cursor: 'none'
+				            });
+				            fadeInBuffer = true;
+				        }, 5000)
+				    });
+				});
+			});
+		
+		</script>
+		
+		
+		
+	</body>
+</html>	
