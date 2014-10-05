@@ -37,10 +37,10 @@ ZN.CanvasRenderer.prototype = {
         };
         this.bgImage.src = 'images/patina_test.jpg';
 
+        this.resize();
+
 
     },
-
-
 
     resize:function(){
 
@@ -61,15 +61,12 @@ ZN.CanvasRenderer.prototype = {
         var size={};
         size.width = $("#"+this.containerId).width();
         size.height = $("#"+this.containerId).height();
-
-
         return size;
     },
 
     render:function(){
 
         var csz = this.getCanvasSize();
-
         var cx = csz.width/ 2, cy = csz.height/2;
 
         // Store the current transformation matrix
@@ -82,41 +79,53 @@ ZN.CanvasRenderer.prototype = {
         // Restore the transform
         this.ctx.restore();
 
-        var globalScale = csz.width/ZN.config.assetBB.width;
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.ctx.translate(cx,cy);
-        this.ctx.scale(globalScale,globalScale);
+        // scale scene to window width
+        var scx = ZN.Config.assetBB.width,
+            scy = ZN.Config.assetBB.height;
 
+        var scale = csz.width/scx;
+        this.ctx.setTransform(scale, 0, 0, scale, cx, cy);
 
-        var projects = this.model.projects;
+        var projects = this.model.projects.slice(0);
 
+        // move focus project to back of list
+        var fp = this.model.focusProject;
+        if(fp){
+            var index = _.indexOf(this.model.focusProject,fp);
+            projects.splice(index,1);
+            projects.push(fp);
+        }
 
         _.each(projects,function(project,index){
 
-            var ps = project.scale;
+            var psx = project.sx, psy = project.sy;
 
-            var px = project.x/*+cx*/, py = project.y/*+cy*/,
+            //var px = project.x+cx, py = project.y+cy,
+            var px = project.x, py = project.y,
                 pr = project.rotation;
 
             // project transform
             this.ctx.save();
             this.ctx.translate(px,py);
             this.ctx.rotate(pr*Math.PI/180);
-            this.ctx.scale(ps,ps);
+            this.ctx.scale(psx,psy);
 
-            _.each(project.shapes,function(shape,ind){
+            var nShapes = project.shapes.length;
+            for(var s=0;s<nShapes;s++){
+                var shape = project.shapes[nShapes-s-1];
 
                 _.each(shape.trail.shapes,function(trailShape,si){
 
-                    this.renderShape(trailShape);
+                    this.renderShape(project,trailShape);
 
                 },this);
 
                 if(typeof shape.parentId === "undefined"){
-                    this.renderShape(shape);
+                    this.renderShape(project,shape);
                 }
 
-            },this);
+            }
+
 
             this.ctx.restore();
 
@@ -124,11 +133,10 @@ ZN.CanvasRenderer.prototype = {
 
     },
 
-    renderShape: function(shape){
+    renderShape: function(project,shape){
 
         // Store project transform
         this.ctx.save();
-        //console.log("ctx.save");
         // Shape transform
         this.ctx.translate(shape.x,shape.y);
         this.ctx.rotate(shape.rotation*Math.PI/180);
@@ -136,7 +144,7 @@ ZN.CanvasRenderer.prototype = {
 
         this.ctx.beginPath();
 
-        var segsAbs = Snap.path.toAbsolute(shape.d);
+        var segsAbs = shape.pathSegs; //Snap.path.toAbsolute(shape.d);
 
         var x, y;
 
@@ -156,7 +164,7 @@ ZN.CanvasRenderer.prototype = {
         }
 
 
-        this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity).css();
+        this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity*project.opacity).css();
 
         this.ctx.fill();
 
@@ -170,18 +178,17 @@ ZN.CanvasRenderer.prototype = {
         this.ctx.stroke();
         */
 
-        for(var c=0;c<shape.children.length;c++){
-            var childShape = shape.children[c];
+        var nShapes = shape.children.length;
+        for(var c=0;c<nShapes;c++){
+            var childShape = shape.children[nShapes-c-1];
             //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
-            this.renderShape(childShape);
+            this.renderShape(project,childShape);
 
         }
 
         // Restore to project transform
         //console.log("ctx.restore");
         this.ctx.restore();
-
-
 
 
     },

@@ -7,4 +7,10 @@ node_modules
 .#*
 web/wnu/*
 *.log
+.grunt/
+_SpecRunner.html
+*.hprof
 
+*.wav
+
+*.aif

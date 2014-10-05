@@ -1,0 +1,53 @@
+{
+    "name":"cancer_cells",
+    "sx":1.0,"sy":1.0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+    "_fills":["#951114","#951114"],
+    "_comment":"Project level animations",
+
+    "animation":[
+        {"type":"loop_sound","dataType":"u","duration_data":"day","duration":[240.0,480.0],"sample":0,"time":0},
+        {"type":"loop_sound","dataType":"c","duration_data":"hour","duration":[30.0,120.0],"sample":1,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+
+    ],
+
+    "shape_animation":
+    [
+    	{"_comment":"pink cells","shape_ids":["1","2","3","4","5","6","7","8","9","10"],"animation":
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#F900AD","8E026A"] ,"duration":[6.0,10.0], "time":0, "duration_data":"hour"},
+            {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.1,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}]
+    	},
+
+    	{"_comment":"dark purple cells","shape_ids":["11","12","13","14","15","16","17","18","19","20"],"animation":
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#8E026A","4F003E"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour"},
+            {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.1,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}
+            ]
+    	},
+
+        {"_comment":"light purple cells","shape_ids":["21","22","23","24","25"],"animation":
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#4F003E","EFDE0C"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour"},
+            {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0], "time":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.05,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}]
+    	},
+
+        {"_comment":"yellow cells","shape_ids":["26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45" ],"animation":
+            [{"type":"colour","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#EFDE0C","F900AD"] ,"duration":[30.0,120.0], "time":0, "duration_data":"hour"},
+            {"type":"serengeti","dataType":"u","data":"day","tween":"linear","fn":"sqrt","duration":[20.0,60.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0], "time":0},
+            {"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"sqrt","range":[0.0,1.0] ,"duration":[60.0,8.0],"time_fn":"random"}]
+    	},
+
+        {"_comment":"ALL cells","shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45"],"animation":
+            [{"type":"scale","dataType":"u","data":"min","series_len":60,"fn":"id","sx":[1.0,1.8],"sy":[1.0,1.8],"duration":[240.0,480.0],"duration_data":"day","time":0}]}
+    ],
+
+
+    "shapes":
+    [
+
+    ]
+}

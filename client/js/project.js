@@ -17,17 +17,35 @@ ZN.Project = function () {
     };
 
     this.timeseries = {
-        c:{series:{},count:{}},
-        u:{series:{},count:{}}
+        c:{/*series:{},count:{},max:{}*/},
+        u:{/*series:{},count:{},max:{}*/}
     };
     this.shapes=[];
-
 
     // graphics
     this.x = 0;
     this.y = 0;
-    this.scale = 0.9;
+    this.sx = 0.9, sy = 0.9;
     this.rotation = 0.0;
+    this.duration = 1.0;
+    this.opacity = 1.0;
+
+    // default transform
+    this.initial={
+        x:0,y:0,sx:1.0,sy:1.0,rotation:0
+    };
+
+    // transform for background
+    this.bg={
+        x:0,y:0,sx:1.0,sy:1.0,rotation:0
+    };
+
+    // background scale animation
+    this.bgScaleAnim = {};
+
+
+
+
 
 
 }
@@ -35,33 +53,37 @@ ZN.Project = function () {
 ZN.Project.prototype = {
     constructor:ZN.Project,
 
-
-    setProps: function(props){
-        for (var prop in props) {
-            if (props.hasOwnProperty(prop)) {
-                var value = props[prop];
-                switch(prop){
-                    case "classification_count":
-                        this.classificationCount = value;
-
-                        break;
-                    default:
-                        this[prop] = value;
-                }
-            }
+    setBackground:function(props){
+        for(var key in props){
+            this[key] = props[key];
+            this.bg[key] = props[key];
+            this.initial[key] = props[key];
         }
-
     },
 
+    setFocus:function(props){
+        for(var key in props){
+            this[key] = props[key];
+            this.initial[key] = props[key];
+        }
+    },
 
-    setStyles:function(data){
-        //this.shapes = data.shapes;
+    setPropsFromBackground:function(){
+        for(var key in this.bg){
+            this[key] = this.bg[key];
+        }
+    },
+
+    setRules:function(data){
 
         _.each(data,function(value,key){
-            if(typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean'){
+
+            if(key!="shapes" && key!="shape_animation"){
                 this[key] = value;
             }
         },this);
+
+        this.id = data.name;
 
 
         var fillScale = null;
@@ -148,7 +170,7 @@ ZN.Project.prototype = {
             // paths
             var pathStr = shapeData.d;
             var segsAbs = Snap.path.toAbsolute(pathStr);
-            shape.pathSegs = segsAbs;
+
 
 
             // find bounds
@@ -217,7 +239,8 @@ ZN.Project.prototype = {
                 };
             },this);
             shapeStr+="z";
-            shape.d = shapeStr;
+            shape.d = shape.initial.d = shapeStr;
+
 
             // for child shapes set origin to parent
             if(parent){
@@ -227,12 +250,84 @@ ZN.Project.prototype = {
             }
 
             segsAbs = Snap.path.toAbsolute(shapeStr);
+            var segsAbsInit = Snap.path.toAbsolute(shapeStr);
             shape.pathSegs = segsAbs;
+            shape.initial.pathSegs = segsAbsInit;
 
 
         },this);
-    }
 
+
+        // add animation rules applied to multiple shapes
+        _.each(data.shape_animation,function(shapeAnim){
+            var anims = shapeAnim.animation;
+            var shapeIds = shapeAnim.shape_ids;
+            var nShapes = shapeIds.length;
+
+            _.each(shapeIds, function(id, shapeIndex){
+                var animsClone = _.cloneDeep(anims);
+                _.each(animsClone, function(anim){
+                    if(anim.time_fn){
+                        switch(anim.time_fn){
+                            case "random":
+                                anim.time = Math.random()*anim.duration[0];
+                                break;
+                            case "index":
+                                anim.time = shapeIndex/nShapes*anim.duration[0];
+                                break;
+                        }
+                    }
+                });
+                var shape = _.find(this.shapes, {"id":id});
+                if(!shape.animation){
+                    shape.animation=[];
+                }
+                shape.animation = shape.animation.concat(animsClone);
+
+            },this);
+        },this);
+
+
+        // add loop param to each animation
+        _.each(this.shapes,function(shape){
+            if(shape.animation){
+                _.each(shape.animation, function(anim){
+                    anim['loop'] = 0;
+                    anim['curDuration'] = anim.duration[0];
+
+                });
+
+            }
+        },this);
+
+
+        // project animations
+        if(this.animation){
+            _.each(this.animation, function(anim){
+                this['']=
+                anim['loop'] = 0;
+                anim['curDuration'] = anim.duration[0];
+
+            });
+
+        }
+
+        // animation rule when project in background
+        var min = ZN.Config.bgScaleAnimDurationRange[0];
+        var max = ZN.Config.bgScaleAnimDurationRange[1];
+        var duration = Math.random()*(max-min)+min;
+        if(!data.bgScaleAnim){
+            this.bgScaleAnim = ZN.Config.bgScaleAnim;
+        }
+
+        this.bgScaleAnim["duration"] = [duration,duration];
+        this.bgScaleAnim["time"] = 0;
+        this.bgScaleAnim["curDuration"] = duration;
+        this.bgScaleAnim["loop"] = 0;
+
+
+
+    }
 
 }
 
@@ -244,6 +339,7 @@ ZN.Shape = function () {
     this.vy=0;
     this.sx=1.0;
     this.sy=1.0;
+
     this.path=null;
     this.pathSegs=[];
     this.d = "";
@@ -260,7 +356,7 @@ ZN.Shape = function () {
     this.children=[];
     this.parent=null;
     this.initial={
-        x:0,y:0,fill:0,rotation:0,opacity:0,d:""
+        x:0,y:0,sx:1.0,sy:1.0,fill:"0x000000",rotation:0,opacity:0,d:"",pathSegs:[]
     };
     this.trail = null;
 
@@ -300,18 +396,26 @@ ZN.Shape.prototype = {
         this.sx = shape.sx;
         this.sy = shape.sy;
         this.d = shape.d;
+        this.pathSegs = _.cloneDeep(shape.pathSegs);
         this.opacity = shape.opacity;
         this.fill = shape.fill;
 
     },
 
-    addTrailShape: function(){
+    addTrailShape: function(type,fade,opacity){
 
+        this.trail.type = type;
+        if(fade){
+            this.trail.fade = fade;
+        }
         switch(this.trail.type){
             case "path":
 
                 var shape = new ZN.Shape();
                 shape.setTrailData(this);
+                if(opacity){
+                    shape.opacity = opacity;
+                }
 
                 this.trail.shapes.push(shape);
                 break;
@@ -325,11 +429,15 @@ ZN.Shape.prototype = {
                     var shape = new ZN.Shape();
                     shape.setTrailData(this);
 
-                    shape.sx = this.sx*3.0;
-                    shape.sy = this.sy*3.0;
+                    shape.sx = this.sx*30.0;
+                    shape.sy = this.sy*30.0;
 
                     shape.x = pt.x + this.x;
                     shape.y = pt.y + this.y;
+
+                    if(opacity){
+                        shape.opacity = opacity;
+                    }
 
                     var squarePath =
                         "M-0.5,-0.5L-0.5,0.5L0.5,0.5L0.5,-0.5L-0.5,-0.5Z";
@@ -340,6 +448,7 @@ ZN.Shape.prototype = {
                     "C-0.5,-0.5,-0.5,-0.5,-0.5,-0.5z"*/
 
                     shape.d = squarePath;
+                    shape.pathSegs =  Snap.path.toAbsolute(squarePath);
 
 
 
@@ -359,6 +468,7 @@ ZN.Shape.prototype = {
 ZN.Trail = function(){
     this.type = "path"; // "points"; //
     this.shapes = [];
+    this.fade = 0.985;
 
 
 }

@@ -1,7 +1,8 @@
 ZN.Model = function () {
     this.projects = [];
     this.projectDict = {};
-    this.classifications = [];// classificationsn order by timestamp
+    this.projectGraph = null;
+    this.classifications = [];// classifications order by timestamp
     //this.classificationIds = {};
     this.analytics={
         clsCount:{},
@@ -12,14 +13,25 @@ ZN.Model = function () {
         c:{},
         u:{}
     };
+    // [<type>][<interval>] = {series:[],count:0,max:0}
 
-    this.interval = {
-        MIN_SECS:60,
-        MIN_15_SECS:900,
-        HOUR_SECS:3600,
-        DAY_SECS:86400,
-        WEEK_SECS:604800,
-        MONTH_SECS:2592000 // month 30 days
+    this.focusProject = null;
+    this.lastFocusProject = null;
+    this.focusList = [];
+    this.focusIndex = 0;
+    this.lastChangeFocus = 0;
+    this.changeFocusTime = 0;
+    this.maxSeriesTime = 0;
+
+
+    this.SECS = {
+        'MIN':60,
+        'MIN5':300,
+        'MIN15':900,
+        'HOUR':3600,
+        'DAY':86400,
+        'WEEK':604800,
+        'MONTH':2592000 // month 30 days
     };
 
 }
@@ -30,15 +42,32 @@ ZN.Model.prototype = {
     init:function(){
 
     },
-    initProjects: function(data){
-        for(var i=0;i<data.length;i++){
-            var projProps = data[i];
+
+
+    initProjects: function(projects){
+        _.each(projects,function(projectData){
             var project = new ZN.Project();
-            project.setProps(projProps);
             this.projects.push(project);
-            this.projectDict[project.name] = project;
+            this.projectDict[projectData.name] = project;
+
+            project.setRules(projectData);
+        },this);
+
+
+        var indices = [];
+        _.each(projects,function(project,index){
+            indices.push(index);
+        });
+
+        for(var i=0;i<projects.length;i++){
+            var index = parseInt(Math.random()*(projects.length-i-1));
+            this.focusList.push(indices[index]);
+            indices.splice(index,1);
+
         }
+
     },
+
     parseAnalytics: function(data){
 
         _.each(data,function(item,index){
@@ -104,68 +133,114 @@ ZN.Model.prototype = {
          */
     },
 
-    parseTimeSeries: function(data){
+    initProjectGraph: function(csvData){
+        this.projectGraph = new ZN.ProjectGraph();
+        this.projectGraph.createSpringyGraph(csvData);
+        //this.projectGraph.start();
+    },
 
+    parseTimeSeries: function(seriesData){
+
+        var data = seriesData.data;
+        var intervals = seriesData.intervals;
+
+        if(data.length==0) return;
+
+        var times = _.pluck(data,'t');
+        this.maxSeriesTime = _.max(times);
+
+
+        // clear timeseries arrays
+        _.each(this.projects,function(project,index){
+            _.each(intervals,function(interval){
+                project.timeseries['c'][interval] = {series:[],count:0,max:0, lastTime:0};
+                project.timeseries['u'][interval] = {series:[],count:0,max:0, lastTime:0};
+
+            },this);
+        },this);
+
+        // populate timeseries arrays
         _.each(data,function(item,index){
-            var projectName = item.project;
+            var projectName = item.p;
             var project = this.projectDict[projectName];
             if(project){
+                var type = item.type;
+                var interval = item.i;
+                var count = item.c;
+                var time = item.t;
 
                 var timeseries = project.timeseries;
-                var seriesObj = {
-                    time:item.time,
-                    count:item.count,
-                    interval:item.interval
-                };
-                var type = item.type;
 
-                if(!timeseries[type].series[item.interval]) timeseries[type].series[item.interval] = [];
-                timeseries[type].series[item.interval].push(item.count);
+                if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
+                timeseries[type][interval].series.push(count);
+                //timeseries[type][interval].count += count;
+                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count,1.0);
+                timeseries[type][interval].lastTime = Math.max(timeseries[type][interval].lastTime,time);
 
-                if(!timeseries[type].count[item.interval]) timeseries[type].count[item.interval] = 0;
-                timeseries[type].count[item.interval] += item.count;
-                /*
-                switch(item.type_id){
-                    case 'c':
-                        if(!timeseries.c.series[item.interval]) timeseries.c.series[item.interval] = [];
-                        timeseries.c.series[item.interval].push(item.count);
-
-                        if(!timeseries.c.count[item.interval]) timeseries.c.count[item.interval] = 0;
-                        timeseries.c.count[item.interval] += item.count;
-                        //analytics.clsData.push(analyticObj);
-
-                        //if(!this.analytics.clsCount[item.interval]) this.analytics.clsCount[item.interval] = 0;
-                        //this.analytics.clsCount[item.interval]+=item.count;
-
-                        break;
-                    case 'u':
-
-                        break;
-
-                }
-                */
             }
             else{
-                console.log('no project:', projectName);
+                //console.log('no project:', projectName);
             }
 
 
-
         },this);
-
-        /*
-        _.each(this.projects,function(project,index){
-            _.each(this.analytics.clsCount,function(value,key){
-                if(project.analytics.clsCount[key]){
-                    project.analytics.clsPercent[key] = project.analytics.clsCount[key]/this.analytics.clsCount[key];
-                    console.log(project.name, key, project.analytics.clsPercent[key]);
-                }
-            },this);
-
-        },this);
-        */
 
     },
+
+    incrementTimeSeries: function(seriesData){
+
+        var data = seriesData.data;
+
+        if(data.length==0) return;
+
+        var times = _.pluck(data,'t');
+        this.maxSeriesTime = _.max(times);
+
+
+        // increment timeseries arrays
+        _.each(data,function(item,index){
+            var projectName = item.p;
+            var project = this.projectDict[projectName];
+            if(project){
+                var type = item.type;
+                var interval = item.i;
+                var count = item.c;
+                var time = item.t;
+
+                var timeseries = project.timeseries;
+
+                if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
+                var series = timeseries[type][interval];
+
+                timeseries[type][interval].series.push(count);
+                // remove first
+                var firstItemCount = timeseries[type][interval].series[0];
+                timeseries[type][interval].series.shift();
+
+                timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count,1.0);
+                timeseries[type][interval].lastTime = Math.max(timeseries[type][interval].lastTime,time);
+
+                // find maximum count if removed item largest
+                if(firstItemCount == timeseries[type][interval].max){
+                    timeseries[type][interval].max = Math.max(_.max(timeseries[type][interval].series),1.0);
+                }
+
+                console.log('incTimeSeries',project.name,type,interval,count,time);
+
+            }
+            else{
+                //console.log('no project:', projectName);
+            }
+
+
+        },this);
+
+
+
+
+
+    },
+
     addClassifications:function(classifications){
         var nClassifications = classifications.length;
         for(var i=0;i<nClassifications;i++){
@@ -180,6 +255,7 @@ ZN.Model.prototype = {
         var minTime = classifications[0].time;
         return classifications;
     },
+
     getNextClassificationTime:function(){
         var time = null;
         if(this.classifications.length>0){
@@ -187,17 +263,12 @@ ZN.Model.prototype = {
         }
         return time;
     },
+
     removeFirstClassification:function(){
         return this.classifications.shift();
-    },
-
-    setStyles: function(projects){
-        _.each(projects,function(projectData){
-            var projectName = projectData.project;
-            this.projectDict[projectName].setStyles(projectData);
-        },this);
-
     }
+
+
 
 
 

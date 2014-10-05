@@ -4,67 +4,47 @@ body {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    color: #ccc;
+    color: #999;
     background-color: #fefdfc;
-    font-family: 'Roboto Condensed', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
 }
 
 
 body a, body a:visited {
-    color: #ddd;
+    color: #333;
 }
 html{
     height:100%;
 }
 
 #loader{
-    background: #fefefe;
+    background: #fff;
     bottom: 0;
     left: 0;
     top: 0;
     right: 0;
-    width: 787px;
-    height: 525px;
-
+    width: 32px;
+    height: 32px;
     margin: auto;
-    position: absolute;
-    display:none;
-    z-index:1500;
-
-}
-
-#loader-bar{
     position:absolute;
-    top:385px;
-    left:520px;
-}
 
-#loading-text {
-    width:200px;
-    display:inline-block;
-    font-size:  24px;
-    font-weight: 300;
-    text-transform: uppercase;
-    color: #c1c1c1;
 }
 
 #wrapper{
-    visibility:visible;
+    display:none;
 }
 
 #footer{
     bottom:0px;
     width:100%;
     height:0px;
-    background-color:#000;
     position:absolute;
 }
 
 #header {
     height: 0px;
     width:100%;
-    background-color: #000;
 }
 
 #canvas-container{
@@ -73,7 +53,7 @@ html{
     top:0px;
     bottom:0px;
     width:100%;
-    overflow:hidden;
+    overflow:hidden; /* fixes scrollbar in ie */
     padding:0;
     margin:0;
 
@@ -81,11 +61,5 @@ html{
 
 #canvas-container canvas{
     position:absolute;
-}
-
-
-.clear {
-    clear: both;
-    display: block;
 }
 

@@ -1,31 +1,64 @@
 
+// mysql package:
 //https://www.npmjs.org/package/node-mysql
 //https://github.com/felixge/node-mysql
 
 var _ = require('lodash');
-
 var mysql      = require('mysql');
 var parseDbUrl = require('parse-database-url');
+var nconf = require('nconf');
 
-var WNU_DB_URL = process.env.WNU_DB_URL;
+
+/*---------------------------------------------------------------------------*/
+
+// Config
+
+
+// if testing then want to make sure we are using testing db
+if (process.env.NODE_ENV == 'test') {
+    nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
+}
+
+// config files take precedence over command-line arguments and environment variables 
+
+nconf.file({ file:
+    'config/' + process.env.NODE_ENV + '.json'
+})
+    .argv()
+    .env();
+
+var WNU_DB_URL = nconf.get('WNU_DB_URL');
+
 var dbConfig = parseDbUrl(WNU_DB_URL);
 
 // need to parse dbname out of connection string
 var WNU_DB_NAME = dbConfig['database'];
 
-//var WNU_DB_NAME = 'heroku_1b240db52f66cb2'
+
+/*---------------------------------------------------------------------------*/
+
+// Cosntants and globals
 
 var MIN_SECS = 60,
+    //MIN_5_SECS = 300,
     MIN_15_SECS = 900,
     HOUR_SECS = 3600,
-    DAY_SECS = 86400,
-    WEEK_SECS = 604800,
-    MONTH_SECS = 2592000; // month 30 days
-
+    DAY_SECS = 86400;
+    //WEEK_SECS = 604800,
+    //MONTH_SECS = 2592000; // month 30 days
 
 var connection;
 
+var gTimeseriesData = [];
+var gTimeseriesUpdateTime = 0;
+var gTimeseriesUpdateInterval = 60000;
+var gMaxUpdateInterval = 60*60*6; // maximum update interval 6hr. Notify if no update within time (seconds).
 
+/*---------------------------------------------------------------------------*/
+
+// Database connection
+
+/*
 function handleDisconnect() {
     connection = mysql.createConnection(WNU_DB_URL); // Recreate the connection, since
     // the old one cannot be reused.
@@ -48,16 +81,135 @@ function handleDisconnect() {
 }
 
 handleDisconnect();
+*/
 
 
+var gPool  = mysql.createPool({
+    host     : dbConfig['host'],
+    user     : dbConfig['user'],
+    password : dbConfig['password'],
+    database : dbConfig['database'],
+    connectionLimit : 13
+});
+
+
+/*---------------------------------------------------------------------------*/
+
+// Cleanup
+
+exports.cleanUp = function() {
+    // Using pool rather than single connection
+    /*
+    console.log('Checking for open DB connections');
+    if (connection != null) {
+        console.log('Closing DB connection');
+        connection.end();
+    }
+    */
+};
+
+
+/*---------------------------------------------------------------------------*/
+
+// Timeseries routes
+
+exports.getTimeSeries = function(req, res) {
+
+    var curMs = (new Date()).valueOf();
+    if (gTimeseriesUpdateTime+gTimeseriesUpdateInterval<curMs) {
+        gPool.getConnection(function(error, con) {
+            if(error) throw error;
+            con.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries`",function(err, rows, fields) {
+                con.release();
+                if(err) throw err;
+
+                var intervalValues = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
+                gTimeseriesData = {intervals:intervalValues,data:rows};
+                gTimeseriesUpdateTime = curMs;
+                console.log('getTimeSeries from DB pool');
+                res.send(gTimeseriesData);
+            });
+        });
+    } else {
+        console.log('getTimeSeries from cache');
+        res.send(gTimeseriesData);
+    }
+};
+
+exports.getTimeSeriesBetweenDates = function(req, res) {
+    // console.log('getTimeSeriesBetweenDates');
+
+    // localhost:5000/timeseries/from/1364684400/to/1364774400
+
+    var from = parseInt(req.params.from); // unix timestamp
+    var to = parseInt(req.params.to); // unix timestamp
+
+    if(isNaN(to) || isNaN(from)){
+        res.send([]);
+        return;
+    }
+
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        var query = "SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t,`count` as c FROM `timeseries` "
+            + "WHERE `datetime` BETWEEN FROM_UNIXTIME('"+from+"') AND FROM_UNIXTIME('"+to+"')";
+        //console.log(query);
+        con.query(query,function(err, rows) {
+
+            con.release();
+            if(err) throw err;
+            res.send({from:from, to:to, data:rows});
+
+        });
+    });
+
+};
+
+exports.getTimeSeriesIntervals = function(req, res) {
+    //console.log('getTimeSeriesIntervals');
+    var intervalsStr = req.params.intervals; // secs
+    var intervals = intervalsStr.split(',');
+    var intervalValues = [];
+
+    _.each(intervals,function(interval,index){
+        if(!isNaN(interval)){
+            intervalValues.push(parseInt(interval));
+        }
+    });
+    var whereStr = " WHERE `interval` IN(" + intervalValues.join(",") + ")";
+    //console.log(whereStr);
+
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT `type_id` as type,`interval` as i,`project` as p,UNIX_TIMESTAMP(`datetime`) as t, `count` as c FROM `timeseries`" + whereStr,function(err, rows, fields) {
+
+            con.release();
+            if(err) throw err;
+            res.send({intervals:intervalValues, data:rows});
+
+        });
+    });
+};
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+// Classification routes
 
 exports.getClassificationCount = function(req, res) {
-    connection.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
-        if(err) throw err;
-        console.log('Classification count: ', rows[0].count);
-        res.send(rows);
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query('SELECT COUNT(*) AS count FROM ??',['classifications'], function(err, rows, fields) {
+            con.release();
+            if(err) throw err;
+            console.log('Classification count: ', rows[0].count);
+            res.send(rows);
+        });
     });
-}
+};
 
 exports.getClassificationCountLatest = function(req, res) {
 
@@ -69,27 +221,29 @@ exports.getClassificationCountLatest = function(req, res) {
     }
 
     var maxTimeUnix = 0;
-    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows, fields) {
-
-        if(err) throw err;
-        maxTimeUnix = rows[0].time;
-        console.log('maxTimeUnix: ', maxTimeUnix);
-
-        var unixTime = maxTimeUnix-seconds;
-        console.log('unixTime: ', unixTime);
-
-        connection.query("SELECT count(*) AS count,project,country "+
-            "FROM classifications WHERE created_at > FROM_UNIXTIME("+unixTime+")"+
-            "GROUP BY project,country", function(err, rows, fields) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY created_at DESC LIMIT 1",function(err, rows, fields) {
 
             if(err) throw err;
-            res.send(rows);
+            maxTimeUnix = rows[0].time;
+            console.log('maxTimeUnix: ', maxTimeUnix);
 
+            var unixTime = maxTimeUnix-seconds;
+            console.log('unixTime: ', unixTime);
+
+            con.query("SELECT count(*) AS count,project,country "+
+                "FROM classifications WHERE created_at > FROM_UNIXTIME("+unixTime+")"+
+                "GROUP BY project,country", function(err, rows, fields) {
+
+                con.release();
+                if(err) throw err;
+                res.send(rows);
+
+            });
         });
     });
-
-}
-
+};
 
 exports.getLastClassifications = function(req, res) {
     var count = parseInt(req.params.count);
@@ -101,13 +255,15 @@ exports.getLastClassifications = function(req, res) {
     }
     console.log('Retrieving last ' + count + ' classifications, offset: ' + offset);
 
-    connection.query("SELECT * FROM ?? LIMIT "+offset+","+count,['classifications'], function(err, rows, fields) {
-    //connection.query('SELECT * FROM ?? LIMIT ?,?',['classifications',offset,count], function(err, rows, fields) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT * FROM ?? LIMIT "+offset+","+count,['classifications'], function(err, rows, fields) {
 
-        if(err) throw err;
-        res.send(rows);
+            con.release();
+            if(err) throw err;
+            res.send(rows);
+        });
     });
-
 };
 
 exports.getClassificationInterval = function(req, res) {
@@ -119,9 +275,6 @@ exports.getClassificationInterval = function(req, res) {
     var to = parseInt(req.params.to); // unixTime
     var interval = parseInt(req.params.interval); // seconds
 
-    // from = 1346457600; //'2012-09-01'
-    // from = 1348790400; //'2012-09-28'
-    // to = 1348876800; //'2012-09-29'
 
     if(isNaN(from) || isNaN(to) || isNaN(interval)){
         res.send([]);
@@ -131,129 +284,108 @@ exports.getClassificationInterval = function(req, res) {
 
     //http://stackoverflow.com/questions/2579803/group-mysql-data-into-arbitrarily-sized-time-buckets
 
+    var classificationsTable = 'classifications';
+    //var classificationsTable = 'classifications_archive';
 
-    connection.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
-        "FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
-        "GROUP BY time,project", function(err, rows, fields) {
-        if(err) throw err;
-        _.map(rows,function(item){
-            //console.log("divided time",item.time);
-            item.time = parseFloat(item.time)*interval + from;
-            item.date = new Date(item.time*1000).toISOString();
-            //console.log('date',item.date,'count',item.count,"time",item.time);
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
+            "FROM "+classificationsTable+" WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
+            "GROUP BY time,project", function(err, rows, fields) {
+
+            con.release();
+            if(err) throw err;
+            _.map(rows,function(item){
+                //console.log("divided time",item.time);
+                item.time = parseFloat(item.time)*interval + from;
+                item.date = new Date(item.time*1000).toISOString();
+                //console.log('date',item.date,'count',item.count,"time",item.time);
+            });
+
+            var minTimeMs = from*1000;
+            var nBars = (to-from)/interval;
+            console.log('nBars',nBars);
+            var projects = {};
+
+            var projectsObj = _.countBy(rows,'project');
+
+            _.each(projectsObj,function(val,project){
+
+                var values = [];
+                for(var i=0;i<nBars;i++){
+                    var time = new Date(minTimeMs+interval*1000*i);
+                    //time = new Date( Date.UTC(time.getFullYear(), time.getMonth(),time.getDate(),time.getHours(),time.getMinutes(), time.getSeconds()));
+
+                    var timeStr = time.toISOString();
+                    values.push({"label":timeStr,"value":0});
+                    //console.log('timeStr',timeStr);
+                }
+
+                projects[project] = {
+                    key: project,
+                    values: values
+                };
+            });
+
+            _.each(rows,function(row){
+
+                var series = projects[row.project];
+                var item = _.find(series.values,{'label':row.date});
+                if(item){
+                    item.value = row.count;
+                }
+                //console.log('row.date',row.date);
+
+            });
+
+            var output = [];
+
+            _.each(projects,function(val,project){
+                output.push(projects[project]);
+            });
+            res.send(output);
+
         });
-
-        var minTimeMs = from*1000;
-        var nBars = (to-from)/interval;
-        console.log('nBars',nBars);
-        var projects = {};
-
-        var projectsObj = _.countBy(rows,'project');
-
-        _.each(projectsObj,function(val,project){
-
-            var values = [];
-            for(var i=0;i<nBars;i++){
-                var time = new Date(minTimeMs+interval*1000*i);
-                //time = new Date( Date.UTC(time.getFullYear(), time.getMonth(),time.getDate(),time.getHours(),time.getMinutes(), time.getSeconds()));
-
-                var timeStr = time.toISOString();
-                values.push({"label":timeStr,"value":0});
-                //console.log('timeStr',timeStr);
-            }
-
-            var series = {
-                key: project,
-                values: values
-            };
-            projects[project] = series;
-        });
-
-        _.each(rows,function(row){
-
-            var series = projects[row.project];
-            var item = _.find(series.values,{'label':row.date});
-            if(item){
-                item.value = row.count;
-            }
-            //console.log('row.date',row.date);
-
-        });
-
-        var output = [];
-
-        _.each(projects,function(val,project){
-            output.push(projects[project]);
-        });
-        res.send(output);
-
     });
-
 };
 
-exports.getDBstats = function(req, res) {
-    var output = [];
-    connection.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
-        if(err) throw err;
-        console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
-	output.push(rows);
-	connection.query("SELECT (data_length+index_length)/power(1024,2) tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
-		if(err) throw err;
-		console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
-		output.push(rows[0]);
-		res.send(output);
-	    });
-    });
 
-};
+
+/*---------------------------------------------------------------------------*/
+
+// Analytics routes
+
 
 exports.updateAnalytics = function(req, res) {
 
-    connection.query("TRUNCATE `analytics`",function(err) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("TRUNCATE `analytics`",function(err) {
 
-        if(err) throw err;
-
-
-        var intervals = [1,12,24,24*7,24*30]; // hours
-        //var intervals = [1]; // hours
-        var types = ['c','u']; // classifications, users
-        var list = [];
-
-        for(var t=0;t<types.length;t++){
-            for(var i=0;i<intervals.length;i++){
-                list.push({type:types[t],interval:intervals[i]});
-                console.log(types[t],intervals[i]);
+            if(err) {
+                con.release();
+                throw err;
             }
-        }
 
-        updateAnalyticsIntervals(res,list);
+            var intervals = [1,12,24,24*7,24*30]; // hours
+            //var intervals = [1]; // hours
+            var types = ['c','u']; // classifications, users
+            var list = [];
 
+            for(var t=0;t<types.length;t++){
+                for(var i=0;i<intervals.length;i++){
+                    list.push({type:types[t],interval:intervals[i]});
+                    console.log(types[t],intervals[i]);
+                }
+            }
+
+            updateAnalyticsIntervals(res,list,con);
+        });
     });
+};
 
 
-
-}
-
-
-
-
-function testUserAnalytics(res){
-    connection.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`) "+
-        "SELECT '1',project,'d',country,COUNT(DISTINCT user_id) as count "+
-        "FROM classifications "+
-        "GROUP BY project,country", function(err, rows, fields) {
-
-        if(err) throw err;
-
-        res.send(rows);
-
-
-    });
-
-}
-
-
-function updateAnalyticsIntervals(res,analyticsArray){
+function updateAnalyticsIntervals(res,analyticsArray,con){
     var analytics = analyticsArray.shift();
     var interval = analytics.interval; // hours
     var dataType = analytics.type;
@@ -261,33 +393,10 @@ function updateAnalyticsIntervals(res,analyticsArray){
 
     console.log('updateAnalyticsIntervals',analytics.type, analytics.interval);
 
-    /*
-    switch (interval) {
-        case 'd': // day
-            seconds = 60 * 60 * 24;
-            break;
-        case 'w': // week
-            seconds = 60 * 60 * 24 * 7;
-            break;
-        case 'm': // month
-            seconds = 60 * 60 * 24 * 7 * 30;
-            break;
-    }
-    */
-
-    // http://stackoverflow.com/questions/14105018/generating-a-series-of-dates
-    // http://stackoverflow.com/questions/75752/what-is-the-most-straightforward-way-to-pad-empty-dates-in-sql-results-on-eithe
-
- // startTime: beginning of series
- //connection.query("SELECT count(*) AS count,project,FLOOR((UNIX_TIMESTAMP(created_at)-starTime)/"+interval+") AS time "+
- //"FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
- //"GROUP BY time,project", function(err, rows, fields) {
-
-
 
     var maxTimeUnix = 0;
     // type, project, interval, country, count
-    connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY time DESC LIMIT 1",function(err, rows, fields) {
+    con.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM classifications ORDER BY created_at DESC LIMIT 1",function(err, rows, fields) {
 
         if(err) throw err;
         maxTimeUnix = rows[0].time;
@@ -308,16 +417,20 @@ function updateAnalyticsIntervals(res,analyticsArray){
         }
         var updateTime = (new Date()).valueOf()/1000;
 
-        connection.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`,`updated`)"+
+        con.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`,`updated`)"+
             "SELECT '"+dataType+"',project,'"+interval+"',country,"+dataQuery+",FROM_UNIXTIME("+updateTime+")"+
             "FROM classifications WHERE created_at > FROM_UNIXTIME("+unixTime+")"+
             "GROUP BY project,country", function(err, rows, fields) {
 
-            if(err) throw err;
+            if(err) {
+                con.release();
+                throw err;
+            }
             if(analyticsArray.length>0){
-                updateAnalyticsIntervals(res,analyticsArray);
+                updateAnalyticsIntervals(res,analyticsArray,con);
             }
             else{
+                con.release();
                 res.send(rows);
             }
 
@@ -325,6 +438,48 @@ function updateAnalyticsIntervals(res,analyticsArray){
     });
 }
 
+
+exports.getAnalytics = function(req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
+            con.release();
+            if(err) throw err;
+            res.send(rows);
+        });
+    });
+};
+
+exports.getAnalyticsAggregateCountries = function(req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
+            if(err) throw err;
+            con.release();
+            res.send(rows);
+        });
+    });
+};
+
+function testUserAnalytics(res){
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query("INSERT INTO analytics (`type_id`,`project`,`interval`,`country`,`count`) "+
+            "SELECT '1',project,'d',country,COUNT(DISTINCT user_id) as count "+
+            "FROM classifications "+
+            "GROUP BY project,country", function(err, rows, fields) {
+
+            con.release();
+            if(err) throw err;
+
+            res.send(rows);
+        });
+    });
+}
+
+/*---------------------------------------------------------------------------*/
+
+// Timeseries generation routes
 
 exports.updateTimeSeries = function(req, res) {
 
@@ -343,7 +498,7 @@ exports.updateTimeSeries = function(req, res) {
     }
 
     var bars={};
-    bars[MIN_SECS] = 60, bars[MIN_15_SECS] = 60, bars[HOUR_SECS] = 24, bars[DAY_SECS] = 30;
+    bars[MIN_SECS] = 60, bars[MIN_5_SECS] = 60, bars[MIN_15_SECS] = 60, bars[HOUR_SECS] = 24, bars[DAY_SECS] = 30;
 
     from = Math.max(from,to-interval*bars[interval.toString()]);
     var series = [
@@ -353,7 +508,10 @@ exports.updateTimeSeries = function(req, res) {
 
     console.log('updateTimeSeries',interval,from,to,bars[interval.toString()]);
 
-    updateTimeSeriesIntervals(res,series);
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        updateTimeSeriesIntervals(res,series,con);
+    });
 
     /* test
      var from = 1348790400; //'2012-09-28'
@@ -362,10 +520,9 @@ exports.updateTimeSeries = function(req, res) {
 
      updateTimeSeriesIntervals(res,[{type:'c',interval:3600,from:from,to:to}]);
      */
+};
 
-}
-
-function updateTimeSeriesIntervals(res,analyticsArray){
+function updateTimeSeriesIntervals(res,analyticsArray,con){
     var analytics = analyticsArray.shift();
     var interval = analytics.interval; // seconds
     var dataType = analytics.type;
@@ -373,8 +530,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
     var to = analytics.to; // unix timestamp
 
     console.log('updateTimeSeriesIntervals',analytics.type, analytics.interval);
-
-
 
     var dataQuery = "";
     switch(dataType){
@@ -390,7 +545,7 @@ function updateTimeSeriesIntervals(res,analyticsArray){
     }
 
 
-    connection.query("SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
+    con.query("SELECT "+dataQuery+",project,FLOOR((UNIX_TIMESTAMP(created_at)-"+from+")/"+interval+") AS time "+
         "FROM classifications WHERE created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+")"+
         "GROUP BY time,project", function(err, rows, fields) {
         if(err) throw err;
@@ -418,11 +573,10 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                 //console.log('unixtime',unixtime);
             }
 
-            var series = {
+            projects[project] = {
                 key: project,
                 values: values
             };
-            projects[project] = series;
         });
 
         // add counts to date series
@@ -435,9 +589,6 @@ function updateTimeSeriesIntervals(res,analyticsArray){
                 item.value = row.count;
             }
             //console.log('row.date',row.date);
-
-
-
         });
 
         var unixNow = parseInt(new Date().valueOf()/1000);
@@ -456,132 +607,112 @@ function updateTimeSeriesIntervals(res,analyticsArray){
         var insertStr = inserts.join(',');
         //console.log(insertStr);
 
-        connection.query("INSERT INTO timeseries (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`) VALUES" +insertStr,
+        con.query("INSERT INTO timeseries (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`) VALUES" +insertStr,
             function (err, rows, fields) {
 
             if (err) throw err;
-
 
             // delete previous data
 
             var maxTime = 0;
             // find last update time
-            connection.query("SELECT UNIX_TIMESTAMP(updated) AS time FROM timeseries ORDER BY updated DESC LIMIT 1",function(err, rows, fields) {
+            con.query("SELECT UNIX_TIMESTAMP(updated) AS time FROM timeseries ORDER BY updated DESC LIMIT 1",function(err, rows, fields) {
 
                 if(err) throw err;
                 maxTime = rows[0].time;
                 console.log('maxTime: ', maxTime,'type',dataType,'interval',interval);
 
                 // delete interval records before last update
-                var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+dataType+"' AND `interval`='"+interval+"'";
+                var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id` = '"+dataType+"' AND `interval` = "+interval;
 
                 console.log(query);
-                connection.query(query, function(err, rows, fields) {
+                con.query(query, function(err, rows, fields) {
 
                         if(err) throw err;
                         if (analyticsArray.length > 0) {
-                            updateTimeSeriesIntervals(res, analyticsArray);
+                            updateTimeSeriesIntervals(res, analyticsArray,con);
                         }
                         else{
+                            con.release();
                             res.send(rows);
                         }
-
-                    });
+                });
             });
-
-
-
         });
-
     });
-
 }
 
-/*
-function deleteTimeSeriesIntervals(res,type,interval){
+/*---------------------------------------------------------------------------*/
 
-    var maxTime = 0;
-    // find last update time
-    connection.query("SELECT UNIX_TIMESTAMP(updated) AS time FROM timeseries ORDER BY updated DESC LIMIT 1",function(err, rows, fields) {
+// Database stats
 
-        if(err) throw err;
-        maxTime = rows[0].time;
-        console.log('maxTime: ', maxTime,'type',type,'interval',interval);
 
-        // delete interval records before last update
-        var query = "DELETE FROM timeseries WHERE `updated` != FROM_UNIXTIME('"+maxTime+"') AND `type_id`='"+type+"' AND `interval`='"+interval+"'";
-
-        console.log(query);
-        connection.query(query,function(err, rows, fields) {
+exports.getDBstats = function(req, res) {
+    var output = [];
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+        con.query('SELECT project, COUNT(*) AS totalclassifications, MIN(created_at) as first, MAX(created_at) as last FROM ?? group by project order by last desc',['classifications'], function(err, rows, fields) {
             if(err) throw err;
-            res.send(rows);
+            console.log('Classification count: ', rows[0].totalclassifications, ' first: ', rows[0].first, ' last: ', rows[0].last);
+            output.push(rows);
+            con.query("SELECT (data_length+index_length)/1048576 tablesize_mb from information_schema.tables where table_schema=? and table_name='classifications'", [WNU_DB_NAME], function(error, rows, fields){
+                if(err) throw err;
+                console.log('DB size (mb) on disk: ', rows[0].tablesize_mb);
+                con.release();
+                output.push(rows[0]);
+                res.send(output);
+            });
+        });
+    });
+};
 
+
+
+/*---------------------------------------------------------------------------*/
+
+// Monitoring
+
+
+exports.ping = function (req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        con.query('SELECT 1', function (err, rows) {
+            con.release();
+            if (err) {
+                res.send({status: 0});
+            } else {
+                res.send({status: 1});
+            }
+        });
+    });
+    //console.log('ping');
+};
+
+
+exports.isUpdating = function (req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        con.query('SELECT UNIX_TIMESTAMP(updated) as time FROM projects ORDER BY updated DESC LIMIT 1', function (err, rows) {
+            con.release();
+            if(err) throw err;
+
+            var lastUpdate = rows[0]['time'];
+            //console.log(lastUpdate);
+            //console.log(rows[0]);
+            var curUnixTime = parseInt((new Date()).valueOf()/1000);
+            var dt = curUnixTime-lastUpdate;
+            console.log("isUpdating dt",dt,"seconds");
+            if(dt>gMaxUpdateInterval){
+                res.send({status: 0});
+            }
+            else{
+                res.send({status: 1});
+            }
         });
     });
 
-}
-*/
+};
 
-exports.getAnalytics = function(req, res) {
-
-    connection.query("SELECT `type_id`,`interval`,`project`,`country`,`count` FROM `analytics`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-
-    });
-
-}
-
-exports.getAnalyticsAggregateCountries = function(req, res) {
-
-    connection.query("SELECT `project`,`type_id`,`interval`,SUM(`count`) as count FROM `analytics` GROUP BY `project`,`interval`,`type_id`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-    });
-}
-
-
-exports.getTimeSeries = function(req, res) {
-
-    console.log('getTimeSeries');
-
-    connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`",function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-
-    });
-
-}
-
-exports.getTimeSeriesIntervals = function(req, res) {
-
-    console.log('getTimeSeries');
-    var intervalsStr = req.params.intervals; // secs
-    var intervals = intervalsStr.split(',');
-
-
-    _.each(intervals,function(interval,index){
-        if(!isNaN(interval)){
-            intervals[index] = "`interval` = '"+interval+"'";
-        }
-    });
-    var whereStr = " WHERE " + intervals.join(" OR ");
-    console.log(whereStr);
-
-    connection.query("SELECT `type_id` as type,`interval`,`project`,`datetime` as time,`count` FROM `timeseries`" + whereStr,function(err, rows, fields) {
-        if(err) throw err;
-        res.send(rows);
-
-    });
-
-}
-
-
-
-exports.cleanUp = function() {
-    console.log('Checking for open DB connections');
-    if (null != connection){
-	console.log('Closing DB connection');
-	connection.end();
-    }
-}
+module.exports.nconf = nconf;

@@ -1,0 +1,40 @@
+{
+    "name":"notes_from_nature",
+    "sx":0.15,
+    "sy":0.15,
+    "x":400,
+    "y":0,
+    "rotation":0,
+    "_fills":["#951114","#951114"],
+    "_comment":"Project level animations",
+    "_animation":[
+        {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
+        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
+
+
+    "shape_animation":
+    [
+
+    	{"shape_ids":["2","3","4","5","6","7","8","9","10","11","17","18","19","20"],"animation":
+            [{"type":"scale","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"sx":[0.8,1.5],"sy":[0.8,1.5],"duration":[3.0,10.0], "time":0}]
+    	},
+        {"shape_ids":["12","14"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,120.0], "time":0}]
+    	},
+        {"shape_ids":["15","16"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,120.0], "time":0}]
+    	}
+    ],
+
+
+    "shapes":
+    [
+        { "_comment":"Scale X and Y",
+            "id":"1","rotation":0,"opacity":0.8,
+            "animation":[{"type":"scale","dataType":"c","data":"min","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
+
+        { "_comment":"Scale X and Y",
+            "id":"13","rotation":0,"opacity":0.8,
+            "animation":[{"type":"scale","dataType":"c","data":"hour","fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]}
+    ]
+}

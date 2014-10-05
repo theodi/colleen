@@ -1,3 +1,4 @@
+from ConfigParser import SafeConfigParser
 import string, json, pprint
 import requests
 import mysql.connector
@@ -7,11 +8,15 @@ import logging.config
 import os
 import urlparse
 
-#urlparse.uses_netloc.append('mysql')
 
-logging.config.fileConfig('logging.conf')
+parser = SafeConfigParser()
+parser.read('fetchandstore.conf')
+# test that conf file successfully read
+# assign values to variables
+logging.config.fileConfig(parser.get('DEFAULT','logging_conf_file'))
 logger = logging.getLogger('fetchandstore')
-
+dateformat = "%a %b %d %H:%M:%S %Y"
+pp = pprint.PrettyPrinter(indent=4)
 
 def construct_values_tuple(project, dict):
     id = dict[u'id']
@@ -46,7 +51,7 @@ def get_json_from_api(zoon_api_request_url, payload, headers):
     logger.info('payload is %s' % payload)
     response = requests.get(zoon_api_request_url, params=payload, headers=headers)
     logger.info('response code was %d' % response.status_code)
-    logger.info('response text was %s' % response.text)
+#    logger.info('response text was %s' % response.text)
     if response.status_code == 200:
         return response.json()
     else:
@@ -80,12 +85,14 @@ def insert_tuples(con,data):
 
 
 def thewholeshebang():
-    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
-    duration = 60 * 60 * 24 * 31 * 1000# a month in millisenconds
-    per_page = 2000
-    page = 1
-
-    mysql_url = os.environ['WNU_DB_URL']
+#    projects = ['cyclone_center', 'galaxy_zoo', 'mergers', 'milky_way_project', 'moon_zoo', 'planet_hunters', 'sea_floor_explorer', 'solar_storm_watch', 'whalefm']
+    projects = get_json_from_file(parser.get('DEFAULT','projects_file'))
+    logger.info("read projects list from %s: %s" % (parser.get('DEFAULT','projects_file'),projects))
+    duration = parser.getint('DEFAULT','duration')
+    per_page = parser.getint('DEFAULT','per_page')
+    page = parser.getint('DEFAULT','page')
+    mysql_url_env = parser.get('DEFAULT','mysql_url_env')
+    mysql_url = os.environ[mysql_url_env]
     mysql_config = urlparse.urlparse(mysql_url)
     logger.info("connecting hostname: %s, user: %s, password: %s, db: %s" % (mysql_config.hostname,mysql_config.username,mysql_config.password,mysql_config.path[1:]))
     con = mysql.connector.connect(host=mysql_config.hostname,user=mysql_config.username,password=mysql_config.password,database=mysql_config.path[1:])
@@ -93,21 +100,27 @@ def thewholeshebang():
                'ACCEPT': 'application/vnd.zooevents.v1+json',}
 
     for project in projects:
-        start_time = int(get_max_created_at_by_project(con, project))
-        if start_time is 'NULL':
+        start_time = get_max_created_at_by_project(con, project)
+        if start_time is None:
             logger.info("setting start_time to a month ago")
             start_time = int(round(time.time() * 1000)) - duration
-        logger.info("max_created_at for %s is %d" % (project, start_time))
+        else:
+            start_time = int(start_time)
+        logger.info("max_created_at for %s is %d (%s)" % (project, start_time, datetime.datetime.fromtimestamp(start_time/1000).strftime(dateformat)))
         end_time = int(start_time + duration)
-        zoon_api_request_url = 'http://event.zooniverse.org/classifications/%s' % project
+        zoon_api_request_url = '%s/%s' % (parser.get('DEFAULT','zoon_api_request_url'),project)
         payload = {'from': start_time, 'to': end_time, 'per_page': per_page, 'page': page}
-        logger.info("requesting %s from %d" % (zoon_api_request_url, start_time))
+        logger.info("requesting %s from %s to %s" % (zoon_api_request_url, datetime.datetime.fromtimestamp(start_time/1000).strftime(dateformat), datetime.datetime.fromtimestamp(end_time/1000).strftime(dateformat)))
         json_obj = get_json_from_api(zoon_api_request_url, payload, headers)
         if json_obj is None:
             continue
         logger.info("got json from api")
         data = json_to_tuples(json_obj, project)
         logger.info("converted json to tuples")
+        firstitemdate = pp.pformat(data[0][1])
+        lastitemdate =  pp.pformat(data[len(data)-1][1])
+        logger.info("date range for data is from %s to %s" % (lastitemdate, firstitemdate))
+        logger.info("first data item is: %s" % pp.pformat(data[0]))
         insert_tuples(con, data)
         logger.info("inserted %d tuples from %s into db" % (len(data), project))
         
