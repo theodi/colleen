@@ -1,6 +1,6 @@
 ZN.Config = {
     // Data source
-    dataSource:"live", //"live", //"live",//"archive"
+    dataSource:"json_file", //"live", //"live",//"archive"
     timeseriesJson:"timeseries_20140904.json",
 
     // Composition dimensions

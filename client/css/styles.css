@@ -5,9 +5,10 @@
 
 /*
 A custom Bootstrap 3.2 theme for weneedus.org
-
-
 */
+
+/* hide jquery mobile loading text */
+.ui-loader { display: none; }
 
 #scene_control_left {
 	float: left;

@@ -750,10 +750,6 @@ ZN.Rules.prototype = {
         var endLoop = this.updateAnimTime(anim);
         if(endLoop){
 
-            // set random duration
-            //var n = Math.random();
-            //var duration = anim.duration[0]+ (anim.duration[1]-anim.duration[0])*n;
-            //anim.curDuration = duration;
             var duration = this.getDuration(project,anim);
 
             // start shooting star
