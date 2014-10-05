@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "audio/wnu",
+		"baseUrl": "http://s3.amazonaws.com/weneedus/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -163,8 +163,8 @@
 				"4_cln_kltebeach.mp3"
 			],
 			"smplr_a": [
-				"cln_brick2.mp3",
 				"cln_brick1.mp3",
+				"cln_brick2.mp3",
 				"cln_brick3.mp3",
 				"cln_brick4.mp3",
 				"cln_brick5.mp3",
@@ -172,8 +172,8 @@
 				"cln_brick7.mp3"
 			],
 			"smplr_b": [
-				"cln_crash1.mp3",
 				"cln_crash2.mp3",
+				"cln_crash1.mp3",
 				"cln_crash3.mp3",
 				"cln_crash4.mp3"
 			]
@@ -304,8 +304,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_sea_water_jf.mp3",
-				"1_sea_water.mp3"
+				"1_sea_water.mp3",
+				"1_sea_water_jf.mp3"
 			],
 			"smplr_a": [
 				"insect-chirrup.mp3",
@@ -366,8 +366,8 @@
 				"sea_pebble1.mp3",
 				"sea_pebble2.mp3",
 				"sea_pebble3.mp3",
-				"sea_pebble4.mp3",
 				"sea_pebble5.mp3",
+				"sea_pebble4.mp3",
 				"sea_pebble6.mp3"
 			],
 			"smplr_b": [
@@ -408,6 +408,29 @@
 			]
 		},
 		{
+			"id": "war_diary",
+			"volumes": {
+				"layers": [
+					0
+				],
+				"smplr_a": 0,
+				"smplr_b": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_war_dusty-caverns.mp3",
+				"2_war_boring-men.mp3"
+			],
+			"smplr_a": [
+				"Cosi1_delay1-10.mp3",
+				"Cosi1_delay2.mp3",
+				"Cosi1_delay3.mp3"
+			],
+			"smplr_b": [
+				"drone_chain_loop.mp3"
+			]
+		},
+		{
 			"id": "sunspot",
 			"volumes": {
 				"layers": [
@@ -431,29 +454,6 @@
 				"jf_04.mp3",
 				"jf_05.mp3",
 				"jf_06.mp3"
-			]
-		},
-		{
-			"id": "war_diary",
-			"volumes": {
-				"layers": [
-					0
-				],
-				"smplr_a": 0,
-				"smplr_b": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_war_dusty-caverns.mp3",
-				"2_war_boring-men.mp3"
-			],
-			"smplr_a": [
-				"Cosi1_delay1-10.mp3",
-				"Cosi1_delay2.mp3",
-				"Cosi1_delay3.mp3"
-			],
-			"smplr_b": [
-				"drone_chain_loop.mp3"
 			]
 		},
 		{
