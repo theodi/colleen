@@ -1,16 +1,21 @@
 ZN.Config = {
+
     // Data source
-    dataSource:"json_file", //"live", //"live",//"archive"
+    // "json_file" uses timeseriesJson file.
+    // "live" uses live timeseries
+    // "archive" uses archived timeseries
+    dataSource:"json_file", //"live", //"archive"
     timeseriesJson:"timeseries_20140904.json",
 
     // Composition dimensions
     assetBB:{left:0,bottom:1080,right:1920,top:0,width:1920,height:1080},
 
-    // Sound
-    //soundConfigPath:"sound/config",
+    // Sound config
+    //soundConfigPath:"sound/config", // execute sound.js route
     soundConfigPath:"data/sound_config.json",
 
     // Debug
+    // display framerate and debug info
     debug:false,
 
     // Interface
