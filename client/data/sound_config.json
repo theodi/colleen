@@ -163,8 +163,8 @@
 				"4_cln_kltebeach.mp3"
 			],
 			"smplr_a": [
-				"cln_brick1.mp3",
 				"cln_brick2.mp3",
+				"cln_brick1.mp3",
 				"cln_brick3.mp3",
 				"cln_brick4.mp3",
 				"cln_brick5.mp3",
@@ -304,8 +304,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_sea_water.mp3",
-				"1_sea_water_jf.mp3"
+				"1_sea_water_jf.mp3",
+				"1_sea_water.mp3"
 			],
 			"smplr_a": [
 				"insect-chirrup.mp3",
