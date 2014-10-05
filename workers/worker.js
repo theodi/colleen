@@ -591,7 +591,7 @@ function updateTimeSeries(series){
             }
             else{
                 to = from+interval;
-                console.log('updateTimeSeries: from, to, interval',from, to, interval, new Date(from*1000), new Date(to*1000) );
+                //console.log('updateTimeSeries: from, to, interval',from, to, interval, new Date(from*1000), new Date(to*1000) );
 
                 updateTimeSeriesInterval(series,from,to);
 
@@ -674,7 +674,7 @@ function updateTimeSeriesInterval(series, from, to){
 
 
         var insertStr = inserts.join(',');
-        console.log(insertStr);
+        // console.log(insertStr);
 
         connection.query("INSERT INTO "+gSeriesTable+" (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`,`from`,`to`) VALUES" +insertStr,
             function (err, rows) {

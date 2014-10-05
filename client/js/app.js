@@ -25,7 +25,7 @@ ZN.App = function () {
 
     // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
-    this.timeSeriesLatency = 2*60*1000 // in ms
+    this.timeSeriesLatency = 3*60*1000 // in ms
     this.dataSource = "archive"; // "live"
 
     // rendering
