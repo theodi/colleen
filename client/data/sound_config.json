@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "audio/wnu",
+		"baseUrl": "http://s3.amazonaws.com/weneedus/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -22,34 +22,6 @@
 				"2_rumble_base_hf_short.mp3"
 			],
 			"smplr_a": [],
-			"smplr_b": []
-		},
-		{
-			"id": "galaxy_zoo",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_gal_motornoise2.mp3",
-				"2_gal_lightrumble.mp3",
-				"3_gal_drone.mp3"
-			],
-			"smplr_a": [
-				"gal_pulse1.mp3",
-				"gal_pulse2.mp3",
-				"gal_pulse3.mp3",
-				"gal_pulse4.mp3",
-				"gal_pulse5.mp3",
-				"gal_pulse6.mp3",
-				"gal_pulse7.mp3",
-				"gal_pulse8.mp3",
-				"gal_pulse9.mp3"
-			],
 			"smplr_b": []
 		},
 		{
@@ -82,7 +54,14 @@
 		},
 		{
 			"id": "bat_detective",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_bat_rmbl.mp3",
 				"1_bat_rumble.mp3"
@@ -172,6 +151,39 @@
 			]
 		},
 		{
+			"id": "galaxy_zoo",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_gal_motornoise2.mp3",
+				"2_gal_lightrumble.mp3",
+				"3_gal_drone.mp3"
+			],
+			"smplr_a": [
+				"gal_pulse1.mp3",
+				"gal_pulse2.mp3",
+				"gal_pulse3.mp3",
+				"gal_pulse4.mp3",
+				"gal_pulse5.mp3",
+				"gal_pulse6.mp3",
+				"gal_pulse7.mp3",
+				"gal_pulse8.mp3",
+				"gal_pulse9.mp3"
+			],
+			"smplr_b": [
+				"gal_bounce1-GSrework1.mp3",
+				"gal_bounce1-GSrework2.mp3",
+				"gal_bounce1-GSrework3.mp3",
+				"gal_bounce4-GSrework2.mp3"
+			]
+		},
+		{
 			"id": "milky_way",
 			"volumes": {
 				"layers": [
@@ -201,7 +213,14 @@
 		},
 		{
 			"id": "plankton",
-			"volumes": {},
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
 			"layers": [
 				"1_sea_water.mp3",
 				"1_sea_water_jf.mp3"

@@ -386,6 +386,9 @@ function loadSceneLayers(def, callback) {
 
       layer.mix.gain.value = 0;
       layer.mix.connect(layer.volume);
+      if(!def.volumes.layers){
+          debug('loadSceneLayers, no volume object: ',def.id);
+      }
       var vol = def.volumes.layers[count++];
     // debug(def.id, 'layer volume', count-1, vol, dbToGain(vol || 0));
       layer.volume.gain.value = dbToGain(vol || 0);
