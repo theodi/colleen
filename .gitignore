@@ -5,7 +5,7 @@ node_modules
 *.pyc
 \#*#
 .#*
-web/wnu/*
+web/*
 *.log
 .grunt/
 _SpecRunner.html
