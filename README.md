@@ -1,18 +1,17 @@
-# Project Colleen
+# We Need Us
 
 
 Data art project for the Data as Culture art programme.
 
 This work is currently in active development. The most visible aspect will be a web-base animation built in javascript.
 
-It is fed by an API built using Node.js, MySQL and Python.
+It is fed by an API built using Node.js and MySQL.
 
 ##License
 
 We intend for this work to be open source but have not yet chosen the license.
 
 ##Acknowledgements
-
 
 Many have helped us. We will name them in time.
 
@@ -21,9 +20,7 @@ Many have helped us. We will name them in time.
 * Node.js
 * npm
 * mysql
-* python
 * various Javascript libraries
-* other stuff to be added later
 
 ##Installation 
 
@@ -56,7 +53,6 @@ Many have helped us. We will name them in time.
         export WEB='supervisor server.js'
         export WNU_DB_URL=mysql://colleen:PUTMYSQLPASSWORDHERE@localhost/zoon
         export WNU_HOST=localhost:5000
-        export WNU_DATA_MODE=archive  
         export NODE_ENV=dev
 
 1. Type:
@@ -93,16 +89,12 @@ Many have helped us. We will name them in time.
 1. Run 
 
         $ heroku config:set WEB='node server.js'
-        $ heroku config:set WNU_DATA_MODE=archive
         $ heroku config:set WNU_HOST=sharp-rain-871.herokuapp.com 
         $ heroku config:set WNU_DB_URL=mysql://<user>:<password>@<dbhost>/<dbname>?reconnect=true
+        $ heroku config:set NODE_ENV=prod
         $ git push heroku master
 
 1. Visit your app at http://YOURAPPNAME
 
 
-##TODO
-* choose license
-* thank people
-* review list of requirements and add/delete as appropriate
-* keep building
+
