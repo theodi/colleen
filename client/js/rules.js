@@ -41,7 +41,6 @@ ZN.Rules.prototype = {
         var focusProject = this.model.focusProject;
         var lfp = this.model.lastFocusProject;
 
-        if(!this.model.projectGraph) return;
         var projectPoints = this.model.projectGraph.projectPoints;
 
         _.each(projects,function(project,index){

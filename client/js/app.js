@@ -414,7 +414,9 @@ ZN.App.prototype = {
         var frameTimeTarget = 40; // ms
 
         var t0 = new Date().valueOf();
-        this.rules.update(frameTimeTarget); // this.frameTime
+        if(this.rules){
+            this.rules.update(frameTimeTarget); // this.frameTime
+        }
         this.renderer.render();
         //this.soundEngine.update();
         this.model.projectGraph.update();
