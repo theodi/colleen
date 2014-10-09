@@ -70,6 +70,10 @@ ZN.App.prototype = {
     loadConfig:function () {
         var self = this;
         var url = "js/config.js";
+        var configStr = this.getParameterByName("config");
+        if(configStr!=""){
+            url = "js/"+configStr+".js";
+        }
 
         $.ajax({
             type:"GET",
@@ -235,6 +239,9 @@ ZN.App.prototype = {
     },
 
     timeSeriesLoaded:function(data){
+        if(this.debug){
+            console.log(data);
+        }
         this.model.parseTimeSeries(data);
         this.loadProjectGraph();
     },

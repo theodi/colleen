@@ -4,7 +4,7 @@ ZN.Config = {
     // "json_file" uses timeseriesJson file.
     // "live" uses live timeseries
     // "archive" uses archived timeseries
-    dataSource: "json_file",//"live", //"archive"
+    dataSource: "live", //"json_file", //"archive"
     timeseriesJson:"timeseries_20140904.json",
 
     // Composition dimensions
@@ -16,7 +16,7 @@ ZN.Config = {
 
     // Debug
     // display framerate and debug info
-    debug:false,
+    debug:true,
 
     // Interface
     showControlsOnProjectChange:true,
