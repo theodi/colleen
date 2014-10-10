@@ -29,6 +29,7 @@ module.exports = function(grunt) {
                     // wnu data
                     {expand: true, cwd: 'client/data/', src: ['*.json','*.csv'], dest: 'web/data/', filter: 'isFile'},
                     {src:'client/js/config.js', dest:'web/js/config.js' },
+                    {src:'client/js/debug_config.js', dest:'web/js/debug_config.js' },
 
                     // chart
                     {src:'client/chart.html', dest:'web/chart.html' },
