@@ -55,7 +55,9 @@ module.exports = function(grunt) {
                     'client/js/*.js',
                     '!client/js/chart.js',
                     '!client/js/config.js',
+                    '!client/js/debug_config.js',
                     '!client/js/testpage.js'
+
 
                 ] }
             }
