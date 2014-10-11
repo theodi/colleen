@@ -173,46 +173,9 @@ ZN.App.prototype = {
 
     projectRulesLoaded:function(data){
         this.model.initProjects(data);
-        this.loadSoundConfig();
-
-    },
-
-    loadSoundConfig:function () {
-        var url = ZN.Config.soundConfigPath;
-        this.loadUrl(url, "json", this.soundConfigLoaded);
-
-    },
-    soundConfigLoaded:function (data) {
-        var self = this;
-        var config = this.model.processSoundConfig(data);
-        var startOnLoadCount = 3;
-
-        ZN.soundengine.init(config, function(err, progress, projectId, loadCounter){
-            if(err){
-                window.alert('Soundengine failed to load:'+ err.message);
-                return;
-            }
-
-            var txt = progress!=100?'Sound loading: '+progress+'%':'';
-            $('#sound-progress').text(txt);
-
-            self.model.setSoundLoaded(projectId);
-
-            if(loadCounter==startOnLoadCount){
-                self.soundLoadComplete();
-            }
-        });
         this.loadTimeSeries();
-    },
-
-    soundLoadComplete: function(){
-
-        ZN.soundengine.start();
-        this.startApp();
-        this.setLayerVolume(1.0);
 
     },
-
 
     loadTimeSeries:function() {
         var url;
@@ -244,10 +207,46 @@ ZN.App.prototype = {
         this.loadUrl(url, "text", this.projectGraphLoaded);
 
     },
+
     projectGraphLoaded:function (data) {
         this.model.initProjectGraph(data);
-        // if not loading sounds
-        //this.startApp();
+        this.loadSoundConfig();
+    },
+
+    loadSoundConfig:function () {
+        var url = ZN.Config.soundConfigPath;
+        this.loadUrl(url, "json", this.soundConfigLoaded);
+
+    },
+
+    soundConfigLoaded:function (data) {
+        var self = this;
+        var config = this.model.processSoundConfig(data);
+        var startOnLoadCount = 3;
+
+        ZN.soundengine.init(config, function(err, progress, projectId, loadCounter){
+            if(err){
+                window.alert('Soundengine failed to load:'+ err.message);
+                return;
+            }
+
+            var txt = progress!=100?'Sound loading: '+progress+'%':'';
+            $('#sound-progress').text(txt);
+
+            self.model.setSoundLoaded(projectId);
+
+            if(loadCounter==startOnLoadCount){
+                self.soundLoadComplete();
+            }
+        });
+    },
+
+    soundLoadComplete: function(){
+
+        ZN.soundengine.start();
+        this.startApp();
+        this.setLayerVolume(1.0);
+
     },
 
 
