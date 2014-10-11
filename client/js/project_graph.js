@@ -1,3 +1,7 @@
+/*
+ * ZN.ProjectGraph handles project composition layout using Springy.js (http://getspringy.com/)
+ */
+
 var ZN = ZN || { };
 ZN.ProjectGraph = function () {
 

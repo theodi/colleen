@@ -1,3 +1,8 @@
+/*
+ * ZN.Rules maps Zooniverse classification timeseries data to graphic transformations and sounds
+ * Uses animation rules specified in Zooniverse project conifg files under client/data/src
+ */
+
 ZN.Rules = function () {
 
     this.app = null;
@@ -8,7 +13,6 @@ ZN.Rules = function () {
     this.bgOpacity = 0.05;
     this.focusDuration = 1.5; // focus transition seconds
     this.changeFocusDuration = [30.0,60.0];
-
 
 }
 
@@ -46,6 +50,7 @@ ZN.Rules.prototype = {
         _.each(projects,function(project,index){
 
             // project rules
+            // update project composition position form projectGraph layout
 
             if(this.app.runProjectGraph){
                 if(project!=focusProject && project!=lfp){
@@ -55,20 +60,15 @@ ZN.Rules.prototype = {
                     if(pt){
                         project.x = pt.x;
                         project.y = pt.y;
-
                     }
 
                     project.opacity = this.bgOpacity;
                 }
 
-
-
             }
             else{
                 project.opacity = this.focusOpacity;
             }
-
-
 
             if(project.animation){
                 _.each(project.animation,function(anim){
@@ -161,119 +161,11 @@ ZN.Rules.prototype = {
                                 this.asteroidRule(project,shape,anim);
                                 break;
 
-
-
-
-                            case "translate_circular_rnd":
-                                var r = anim.radius;
-
-                                if(parseInt(anim.angle)%5 ==0){
-                                    if(project.name=='galaxy_zoo' && ind==6){
-                                        //console.log('anim x,y',shape.x,shape.y);
-                                        //shape.addTrailShape();
-                                    }
-                                    //shape.addTrailShape();
-
-                                }
-
-                                // speed
-                                var speedRnd = (anim.speed[1]-anim.speed[0])*10.0/frameTime;
-                                var speedMin = anim.speed[0]*10.0/frameTime;
-                                anim.angle = (anim.angle+Math.random()*speedRnd+speedMin);
-
-                                if(anim.angle>360){
-                                    anim.angle %= 360;
-
-                                }
-
-
-                                // set radius
-                                var ry = r;//shape.bounds.height()/2-shape.height/2;
-                                var rx = r;//shape.bounds.width()/2-shape.width/2;
-                                var rad = (Math.PI / 180)*anim.angle;
-
-                                // position
-                                var x = rx * Math.cos(rad);
-                                var y = ry * Math.sin(rad);
-                                shape.x = shape.initial.x +x;
-                                shape.y = shape.initial.y +y;
-
-
-
-                                break;
-
-                            case "scale_rnd":
-
-                                //anim.time = (anim.time+frameTime/1000)%anim.duration[0];
-                                anim.time = (anim.time+frameTime/1000);
-                                if(!anim.data){
-                                    anim.data=1.0;
-                                }
-
-                                if(anim.time>anim.duration[0]) {
-                                    anim.time = -Math.random()*2 -0.5;
-                                    anim.data= Math.random()*0.7+0.3;
-
-                                }
-                                if(anim.time>0){
-                                    var n = anim.time/anim.duration[0];
-                                    n = n>0.5?1-n:n;
-                                    n*=2;
-                                    var sx = anim.x[0]+ (anim.x[1]-anim.x[0])*n;
-                                    var sy = anim.y[0]+ (anim.y[1]-anim.y[0])*n;
-                                    shape.sx = sx*anim.data;
-                                    shape.sy = sy*anim.data;
-                                }
-
-                                break;
-
-
-
-
-                            case "translate_bounce_bounds":
-
-                                if(shape.x+shape.vx > shape.bounds.right) shape.vx*=-1;
-                                if(shape.x+shape.vx < shape.bounds.left) shape.vx*=-1;
-
-                                if(shape.y+shape.vy > shape.bounds.bottom) shape.vy*=-1;
-                                if(shape.y+shape.vy < shape.bounds.top) shape.vy*=-1;
-
-                                shape.x+=shape.vx;
-                                shape.y+=shape.vy;
-
-                                break;
-
-                            case "translate_linear":
-                            /*
-                             var r = anim.radius;
-
-                             // speed
-                             var speedRnd = anim.speed[1]-anim.speed[0];
-                             var speedMin = anim.speed[0];
-                             anim.angle = (anim.angle+Math.random()*speedRnd+speedMin)%360;
-
-                             // set radius
-                             var ry = shape.bounds.height()/2-shape.height/2;
-                             var rx = shape.bounds.width()/2-shape.width/2;
-                             var rad = (Math.PI / 180)*anim.angle;
-
-                             // position
-                             var x = rx * Math.cos(rad);
-                             var y = ry * Math.sin(rad);
-                             shape.x = shape.initial.x +x;
-                             shape.y = shape.initial.y +y;
-
-
-                             break;
-                             */
                         }
 
 
                     },this);
                 }
-
-
-
 
             },this);
 
@@ -553,8 +445,6 @@ ZN.Rules.prototype = {
         var dy = rangeY[0] + (rangeY[1]-rangeY[0])*-1.0*Math.cos((n-0.5)*2*Math.PI);
 
         // bl, br, tr, tl
-        //var t = [[0.0,0.0],[0.0,0.0],[-0.5,-10.0],[0.5,-10.0]];
-
         var t = [[-dx,-dy],[-dx,-dy],[dx,dy],[dx,dy]];
 
         this.pointTranslate(obj,t);
@@ -595,7 +485,6 @@ ZN.Rules.prototype = {
 
     radioRule:function(project, obj, anim){
 
-        //var n = this.getNextSeriesValue(project, obj, anim);
 
         if(typeof anim['dx'] ==='undefined'){
 
@@ -626,19 +515,10 @@ ZN.Rules.prototype = {
 
         }
 
-        /*
-        var n = this.getSeriesValue(project, obj, anim);
-
-        // translate along axis from project centre
-        var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
-        speed*=1500;
-        */
 
         var dt = this.frameTime/(1000*anim.mass);
 
         var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
-        //var d = obj.x*obj.x + obj.y*obj.y;
-
 
         var gravity = 2600.0;
 
@@ -661,72 +541,8 @@ ZN.Rules.prototype = {
         }
 
 
-
-
-        /*
-        if(Math.abs(obj.y)<=Math.abs(obj.initial.y*minDistScale)){
-            obj.y = obj.initial.y*minDistScale;
-            obj.vy=0;
-        }
-        */
-
-
     },
 
-
-    /*
-    radioRule:function(project, obj, anim){
-
-        var n = this.getNextSeriesValue(project, obj, anim);
-
-        if(typeof anim['lastSeriesValue'] ==='undefined'){
-            anim['lastSeriesValue'] = n;
-            var dist = Math.sqrt(obj.initial.x*obj.initial.x + obj.initial.y*obj.initial.y);
-            var dx = obj.initial.x/dist,
-                dy = obj.initial.y/dist;
-            anim['dx'] = dx, anim['dy'] = dy;
-            var massScale = 0.001;
-            anim['mass'] = Math.sqrt(obj.width*obj.height)*massScale;
-
-        }
-
-        var dn = n-anim['lastSeriesValue'];
-
-        // translate along axis from project centre
-        var speed = anim.range[0]+ (anim.range[1]-anim.range[0])*n;
-        speed*=2000;
-
-        var dt = this.frameTime/(1000*anim.mass);
-
-        var d = Math.sqrt(obj.x*obj.x + obj.y*obj.y);
-
-        if(d==0) d = 0.0001;
-        if(dn>0){
-            obj.vx += speed*anim.dx*dt/d;
-            obj.vy += speed*anim.dy*dt/d;
-        }
-        var gravity = 700.0;
-
-        obj.vx -= gravity*anim.dx*dt/d;
-        obj.vy -= gravity*anim.dy*dt/d;
-
-        obj.x += obj.vx;
-        obj.y+= obj.vy;
-
-
-        if(Math.abs(obj.x)<=Math.abs(obj.initial.x/4)){
-            obj.x = obj.initial.x/4;
-            obj.vx=0;
-        }
-        if(Math.abs(obj.y)<=Math.abs(obj.initial.y/4)){
-            obj.y = obj.initial.y/4;
-            obj.vy=0;
-        }
-
-        anim['lastSeriesValue'] = n;
-
-    },
-    */
 
     radialTranslateRule: function(project, obj, anim){
 
@@ -827,7 +643,7 @@ ZN.Rules.prototype = {
 
 
 
-        /*---------------------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------*/
 
     // Project rules
 
@@ -852,7 +668,6 @@ ZN.Rules.prototype = {
         var fp = this.model.focusProject;
 
         if(fp!=null){
-            //fp.setPropsFromBackground();
             this.model.lastFocusProject = fp;
         }
 
@@ -861,8 +676,6 @@ ZN.Rules.prototype = {
         var max = this.changeFocusDuration[1];
         this.model.changeFocusTime = (Math.random()*(max-min)+min)*1000;
 
-        //var project = this.model.projects[parseInt(Math.random()*this.model.projects.length)];
-        //var scale = 0.5;
         var projectIndex = this.model.focusList[this.model.focusIndex];
         var project = this.model.projects[projectIndex];
 
@@ -877,6 +690,7 @@ ZN.Rules.prototype = {
             this.app.showControls(true,ZN.Config.showControlsDuration*1000);
         }
 
+        // Animation to switch between current project compositions
 
         var self = this;
 
@@ -884,7 +698,7 @@ ZN.Rules.prototype = {
             t: 0.0
         };
 
-        var focusScale = 1.0;//0.8;
+        var focusScale = 1.0;
         fp = this.model.focusProject; // scale to foreground
         var lfp = this.model.lastFocusProject; // scale to background
         var initFP = {x:fp.x, y:fp.y, sx:fp.sx, sy:fp.sy};
@@ -977,11 +791,11 @@ ZN.Rules.prototype = {
     },
 
 
-/*
-cx, cy = rotation center
-x,y = current x,y
-nx, ny = new coordinates
-*/
+    /*
+    cx, cy = rotation center
+    x,y = current x,y
+    nx, ny = new coordinates
+    */
     rotateAroundPoint: function (cx, cy, x, y, angle) {
         var radians = (Math.PI / 180) * angle,
             cos = Math.cos(radians),

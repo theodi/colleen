@@ -1,9 +1,14 @@
+/*
+ * ZN.Chart visualises Zooniverse classification timeseries data using nvd3 Barchart
+ */
+
+
 var ZN = ZN || { };
 
 ZN.Chart = function () {
     this.container = "charts-container";
-    this.durationSecs = 60 * 60 * 24; // 1 hour
-    this.offsetSecs = 0;//120000;
+    this.durationSecs = 60 * 60 * 24;
+    this.offsetSecs = 0;
     this.classifications = [];
     this.projects = {};
     this.minDate = new Date();
@@ -44,8 +49,8 @@ ZN.Chart.prototype = {
     },
 
     configLoaded:function () {
-	/* url for api on same host as this page served from
-	 */
+	// url for api on same host as this page served from
+
 	var url = window.location.protocol + "//" + window.location.host + "/"; 
         this.apiUrl = url;
         this.initInterface();
@@ -68,8 +73,6 @@ ZN.Chart.prototype = {
         var minDateStr = format(this.minDate);
         var maxDateStr = format(this.maxDate);
 
-	// set start/end dates to mirror contents of data/test_data.sql
-	//beware, the month is 0 based, i.e. January is 0!
         var d = new Date();
         this.pickerEndDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
         var endMs = this.pickerEndDate.valueOf();
@@ -84,9 +87,9 @@ ZN.Chart.prototype = {
 
 
         $("#start-date").datetimepicker({
-            minDate:minDateStr, //'2013/03/01',
-            maxDate:maxDateStr, //'2013/03/30',
-            value:minValue, //'2013/03/30 00:00',
+            minDate:minDateStr,
+            maxDate:maxDateStr,
+            value:minValue,
             format:'Y/m/d H:i',
             onChangeDateTime:function (dp, $input) {
                 //console.log($input.val());
@@ -95,8 +98,8 @@ ZN.Chart.prototype = {
             }
         });
         $("#end-date").datetimepicker({
-            minDate:minDateStr, //'2013/03/01',
-            maxDate:maxDateStr, //'2013/03/30',
+            minDate:minDateStr,
+            maxDate:maxDateStr,
             value:maxValue,
             format:'Y/m/d H:i',
             onChangeDateTime:function (dp, $input) {
@@ -116,9 +119,7 @@ ZN.Chart.prototype = {
         });
         $('#time-select').val(self.intervalSecs / 60);
 
-        $("#update-but")
-
-            .click(function (event) {
+        $("#update-but").click(function (event) {
 
                 self.loadChart();
                 event.preventDefault();
@@ -319,7 +320,7 @@ ZN.Chart.prototype = {
 
 }
 
-//Generate some nice data.
+// Test data
 
 function exampleData() {
     return stream_layers(3, 10 + Math.random() * 100, .1).map(function (data, i) {

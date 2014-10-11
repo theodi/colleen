@@ -1,19 +1,11 @@
+/*
+ * ZN.Model stores array of Zooniverse project compositions, project layout graph, and currently focused project
+ */
+
 ZN.Model = function () {
     this.projects = [];
     this.projectDict = {};
     this.projectGraph = null;
-    this.classifications = [];// classifications order by timestamp
-
-    this.analytics={
-        clsCount:{},
-        userCount:{}
-    };
-
-    this.timeseries={
-        c:{},
-        u:{}
-    };
-    // [<type>][<interval>] = {series:[],count:0,max:0}
 
     // focus project
     this.focusProject = null;
@@ -26,7 +18,6 @@ ZN.Model = function () {
 
     // sound
     this.soundConfig = null;
-
 
     this.SECS = {
         'MIN':60,
@@ -102,6 +93,7 @@ ZN.Model.prototype = {
     getSoundLoaded: function(projectId){
         return this.projectDict[projectId].soundLoaded;
     },
+
     isFocusSoundLoaded: function(){
         var ret = false;
         if(this.focusProject){
@@ -109,8 +101,6 @@ ZN.Model.prototype = {
         }
         return ret;
     },
-
-
 
     initProjectGraph: function(csvData){
         this.projectGraph = new ZN.ProjectGraph();
@@ -152,7 +142,6 @@ ZN.Model.prototype = {
 
                 if(!timeseries[type][interval]) timeseries[type][interval] = {series:[],count:0,max:0};
                 timeseries[type][interval].series.push(count);
-                //timeseries[type][interval].count += count;
                 timeseries[type][interval].max = Math.max(timeseries[type][interval].max,count,1.0);
                 timeseries[type][interval].lastTime = Math.max(timeseries[type][interval].lastTime,time);
 
@@ -218,9 +207,10 @@ ZN.Model.prototype = {
 
 
 
-    },
+    }
 
 
+    /*
     parseAnalytics: function(data){
 
         _.each(data,function(item,index){
@@ -273,47 +263,9 @@ ZN.Model.prototype = {
 
         },this);
 
-        /* test percentages
-         var percentTotal = _.reduce(this.projects, function(sum, project) {
-         var value = 0;
-         if(project.analytics.clsPercent['d']){
-         value = project.analytics.clsPercent['d'];
-         }
-         return sum + value;
-         },0);
 
-         console.log('percent sum:',percentTotal);
-         */
-    },
-
-    addClassifications:function(classifications){
-        var nClassifications = classifications.length;
-        for(var i=0;i<nClassifications;i++){
-            var classification = classifications[i];
-            classification.time = (new Date(classification.timestamp)).valueOf();
-            console.log("load classification timestamp:",classification.timestamp);
-            if(typeof _.find(this.classifications, { 'id': classification.id }) == 'undefined'){
-                this.classifications.push(classification);
-            }
-            //for(var key in classification){}
-        }
-        var minTime = classifications[0].time;
-        return classifications;
-    },
-
-    getNextClassificationTime:function(){
-        var time = null;
-        if(this.classifications.length>0){
-            time =  this.classifications[0].time;
-        }
-        return time;
-    },
-
-    removeFirstClassification:function(){
-        return this.classifications.shift();
     }
-
-
+    */
 
 
 

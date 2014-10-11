@@ -1,20 +1,14 @@
+/*
+ * ZN.Project stores Zooniverse project compositions and project level animatation rules
+ * Parses project data from conig files under client/data/src
+ *
+ * ZN.Shape stores individual composition shape data and animation rules
+ */
+
 ZN.Project = function () {
     this.id="";
     this.name="";
     this.title="";
-
-    this.analytics = {
-
-        clsCount:{},
-        userCount:{},
-
-        clsPercent:{},
-        userPercent:{},
-
-        userData:[],
-        clsData:[]
-
-    };
 
     this.timeseries = {
         c:{/*series:{},count:{},max:{}*/},
@@ -22,12 +16,10 @@ ZN.Project = function () {
     };
     this.shapes=[];
 
-    // graphics
     this.x = 0;
     this.y = 0;
     this.sx = 0.9, sy = 0.9;
     this.rotation = 0.0;
-    this.duration = 1.0;
     this.opacity = 1.0;
 
     // default transform
@@ -35,7 +27,7 @@ ZN.Project = function () {
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
 
-    // transform for background
+    // background transform
     this.bg={
         x:0,y:0,sx:1.0,sy:1.0,rotation:0
     };
@@ -170,13 +162,12 @@ ZN.Project.prototype = {
             var segsAbs = Snap.path.toAbsolute(pathStr);
 
 
-
             // find bounds
             var x, y, ox= 0, oy=0, mx=0, my=0,
-                minx=10e6, //Number.MAX_VALUE,
-                miny=10e6,//Number.MAX_VALUE,
-                maxx=-10e6,//Number.MAX_VALUE,
-                maxy=-10e6;//Number.MAX_VALUE;
+                minx=10e6,
+                miny=10e6,
+                maxx=-10e6,
+                maxy=-10e6;
 
             _.each(segsAbs,function(seg){
                 switch(seg[0]){
@@ -200,12 +191,8 @@ ZN.Project.prototype = {
 
             },this);
 
-
-
             var ox =  (minx+maxx)/2;
             var oy =  (miny+maxy)/2;
-
-
 
             shape.x = shape.initial.x = ox;
             shape.y = shape.initial.y = oy;
@@ -467,16 +454,11 @@ ZN.Trail = function(){
     this.type = "path"; // "points"; //
     this.shapes = [];
     this.fade = 0.985;
-
-
 }
+
 ZN.Trail.prototype = {
     constructor:ZN.Trail,
-
-    init: function(){
-
-    }
-
+    init: function(){}
 };
 
 

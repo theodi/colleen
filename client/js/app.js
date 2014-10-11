@@ -1,3 +1,9 @@
+/*
+ * ZN.App loads application config, project rules, project graph data, sounds and Zooniverse timeseries data
+ * Initialises application and handles user interface
+ */
+
+
 var ZN = ZN || { };
 
 ZN.App = function () {
@@ -58,7 +64,6 @@ ZN.App.prototype = {
         if(this.debug){
             $(document.body).append(
                 '<div id="diagnostics" style="position:absolute;z-index:10;bottom:0"></div>'
-                //+ '<div id="sound-progress" style="position:absolute;z-index:10;top:20px"></div>'
             );
         }
 
@@ -209,19 +214,6 @@ ZN.App.prototype = {
     },
 
 
-
-    /*
-    loadProjectAnalytics:function() {
-        var url = this.apiUrl+"analytics";
-        this.loadUrl(url, "json",this.analyticsLoaded);
-
-    },
-    analyticsLoaded:function(data){
-        this.model.parseAnalytics(data);
-        this.startApp();
-    },
-    */
-
     loadTimeSeries:function() {
         var url;
         // select timeseries
@@ -254,6 +246,7 @@ ZN.App.prototype = {
     },
     projectGraphLoaded:function (data) {
         this.model.initProjectGraph(data);
+        // if not loading sounds
         //this.startApp();
     },
 
@@ -262,9 +255,6 @@ ZN.App.prototype = {
 
         this.renderer = new ZN.CanvasRenderer();
         this.renderer.init(this,this.model,this.canvasContainerId);
-
-        //this.soundEngine = new ZN.SoundEngine();
-        //this.soundEngine.init(this,this.model);
 
         this.curTime = this.lastTime = (new Date()).valueOf();
         this.initInterface();
@@ -308,24 +298,15 @@ ZN.App.prototype = {
             self.showControls(false);
         },5000);
 
-        // Launch fullscreen for browsers that support it!
-
-
-
-        $(window).resize(function(){
-            self.renderer.resize();
-        });
 
         $(window).keydown(function( event ) {
             //console.log(event.which);
             switch(event.which){
-                case 111: // 'o'
                 case 37: // left arrow
                 case 38: // up arrow
                 case 33: // page up
                     self.rules.incFocusProject(-1);
                     break;
-                case 112: // 'p'
                 case 39: // right arrow
                 case 40: // down arrow
                 case 34: // page down
@@ -406,10 +387,6 @@ ZN.App.prototype = {
         var self = this;
         setTimeout(function(){self.loadIncTimeSeries()}, this.timeSeriesRequestInterval);
 
-
-    },
-
-    resize:function(){
 
     },
 
@@ -523,78 +500,6 @@ ZN.App.prototype = {
         }
         */
     }
-
-
-    /*
-
-
-     // classifications request. Not currently used
-
-     this.nextRequestTime = 0;
-     this.requestDuration = 60*1000; // in ms
-     this.classificationDelay = 0;
-     this.classificationLoadCount = 0;
-     this.archiveStartSecs = 120000;//2*24*60*60; // seconds
-
-
-     loadClassification:function () {
-     var maxItems = 1000;
-     var requestDurationSecs = this.requestDuration/1000;
-     var offsetSecs = 0;
-     if(this.dataSource=="archive"){
-     offsetSecs = this.archiveStartSecs-this.classificationLoadCount*requestDurationSecs;
-     }
-     var url = this.apiUrl + "classifications/" + maxItems +"/duration/"+requestDurationSecs+"/offset/"+offsetSecs;
-
-     this.loadUrl(url, "json", this.classificationLoaded);
-
-     },
-
-     classificationLoaded:function(data){
-     var d = data;
-     var classifications = this.model.addClassifications(data);
-     var delay = (new Date()).valueOf() - classifications[0].time;
-
-     this.classificationLoadCount += 1;
-
-     if(this.firstFrame){
-     this.firstFrame = false;
-     this.classificationDelay = delay;
-     this.nextRequestTime = (new Date()).valueOf() + this.requestDuration;
-     this.update();
-
-     }
-     else{
-
-     if(this.classificationDelay < delay){
-     //this.classificationDelay = delay;
-     }
-
-     }
-
-     },
-
-     updateClassifications:function(){
-     /*
-     // load new classifications
-     if(this.curTime>this.nextRequestTime){
-     this.loadClassification();
-     this.nextRequestTime = this.curTime + this.requestDuration;
-     console.log("nextRequestTime",(new Date(this.nextRequestTime)).toISOString());
-     }
-
-     // classification
-     if(this.model.classifications.length>0){
-     var nextClassificationTime = this.model.getNextClassificationTime()+ this.classificationDelay;
-     if(this.curTime>nextClassificationTime){
-     console.log("nextClassificationTime",(new Date(nextClassificationTime)).toISOString());
-     var classification = this.model.removeFirstClassification();
-     console.log("classification timestamp:",classification.timestamp);
-
-     }
-     }
-     */
-
 
 
 }

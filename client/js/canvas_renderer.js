@@ -1,3 +1,7 @@
+/*
+ * ZN.CanvasRenderer render project compositions using HTML5 Canvas
+ */
+
 ZN.CanvasRenderer = function () {
 
     this.app = null;
@@ -100,7 +104,6 @@ ZN.CanvasRenderer.prototype = {
 
             var psx = project.sx, psy = project.sy;
 
-            //var px = project.x+cx, py = project.y+cy,
             var px = project.x, py = project.y,
                 pr = project.rotation;
 
@@ -191,12 +194,8 @@ ZN.CanvasRenderer.prototype = {
         this.ctx.restore();
 
 
-    },
-
-    projectToFront:function(project){
-
-
     }
+
 
 }
 
