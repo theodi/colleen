@@ -297,6 +297,10 @@ ZN.App.prototype = {
             self.showControls(false);
         },5000);
 
+        $(window).resize(function(){
+            self.renderer.resize();
+        });
+
 
         $(window).keydown(function( event ) {
             //console.log(event.which);
