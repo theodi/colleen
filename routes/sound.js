@@ -144,8 +144,13 @@ function compileSoundConfig(options, callback){
               // debug('json', json);
               callback(null, json);
             }catch(err){
-              debug('no volumes.json file found for', projectId);
-              callback(null, {});
+              debug('no volumes.json file found for', projectId, ', using defaults.');
+              callback(null, {
+                "layers" : [],
+                "smplr_a" : 0,
+                "smplr_b" : 0,
+                "master" : 0
+              });
             }
           },
           layers: function(callback){
