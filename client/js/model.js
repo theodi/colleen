@@ -65,23 +65,22 @@ ZN.Model.prototype = {
     },
 
     processSoundConfig: function(data){
-
+      'use strict';
         var scenes = [];
         // add base sound
-        scenes.push( _.find(data.scenes,{"id":'__base'}));
+        var obj = _.find(data.scenes,{"id":'__base'});
+        if(obj) scenes.push(obj);
 
         // add active projects in focus order
         _.each(this.focusList,function(projectIndex){
             var projectId = this.projects[projectIndex].id;
-            var soundObj = _.find(data.scenes,{"id":projectId});
-            scenes.push(soundObj);
-
+            obj = _.find(data.scenes,{"id":projectId});
+            if(obj) scenes.push(obj);
         },this);
 
         data.scenes = scenes;
         this.soundConfig = data;
         return data;
-
     },
 
     setSoundLoaded: function(projectId){
