@@ -23,7 +23,7 @@ var sceneData = {};
 var mix; // mixbus
 
 function init(config, cbProgress) {
-  debug('Initializing soundengine', config);
+  debug('Initializing soundengine, config: ',config);
 
   if('AudioContext' in window) {
      context = new window.AudioContext();
@@ -48,6 +48,7 @@ function init(config, cbProgress) {
   // sceneIds = [];
   config.scenes.forEach(function(def) {
     // sceneIds.push(p.id);
+    if(!def) return; // guard for undefined scenes
 
     var scene = {
       id : def.id, // for progress report
@@ -85,6 +86,9 @@ function init(config, cbProgress) {
   // var loadingScene = 'none';
   // Scenes are loaded one after another
   async.eachSeries(config.scenes, function(def, callback) {
+
+    if(!def) return; // guard for undefined scenes
+
     // Calculate how much we still need to load
     var percent = (loadCounter++/ config.scenes.length) * 100;
     cbProgress(null, Math.floor(percent), def.id, loadCounter);
@@ -165,20 +169,25 @@ function setSceneLayersMix(v) {
     return;
 
   if(!settings.sceneLayersMixMode){
+    // debug('mix keep 1');
     mixLayersKeep1(activeSceneId, v);
   }else{
+    // debug('mix all off');
     mixLayersAllOff(activeSceneId, v);
   }
 }
 
 function setBaseLayersMix(v){
+  // sceneData.__base.layersMix = v;
   mixLayersAllOff('__base', v);
 }
 
 function mixLayersKeep1(sceneId, v){
+  // var vnorm = v / 100;
   var data = sceneData[sceneId];
   data.layersMix = v;
   var numLayers = data.layers.length;
+  // if(numLayers <= 1) return; // nothing to do with one layer
 
  data.layers.forEach(function(layer, index, arr){
   if(index === 0){
@@ -199,6 +208,7 @@ function mixLayersKeep1(sceneId, v){
 }
 
 function mixLayersAllOff(sceneId, v){
+  // var vnorm = v / 100;
   var data = sceneData[sceneId];
   data.layersMix = v;
   var numLayers = data.layers.length;
@@ -352,7 +362,7 @@ function triggerSamplerB() {
 Loading all audio files from a scene. This happens in parallel.
  */
 function loadSceneFiles(def, callback) {
-  debug('Loading def: ', def.id);
+  debug('Loading files for scene: ', def.id);
   async.series([
 
     function(cb) {
@@ -386,12 +396,9 @@ function loadSceneLayers(def, callback) {
 
       layer.mix.gain.value = 0;
       layer.mix.connect(layer.volume);
-      if(!def.volumes.layers){
-          debug('loadSceneLayers, no volume object: ',def.id);
-      }
-      var vol = def.volumes.layers[count++];
-    // debug(def.id, 'layer volume', count-1, vol, dbToGain(vol || 0));
-      layer.volume.gain.value = dbToGain(vol || 0);
+      var vol = def.volumes.layers[count++] || 0;
+
+      layer.volume.gain.value = dbToGain(vol);
       layer.volume.connect(data.fade);
       data.layers.push(layer);
       return cb(null);
@@ -501,20 +508,6 @@ function getAudioBufferData(url, callback) {
 
   request.send();
 }
-
-// function setBaseLayerVolume(db){
-//   var data = sceneData.__base;
-//   if(!data){
-//     debug('No base layer available, setBaseLayerVolume no-op');
-//     return;
-//   }
-
-//   if(db <= -40){
-//     data.fade.gain.value = 0;
-//   }else{
-//     data.fade.gain.value = dbToGain(db);
-//   }
-// }
 
 module.exports = {
   init: init,
@@ -1361,13 +1354,13 @@ module.exports = {
         };
         return q;
     };
-
+    
     async.priorityQueue = function (worker, concurrency) {
-
+        
         function _compareTasks(a, b){
           return a.priority - b.priority;
         };
-
+        
         function _binarySearch(sequence, item, compare) {
           var beg = -1,
               end = sequence.length - 1;
@@ -1381,7 +1374,7 @@ module.exports = {
           }
           return beg;
         }
-
+        
         function _insert(q, data, priority, callback) {
           if (!q.started){
             q.started = true;
@@ -1403,7 +1396,7 @@ module.exports = {
                   priority: priority,
                   callback: typeof callback === 'function' ? callback : null
               };
-
+              
               q.tasks.splice(_binarySearch(q.tasks, item, _compareTasks) + 1, 0, item);
 
               if (q.saturated && q.tasks.length === q.concurrency) {
@@ -1412,15 +1405,15 @@ module.exports = {
               async.setImmediate(q.process);
           });
         }
-
+        
         // Start with a normal queue
         var q = async.queue(worker, concurrency);
-
+        
         // Override push to accept second parameter representing priority
         q.push = function (data, priority, callback) {
           _insert(q, data, priority, callback);
         };
-
+        
         // Remove unshift function
         delete q.unshift;
 
@@ -2737,6 +2730,8 @@ var process = module.exports = {};
 process.nextTick = (function () {
     var canSetImmediate = typeof window !== 'undefined'
     && window.setImmediate;
+    var canMutationObserver = typeof window !== 'undefined'
+    && window.MutationObserver;
     var canPost = typeof window !== 'undefined'
     && window.postMessage && window.addEventListener
     ;
@@ -2745,8 +2740,29 @@ process.nextTick = (function () {
         return function (f) { return window.setImmediate(f) };
     }
 
+    var queue = [];
+
+    if (canMutationObserver) {
+        var hiddenDiv = document.createElement("div");
+        var observer = new MutationObserver(function () {
+            var queueList = queue.slice();
+            queue.length = 0;
+            queueList.forEach(function (fn) {
+                fn();
+            });
+        });
+
+        observer.observe(hiddenDiv, { attributes: true });
+
+        return function nextTick(fn) {
+            if (!queue.length) {
+                hiddenDiv.setAttribute('yes', 'no');
+            }
+            queue.push(fn);
+        };
+    }
+
     if (canPost) {
-        var queue = [];
         window.addEventListener('message', function (ev) {
             var source = ev.source;
             if ((source === window || source === null) && ev.data === 'process-tick') {
@@ -2786,7 +2802,7 @@ process.emit = noop;
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
-}
+};
 
 // TODO(shtylman)
 process.cwd = function () { return '/' };
