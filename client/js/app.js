@@ -101,7 +101,10 @@ ZN.App.prototype = {
         this.dataSource = ZN.Config.dataSource;
         this.debug = ZN.Config.debug;
         this.rules.init(this,this.model);
-        this.loadProjectRules();
+        var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+        if(!iOS){
+            this.loadProjectRules();
+        }
 
     },
 
