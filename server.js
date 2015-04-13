@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 // redirect www to non-www
+/*
 app.get('/*', function(req, res, next) {
     if(/^www\./.test(req.headers.host)) {
         res.redirect(req.protocol+'://'+req.headers.host.replace(/^www\./,'')+req.url,301);
@@ -37,6 +38,7 @@ app.get('/*', function(req, res, next) {
         next();
     }
 });
+*/
 
 // timeseries
 app.get('/timeseries',classifications.getTimeSeries); // client
