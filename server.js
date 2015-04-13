@@ -29,6 +29,15 @@ app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
 app.use(express.json());
 app.use(express.urlencoded());
 
+// redirect www to non-www
+app.get('/*', function(req, res, next) {
+    if(/^www\./.test(req.headers.host)) {
+        res.redirect(req.protocol+'://'+req.headers.host.replace(/^www\./,'')+req.url,301);
+    } else {
+        next();
+    }
+});
+
 // timeseries
 app.get('/timeseries',classifications.getTimeSeries); // client
 app.get('/timeseries/from/:from/to/:to',classifications.getTimeSeriesBetweenDates); // client
