@@ -124,7 +124,7 @@ ZN.CanvasRenderer.prototype = {
                 },this);
 
                 if(typeof shape.parentId === "undefined"){
-                    this.renderShape(project,shape);
+                    //this.renderShape(project,shape);
                     this.renderText(project,shape);
                 }
 
@@ -210,24 +210,61 @@ ZN.CanvasRenderer.prototype = {
         var segsAbs = shape.pathSegs; //Snap.path.toAbsolute(shape.d);
 
         var x, y;
+        var ox,oy;
+        this.ctx.strokeStyle = shape.fill;
+        this.ctx.lineWidth=1.0;
 
         for(var s=0;s<segsAbs.length;s++){
             var seg = segsAbs[s];
             switch(seg[0]){
                 case "M":
-                    //this.ctx.moveTo(seg[1],seg[2]);
-                    this.ctx.translate(seg[1],seg[2]);
+                    this.ctx.moveTo(seg[1],seg[2]);
                     break;
                 case "C":
-                    //this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
-                    this.ctx.translate(seg[5],seg[6]);
+                    this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
                     break;
                 case "L":
-                    //this.ctx.lineTo(seg[1],seg[2]);
-                    this.ctx.translate(seg[1],seg[2]);
+                    this.ctx.lineTo(seg[1],seg[2]);
                     break;
             };
-            this.ctx.fillText("0,0", 0,0);
+
+        }
+
+        this.ctx.stroke();
+
+
+        //this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity*project.opacity).css();
+
+
+        this.ctx.fillStyle = shape.fill;// chroma(shape.fill).alpha(shape.opacity*project.opacity).css();
+
+
+
+        for(var s=0;s<segsAbs.length;s++){
+            var seg = segsAbs[s];
+            switch(seg[0]){
+                case "M":
+                    this.ctx.translate(seg[1],seg[2]);
+                    //this.ctx.fillText("M", 0,0);
+                    ox = seg[1];
+                    oy = seg[2];
+
+                    break;
+                case "C":
+                    this.ctx.translate(seg[5]-ox,seg[6]-oy);
+                    ox = seg[5]
+                    oy = seg[6]
+                    this.ctx.fillText("C", 0,0);
+
+                    break;
+                case "L":
+                    this.ctx.translate(seg[1],seg[2]);
+                    this.ctx.fillText("L", 0,0);
+
+
+                    break;
+            };
+
         }
 
 
