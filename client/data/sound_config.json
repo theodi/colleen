@@ -111,11 +111,38 @@
 				"cnr_braids5.mp3"
 			],
 			"smplr_b": [
-				"cnr_braids10.mp3",
 				"cnr_braids6.mp3",
+				"cnr_braids10.mp3",
 				"cnr_braids7.mp3",
 				"cnr_braids8.mp3",
 				"cnr_braids9.mp3"
+			]
+		},
+		{
+			"id": "condor",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
 			]
 		},
 		{
@@ -145,8 +172,8 @@
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
-				"cln_crash2.mp3",
 				"cln_crash3.mp3",
+				"cln_crash2.mp3",
 				"cln_crash4.mp3"
 			]
 		},
@@ -206,9 +233,63 @@
 			],
 			"smplr_b": [
 				"mky_tingle6.mp3",
-				"mky_tingle7.mp3",
 				"mky_tingle8.mp3",
+				"mky_tingle7.mp3",
 				"mky_tingle9.mp3"
+			]
+		},
+		{
+			"id": "notes_from_nature",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
+			]
+		},
+		{
+			"id": "planet_four",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
 			]
 		},
 		{
@@ -241,6 +322,60 @@
 			]
 		},
 		{
+			"id": "radio",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
+			]
+		},
+		{
+			"id": "sea_floor",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
+			]
+		},
+		{
 			"id": "serengeti",
 			"volumes": {
 				"layers": [
@@ -267,6 +402,33 @@
 				"ser_bisonp2.mp3",
 				"ser_bisonp3.mp3",
 				"ser_bisonp4.mp3"
+			]
+		},
+		{
+			"id": "sunspot",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
 			]
 		},
 		{
@@ -312,6 +474,33 @@
 		},
 		{
 			"id": "wise",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
+			],
+			"smplr_a": [
+				"wse_sigp1.mp3",
+				"wse_sigp2.mp3",
+				"wse_sigp3.mp3",
+				"wse_sigp4.mp3"
+			],
+			"smplr_b": [
+				"wse_sigp5.mp3",
+				"wse_sigp6.mp3",
+				"wse_sigp7.mp3",
+				"wse_sigp8.mp3"
+			]
+		},
+		{
+			"id": "worms",
 			"volumes": {
 				"layers": [
 					0,

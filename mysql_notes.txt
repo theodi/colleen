@@ -21,10 +21,35 @@ If you have issues with MySQL not starting
 ensure present working directory is the project directory (i.e. colleen), then
 
 > source dev.env
-> node client/util/compile_assets.js
+> node client/util/compile_assets.js   [or set supervisor running, see below in Run]
 > foreman start
 
 where node commend compiles the .js and foreman starts the node server
 
 To set timezone to global:
 > mysql -e "SELECT @@global.time_zone;"
+
+
+To switch between MASTER and LOCAL
+
+Change:
+
+* procfile
+* config/config.js - audio file path to S3 bucket (WEB) or baseUrl (LOCAL)
+* js/config.js - dataSource: "live", //"json_file",//"archive"
+  [ timeseriesJson file needs to be in client/data ]
+
+Run:
+* supervisor -n exit -w client/audio,config -e on,mp3 client/util/compile_sound_config.js
+* supervisor -n exit -w client/data/src -e json,svg client/util/compile_assets.js
+
+Audio notes:
+
+All sound files on bucket have to be the same as the local files
+Do not upload sound files to Heroku
+
+
+Sound file conversions:
+for i in *.wav; do ffmpeg -i "$i" -ab 128k "${i%wav}mp3" -y; done
+for i in *.aif; do ffmpeg -i "$i" -ab 128k "${i%aif}mp3" -y; done
+for i in *.aif; do ffmpeg -i "$i" -ac 1 -ab 64k "${i%aif}mp3" -y; done

@@ -29,7 +29,7 @@
             {"type":"scale","dataType":"u","data":"day","fn":"id","sx":[0.7,2.0],"sy":[0.8,2.1] ,"duration":[30.0,60.0], "duration_data":"day", "time":0},
             {"type":"_rotate","data":"min","tween":"linear","fn":"sqrt","rotation":[-0.1,0.1],"duration":[1.0,40.0],"time":0},
             {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[14.0,14.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
-            {"type":"trail","trail_type":"path","fade":0.95,"opacity":0.4,"duration":[1.0,2.0], "time":0}
+            {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,2.0], "time":0}
             ]},
 
         { "_comment":"Central Bar. Scale X",
