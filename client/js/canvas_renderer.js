@@ -125,6 +125,7 @@ ZN.CanvasRenderer.prototype = {
 
                 if(typeof shape.parentId === "undefined"){
                     this.renderShape(project,shape);
+                    this.renderText(project,shape);
                 }
 
             }
@@ -191,6 +192,59 @@ ZN.CanvasRenderer.prototype = {
 
         // Restore to project transform
         //console.log("ctx.restore");
+        this.ctx.restore();
+
+    },
+
+    renderText: function(project,shape){
+
+        // Store project transform
+        this.ctx.save();
+        // Shape transform
+        this.ctx.translate(shape.x,shape.y);
+        this.ctx.rotate(shape.rotation*Math.PI/180);
+        this.ctx.scale(shape.sx,shape.sy);
+
+        this.ctx.beginPath();
+
+        var segsAbs = shape.pathSegs; //Snap.path.toAbsolute(shape.d);
+
+        var x, y;
+
+        for(var s=0;s<segsAbs.length;s++){
+            var seg = segsAbs[s];
+            switch(seg[0]){
+                case "M":
+                    //this.ctx.moveTo(seg[1],seg[2]);
+                    this.ctx.translate(seg[1],seg[2]);
+                    break;
+                case "C":
+                    //this.ctx.bezierCurveTo(seg[1],seg[2],seg[3],seg[4],seg[5],seg[6]);
+                    this.ctx.translate(seg[5],seg[6]);
+                    break;
+                case "L":
+                    //this.ctx.lineTo(seg[1],seg[2]);
+                    this.ctx.translate(seg[1],seg[2]);
+                    break;
+            };
+            this.ctx.fillText("0,0", 0,0);
+        }
+
+
+        //this.ctx.fillStyle = chroma(shape.fill).alpha(shape.opacity*project.opacity).css();
+
+        //this.ctx.fill();
+
+
+        var nShapes = shape.children.length;
+        for(var c=0;c<nShapes;c++){
+            var childShape = shape.children[nShapes-c-1];
+            //console.log("childShape",childShape.x,childShape.y,childShape.fill,childShape.width,childShape.height);
+            this.renderText(project,childShape);
+
+        }
+
+        // Restore to project transform
         this.ctx.restore();
 
 
