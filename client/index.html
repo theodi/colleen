@@ -110,7 +110,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <iframe name="altContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;" allowFullScreen></iframe>
+                        <iframe name="altContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/compatibility.htm" style="height:30em;"></iframe>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
                       <div class="tabbable">
                         <div class="tab-content">
                           <div class="tab-pane active" id="main">
-                            <iframe id="mainFrame" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/about.htm" style="height:30em;" allowFullScreen></iframe>
+                            <iframe id="mainFrame" name="mainContent" width="100%" height="100%" frameborder="0" scrolling="auto" allowtransparency="true" src="webpages/about.htm" style="height:30em;" ></iframe>
                           </div>
                         </div>
                       </div> <!-- /tabbable -->
@@ -223,12 +223,13 @@
                 $("#about_weneedus_div").css('display','block');
 
             }
-
+			
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
 			
 			$( ".leftButton" ).click(function() {
 	  		$( "#about_weneedus_div" ).fadeIn( "slow", "linear" );
+			
 			});
 			
 			$( "#closeBtton" ).click(function() {
@@ -276,8 +277,13 @@
 				});
 			});
 
-
-
+			var uagent = navigator.userAgent.toLowerCase();
+			if(/safari/.test(uagent) && !/chrome/.test(uagent))
+			{
+				$("#full-screen-button").hide();
+			}
+			
+			
 		
 		</script>
 		<!-- /website scripts -->
