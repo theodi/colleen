@@ -667,6 +667,25 @@ exports.getDBstats = function(req, res) {
 };
 
 
+/*---------------------------------------------------------------------------*/
+
+// Optimize table
+
+
+exports.optimize = function (req, res) {
+    gPool.getConnection(function(error, con) {
+        if(error) throw error;
+
+        con.query('OPTIMIZE TABLE classifications', function (err, rows) {
+            con.release();
+            if (err) {
+                res.send({status: 0});
+            } else {
+                res.send({status: 1});
+            }
+        });
+    });
+};
 
 /*---------------------------------------------------------------------------*/
 

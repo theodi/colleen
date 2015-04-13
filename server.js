@@ -47,6 +47,7 @@ app.get('/analytics/totals',classifications.getAnalyticsAggregateCountries);
 // diagnostics
 app.get('/ping', classifications.ping); // monitor
 app.get('/isupdating', classifications.isUpdating);// monitor
+app.get('/optimize_db', classifications.optimize);// optimize
 app.get('/dbstats',classifications.getDBstats);
 
 app.get('/sound', sound.test);
