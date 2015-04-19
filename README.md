@@ -9,11 +9,18 @@ It is fed by an API built using Node.js and MySQL.
 
 ##License
 
-We intend for this work to be open source but have not yet chosen the license.
+We intend for this work to be open source see weneedus.org for the license.
 
 ##Acknowledgements
 
-Many have helped us. We will name them in time.
+Gavin Baily
+Gavin Starks
+Hannah Redler
+Emma Thwaites
+Victoria & Ruth
+Marcus
+Matt Jarvis
+Harley-Jo Avery
 
 ##Requirements
 
