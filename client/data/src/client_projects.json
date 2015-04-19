@@ -1,4 +1,5 @@
 [
+    "asteroid",
     "bat_detective",
     "cancer_cells",
     "cyclone_center",
@@ -7,5 +8,9 @@
     "plankton",
     "serengeti",
     "war_diary",
-    "wise"
+    "wise",
+    "radio",
+    "notes_from_nature",
+    "sunspot",
+    "worms"
 ]
