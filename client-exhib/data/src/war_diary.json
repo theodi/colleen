@@ -1,0 +1,71 @@
+{
+    "name":"war_diary",
+    "title":"War Diaries",
+    "sx":0,"sy":0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+    
+    "animation":[
+        {"_comment":"align with id 5","type":"loop_sound","dataType":"u","duration_data":"hour","duration":[20.0,100.0],"sample":0,"time":10},
+        {"_comment":"align with ids 2,5,10,11","type":"loop_sound","dataType":"c","duration_data":"day","duration":[200.0,400.0],"sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.2],"duration":[60.0,60.0], "time":0}
+
+    ],
+
+     "shape_animation":
+        [{"_comment":"horizontal blocks dk red","shape_ids":["1","3","6"],"animation":
+            [{"type":"scale","dataType":"c","data":"day","tween":"linear","fn":"sqrt","sx":[1.0,1.0],"sy":[0.8,1.3],"duration":[200.0,400.0],"duration_data":"day","time_fn":"random"},
+            {"type":"translate","data":"day","tween":"linear","fn":"id","dir":"y","range":[-30,30],"duration":[100.0,100.0],"duration_data":"day","time_fn":"random", "loop_sound":1}]
+        },
+
+        {"_comment":"horizontal blocks lt red","shape_ids":["2","5","10","11"],"animation":
+            [{"type":"scale","dataType":"c","data":"hour","tween":"linear","fn":"sqrt","sx":[1.0,1.0],"sy":[1.0,1.4],"duration":[200.0,400.0],"duration_data":"hour","time_fn":"random"},
+            {"type":"translate","data":"hour","tween":"linear","fn":"id","dir":"y","range":[-40,40],"duration":[200.0,200.0],"time_fn":"random"}]
+        },
+
+        {"_comment":"small sticks","shape_ids":["4","7","8","9","12","13","14","15"],"animation":
+            [{"type":"scale","dataType":"u","data":"min","series_len":10,"tween":"linear","fn":"id","sx":[0.3,2.4],"sy":[0.3,2.4],"duration":[30.0,60.0],"duration_data":"min","time_fn":"random"},
+            {"type":"serengeti","dataType":"u","data":"min","tween":"linear","fn":"sqrt","duration":[20.0,20.0],"rangeX":[-0.2,0.2],"rangeY":[-2.0,2.0],"time_fn":"random"},
+            {"type":"opacity","dataType":"u","data":"min","tween":"linear","fn":"sqrt","range":[0.99,0.02],"duration":[60.0,60.0],"time":0},
+            {"type":"rotate","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","rotation":[-70,70],"duration_data":"hour","duration":[0.0,100.0],"time":10}]
+        },
+
+        {"_comment":"all horiz blocks","shape_ids":["1","2","3","6","10","11"],"animation":[]
+        }
+    ],
+
+    "shapes":[
+
+        { "_comment":"Rotation",
+            "id":"2","rotation":-2.5},
+        { "_comment":"drop one red block down, play sound. WHY DOESN'T THIS WORK",
+            "id":"4","rotation":-4.5,"animation":[
+            {"type":"translate","data":"hour","tween":"id","fn":"id","dir":"y","range":[0,800],"duration":[20.0,20.0],"time":10,"loop_sound":1}]},
+
+        { "_comment":"Rotation",
+            "id":"5","rotation":-34.3,"animation":[
+            {"type":"rotate","dataType":"u","data":"hour","tween":"id","fn":"sqrt","rotation":[-40,-35],"duration_data":"hour","duration":[20.0,100.0],"time":10}]},
+
+        { "_comment":"Rotation",
+            "id":"6","rotation":-5.5},
+        { "_comment":"Rotation",
+            "id":"7","rotation":6.5},
+        { "_comment":"Rotation",
+            "id":"8","rotation":5.7},
+        { "_comment":"Rotation",
+            "id":"9","rotation":2.5},
+        { "_comment":"Rotation",
+            "id":"10","rotation":10.4},
+        { "_comment":"Rotation",
+            "id":"11","rotation":6.2},
+        { "_comment":"Rotation",
+            "id":"12","rotation":-7.0},
+        { "_comment":"Rotation",
+            "id":"13","rotation":-7.0},
+        { "_comment":"Rotation",
+            "id":"14","rotation":-7.0},            
+        { "_comment":"Rotation",
+            "id":"15","rotation":-7.0}
+    ]
+}

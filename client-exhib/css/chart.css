@@ -1,0 +1,11 @@
+body {
+    font-size: 14px;
+}
+
+#menu{
+    padding: 10px;
+}
+
+#menu > span{
+    padding:0 0 0 10px;
+}

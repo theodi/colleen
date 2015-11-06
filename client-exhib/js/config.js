@@ -1,0 +1,38 @@
+ZN.Config = {
+
+    // Data source
+    // "json_file" uses timeseriesJson file.
+    // "live" uses live timeseries
+    // "archive" uses archived timeseries
+    dataSource: "live", //"json_file",//"archive"
+    timeseriesJson:"timeseries_20140904.json",
+
+    // Composition dimensions
+    assetBB:{left:0,bottom:1080,right:1920,top:0,width:1920,height:1080},
+
+    // Sound config
+    //soundConfigPath:"sound/config", // execute sound.js route
+    soundConfigPath:"data/sound_config.json",
+
+    // Debug
+    // display framerate and debug info
+    debug:false,
+
+    // Interface
+    showControlsOnProjectChange:true,
+    showControlsDuration:3, // duration to show controls on project change (seconds)
+
+    // Rules to select focus project
+    focusOpacity:1.0, // opacity of focused project
+    bgOpacity:0.03, // opacity of background projects
+    focusDuration:2.5, // transition duration from bgd project to become in focus (seconds)
+
+    bgScaleAnim:{"type":"scale","data":"day","sx":[0.6,0.8],"sy":[0.6,0.8],"tween":"linear","fn":"sqrt"}, // background animation scale rule OLD:{"type":"scale","data":"day","sx":[0.02,0.1],"sy":[0.02,0.1],"tween":"linear","fn":"id"}
+    bgScaleAnimDurationRange:[500.0,600.0], // background animation scale rule duration range (seconds)
+    changeFocusDuration:[60,100] // change duration of focus project switch. random number between range (seconds)
+
+
+}
+
+
+

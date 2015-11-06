@@ -1,0 +1,42 @@
+<html>
+<body>
+
+<script src="lib/jquery/jquery-1.11.1.min.js"></script>
+<script src="lib/lodash/lodash.compat.min.js"></script>
+<script src="lib/springy/springy.js"></script>
+<script src="lib/springy/springyui.js"></script>
+<script src="js/project_graph.js"></script>
+
+<script type="text/javascript">
+    var ZN = ZN || { };
+    $(window).load(function() {
+
+        $.get( "data/project_rels.csv", function( data ) {
+
+            var projectGraph = new ZN.ProjectGraph();
+            var graph = projectGraph.createSpringyGraphFromEdgeCSV(data);
+
+            jQuery(function(){
+                var springy = window.springy = jQuery('#springydemo').springy({
+                    graph: graph,
+                    //stiffness: 150.0, // 400
+                    //repulsion:800.0, // 400
+                    stiffness: 10,
+                    repulsion: 400,
+                    damping: 0.3, // 0.5
+                    nodeSelected: function(node){
+                        console.log('Node selected: ' + JSON.stringify(node.data));
+                    }
+                });
+            });
+        });
+
+
+    });
+</script>
+
+
+
+<canvas id="springydemo" width="960" height="520" />
+</body>
+</html>

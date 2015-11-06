@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="Zooniverse" />
+    <meta name="description" content="" />
+    <title>Zooniverse Charts</title>
+
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/chart.css"/>
+    <link rel="stylesheet" type="text/css" href="css/d3/nv.d3.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.min.css"/>-->
+    <link rel="stylesheet" type="text/css" href="lib/jquery/datetimepicker/jquery.datetimepicker.css"/>
+
+
+    <!--<script src="lib/jquery/jquery-1.11.1.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="lib/jquery/datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="lib/lodash/lodash.compat.min.js"></script>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="lib/d3/nv.d3.min.js"></script>
+    <script src="js/chart.js"></script>
+
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            var chart = new ZN.Chart();
+            chart.init();
+        });
+    </script>
+
+</head>
+<body  scroll="no">
+<div align="center">
+<h1>We Need Us: Zooniverse data tool</h1>
+<p>During development of <a href="http://www.weneedus.org">We Need Us</a>, this tool was used to explore the data harvested from all the different projects in the <a href="http://zooniverse.org">Zooniverse</a>. 
+
+It helped to reveal patterns and rhythms in the data which influenced how the compositions and sounds were created.</p>
+<p>
+This tool used data archived from the last month. Please enter a recent date range to explore project data at different intervals.
+</p>
+</div>
+
+<div id="menu" align="center" >
+    <span>Start Date: <input type="text" id="start-date"></span>
+    <span>End Date: <input type="text" id="end-date"></span>
+
+
+    <span>Interval: <select id="time-select">
+       <!-- <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="15">15</option>-->
+        <option value="60">1 hr</option>
+        <option value="1440">1 day</option>
+        <!--<option value="10080">1 week</option>-->
+    </select></span>
+    <span><button id="update-but" href="#">Update</button></span>
+    <span><span id="loading" style="display:none">Loading...</span></span>
+
+</div>
+
+<div id="chart-container" align="center" >
+    <svg style="width:1200px;height:500px" ></svg>
+</div> <!-- close wrapper -->
+
+<div style="width:1200px" align="center" >
+    <a href="http://www.thespace.org"><img src="webpages/images/the-space_plogo_vert_blue.jpg" alt="the space logo"></a>
+    <a href="http://www.theodi.org"><img class="rightFloat" src="webpages/images/odi_culture-url-72-250px.jpg" alt="the ODI logo"></a>
+</div>
+
+</body>
+</html>

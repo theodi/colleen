@@ -1,0 +1,83 @@
+{
+    "name":"radio",
+    "title":"Radio Galaxy Zoo",
+    "sx":1.0,
+    "sy":1.0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+
+    "animation":[
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[4.0,10.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+    ],
+
+    "shape_animation":[
+
+        {"shape_ids":["3","4","6","7","9"],"animation":
+            [{"type":"_radio","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[10.0,30.0],"duration_data":"hour", "time_fn":"random"}]},
+
+        {"shape_ids":["3","5","6","7","9"],"animation":
+            [{"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[14.0,14.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"duration_data":"min","time_fn":"random"}]}
+     ],
+
+    "shapes":[
+
+        { "_comment":"Central Shape",
+            "id":"1","rotation":-18, "opacity":0.6,
+            "animation":[
+            {"type":"scale","dataType":"u","data":"day","fn":"id","sx":[0.7,2.0],"sy":[0.8,2.1] ,"duration":[30.0,60.0], "duration_data":"day", "time":0},
+            {"type":"_rotate","data":"min","tween":"linear","fn":"sqrt","rotation":[-0.1,0.1],"duration":[1.0,40.0],"time":0},
+            {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[14.0,14.0], "rangeX":[-2.0,2.0],"rangeY":[-2.0,2.0],"time":0},
+            {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,2.0], "time":0}
+            ]},
+
+        { "_comment":"Central Bar. Scale X",
+            "id":"2","rotation":-11,"opacity":0.7,
+            "animation":[{"type":"_scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[10.0,4.0], "time":0},
+            {"type":"rotate","data":"day","tween":"linear","fn":"sqrt","rotation":[-11,-13],"duration":[1.0,40.0],"time":0},
+                {"type":"_trail","trail_type":"path","fade":0.5,"duration":[2.0,2.0], "time":0}]},
+
+        {  "_comment":"Scale min data",
+            "id":"3","rotation":-16,
+            "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1.0,2.0], "time":0},
+                {"type":"trail","trail_type":"path","fade":0.7,"duration":[0.1,1.0], "time":0}]
+        },
+
+        { "_comment":"top left rect, scale X+Y,",
+            "id":"4","rotation":-24,"opacity":0.4,
+            "animation":[{"type":"scale","data":"hour","fn":"id","sx":[1,0,1.0],"sy":[0.8,1.0] ,"duration":[120.0,120.0], "time":0},
+                {"type":"rotate","data":"min","tween":"linear","fn":"sqrt","rotation":[-24,-22],"duration":[4.0,4.0],"time":0},
+                {"type":"trail","trail_type":"path","fade":0.7,"duration":[0.1,1.0], "time":0}]
+        },
+
+        { "_comment":"bottom R rect",
+            "id":"5","rotation":-13,"opacity":0.6,
+            "animation":[{"type":"rotate","data":"min","tween":"linear","fn":"sqrt","rotation":[-10,10],"duration":[10.0,10.0],"time":0}]
+        },
+
+        { "_comment":"small square L",
+            "id":"6","rotation":0,"opacity":0.6,
+            "animation":[{"type":"trail","trail_type":"path","fade":0.7,"duration":[0.1,1.0],"time":0},
+            {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[4.0,4.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"time":0},
+            {"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,40],"radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]
+        },
+
+        { "_comment":"small square R",
+            "id":"7","rotation":0,"opacity":0.8,
+            "animation":[{"type":"trail","trail_type":"path","fade":0.7,"duration":[0.1,1.0],"time":0},
+            {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[14.0,14.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"time":0},
+            {"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,40],"radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]
+        },
+
+        { "_comment":"thin rect top R",
+            "id":"8","rotation":0,"opacity":0.3,
+            "animation":[{"type":"rotate","data":"min","tween":"linear","fn":"sqrt","rotation":[-2,2],"duration":[4.0,4.0],"time":0}]
+        },
+
+        { "_comment":"small square bottom R",
+            "id":"9","rotation":-16,"opacity":0.8,
+            "animation":[{"type":"trail","trail_type":"path","fade":0.7,"duration":[0.1,1.0],"time":0}]
+        }
+    ]
+}

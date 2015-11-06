@@ -1,0 +1,44 @@
+{
+    "name":"serengeti",
+    "title":"Snapshot Serengeti",
+    "sx":1.0,"sy":1.0,
+    "x":0,
+    "y":0,
+    "rotation":0,
+    "_fills":["#634e0d","#474611"],
+
+    "_bgScaleAnim":{"type":"scale","data":"day","sx":[0.5,0.8],"sy":[0.5,0.8],"tween":"linear","fn":"sqrt"},
+
+    "animation":[
+        {"type":"loop_sound","dataType":"c","duration_data":"min","duration":[30.0,200.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.25],"duration":[60.0,60.0], "time":0}
+
+    ],
+
+    "shape_animation":
+    [
+    	{"shape_ids":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],"animation":
+            [
+             {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[60.0,60.0], "rangeX":[-20.0,20.0],"rangeY":[-3.0,3.0],"time_fn":"random"},
+             {"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,0.98],"duration":[100.0,240.0],"time":0}]
+    	},
+
+    	{"_comment":"hidden blocks","shape_ids":["20","21"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#634e0d","#474611"],"duration":[30.0,120.0],"time":0},
+            {"type":"translate","data":"min","tween":"id","fn":"id","dir":"x","range":[-200,400],"duration":[200.0,240.0],"time_fn":"random","duration_data":"min", "series_len":2, "loop_sound":1},
+            {"type":"scale","data":"hour","fn":"id","sx":[0.98,1.03],"sy":[0.98,1.03] ,"duration":[200.0,240.0],"duration_data":"min","series_len":2, "time_fn":"random"},
+            {"type":"opacity","data":"day","tween":"linear","fn":"id","range":[0.1,0.9],"duration":[100.0,600.0],"duration_data":"day","time_fn":"random"}]
+    	}
+    ],
+
+    "shapes":
+    [
+        { "_comment":"first shape initial rotation",
+            "id":"19","rotation":-5.9
+        },
+
+        {"_comment":"translate y - large animal shape",
+            "id":"21","rotation":0,
+            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-50,300],"duration":[100.0,130.0],"duration_data":"min","time":0,"loop_sound":1}]}
+    ]
+}

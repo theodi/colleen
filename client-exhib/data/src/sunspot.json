@@ -1,0 +1,70 @@
+{
+    "name":"sunspot",
+    "title":"Sunspotter",
+    "sx":0.2,
+    "sy":0.2,
+    "x":0,
+    "y":0,
+    "_comment":"Project level animations",
+    
+    "animation":[
+        {"type":"loop_sound","dataType":"u","duration_data":"min","duration":[4.0,10.0], "sample":0,"time":0},
+        {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
+    ],
+
+
+    "shape_animation":[
+        {"_comment":"4 small blocks top left","shape_ids":["3","4", "5","6"],"animation":
+            [{"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.3,0.99],"duration":[10.0,240.0],"time_fn":"index"},
+            {"type":"circle","data":"min","tween":"linear","fn":"sqrt","deg_per_sec":[20,360],"angle":200,"radius":10,"duration":[15.0,50.0],"duration_data":"hour","time_fn":"random"},
+            {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0], "time":0}]},
+    
+        {"_comment":"horizontal shapes","shape_ids":["7","9","12","13"],"animation":
+            [{"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0],"time_fn":"random"},
+            {"type":"serengeti","data":"day","tween":"linear","fn":"sqrt","duration":[60.0,60.0],"rangeX":[-100.0,100.0],"rangeY":[-3.0,3.0],"time_fn":"random"}]},
+
+        {"_comment":"thinner horizontal shapes","shape_ids":["8","10","11"],"animation":
+            [{"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,5.0],"time_fn":"random"},
+            {"type":"point_translate","data":"min15","tween":"linear","fn":"sqrt","duration":[10.0,60.0],"rangeX":[-5.0,5.0],"rangeY":[-5.0,5.0],"time_fn":"random"}]},
+
+        {"_comment":"all horizontal shapes","shape_ids":["1","7","9","8","10","11","12","13"],"animation":
+            [{"type":"opacity","dataType":"c","data":"min","tween":"linear","fn":"id","range":[0.2,0.99],"duration":[80.0,240.0], "time_fn":"random"}]}
+
+    ],
+
+
+    "shapes":[
+        {"_comment":"shard through sun","id":"1","rotation":-20,"animation":[
+            {"type":"rotate","dataType":"u","data":"hour","tween":"linear","fn":"sqrt","rotation":[-30,-10],"duration_data":"hour","duration":[30.0,100.0],"time":10},
+            {"type":"translate","data":"min15","dataType":"u","series_len":20,"tween":"linear","fn":"sqrt","dir":"x","range":[-800,300],"duration":[70.0,100.0],"duration_data":"hour","time":0,"loop_sound":0},
+            {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,2.0],"time":0}]},
+
+        {"_comment":"sun","id":"2","rotation":-2,"animation":[
+            {"type":"scale","data":"min","dataType":"u","tween":"linear","fn":"sqrt","sx":[3.7,0.37],"sy":[3.7,0.37],"duration":[40.0,0.0], "time":0},
+            {"type":"point_translate","data":"min15","dataType":"u","tween":"linear","fn":"sqrt","duration":[40.0,60.0],"rangeX":[-10.0,10.0],"rangeY":[-10.0,10.0],"time":0},
+            {"type":"opacity","dataType":"u","data":"min","tween":"linear","fn":"sqrt","range":[0.3,0.8],"duration":[40.0,240.0],"time":0}]},
+
+        { "id":"3","rotation":-35},
+        
+        { "id":"4","rotation":-19},
+
+        { "id":"5","rotation":-19},
+
+        { "id":"6","rotation":-17},
+
+        { "id":"7","rotation":-19},
+
+        { "id":"8","rotation":-20},
+
+        { "id":"9","rotation":-16},
+
+        { "id":"10","rotation":-11},
+
+        { "id":"11","rotation":-19},
+
+        { "id":"12","rotation":-13},
+
+        { "id":"13","rotation":-9}
+
+    ]
+}
