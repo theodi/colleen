@@ -29,7 +29,7 @@ ZN.Config = {
 
     bgScaleAnim:{"type":"scale","data":"day","sx":[0.6,0.8],"sy":[0.6,0.8],"tween":"linear","fn":"sqrt"}, // background animation scale rule OLD:{"type":"scale","data":"day","sx":[0.02,0.1],"sy":[0.02,0.1],"tween":"linear","fn":"id"}
     bgScaleAnimDurationRange:[500.0,600.0], // background animation scale rule duration range (seconds)
-    changeFocusDuration:[40,80] // change duration of focus project switch. random number between range (seconds)
+    changeFocusDuration:[80,120] // change duration of focus project switch. random number between range (seconds)
 
 
 }
