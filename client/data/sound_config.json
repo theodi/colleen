@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "http://s3.amazonaws.com/weneedus/audio/wnu",
+		"baseUrl": "http://s3.amazonaws.com/weneedus/audio-exhibition/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -111,8 +111,8 @@
 				"cnr_braids5.mp3"
 			],
 			"smplr_b": [
-				"cnr_braids6.mp3",
 				"cnr_braids10.mp3",
+				"cnr_braids6.mp3",
 				"cnr_braids7.mp3",
 				"cnr_braids8.mp3",
 				"cnr_braids9.mp3"
@@ -172,8 +172,8 @@
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
-				"cln_crash3.mp3",
 				"cln_crash2.mp3",
+				"cln_crash3.mp3",
 				"cln_crash4.mp3"
 			]
 		},
@@ -233,8 +233,8 @@
 			],
 			"smplr_b": [
 				"mky_tingle6.mp3",
-				"mky_tingle8.mp3",
 				"mky_tingle7.mp3",
+				"mky_tingle8.mp3",
 				"mky_tingle9.mp3"
 			]
 		},
