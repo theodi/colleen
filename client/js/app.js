@@ -133,7 +133,9 @@ ZN.App.prototype = {
                         self.loadUrl(this.url, this.dataType, callback);
                     }
                     else {
-                        alert('Time out error.');
+                        if(!isExhibtionApp){
+                            alert('Time out error.');
+                        }
                     }
 
                 }

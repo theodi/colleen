@@ -33,6 +33,7 @@ module.exports = function(grunt) {
 
                     // chart
                     {src:'client/chart.html', dest:'web/chart.html' },
+                    {src:'client/exhibition.html', dest:'web/exhibition.html' },
                     {expand: true, cwd: 'client/lib/', src: ['**'], dest: 'web/lib/'},
                     {src:'client/js/chart.js',dest:'web/js/chart.js'}
                     /*
