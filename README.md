@@ -54,14 +54,19 @@ Many have helped us. We will name them in time.
         export WNU_DB_URL=mysql://colleen:PUTMYSQLPASSWORDHERE@localhost/zoon
         export WNU_HOST=localhost:5000
         export NODE_ENV=dev
+        export WNU_NEW_RELIC_ENABLED=false
 
 1. Type:
 
         $ source dev.env
 
+1. Install foreman
+
+        $ sudo gem install foreman
+
 1. Fire it up:
 
-   	$ foreman start
+        $ foreman start
 
 1. Visit app in browser at http://localhost:5000/chart.html
 
@@ -77,7 +82,7 @@ Many have helped us. We will name them in time.
 
         $ heroku login
         $ heroku create
-        
+
         Creating sharp-rain-871... done, stack is cedar
         http://sharp-rain-871.herokuapp.com/ | git@heroku.com:sharp-rain-871.git
         Git remote heroku added			
@@ -86,15 +91,12 @@ Many have helped us. We will name them in time.
 
         $ mysql -u <username> -h <hostaddress> -p <dbname> < data/zoon_tables.sql
 
-1. Run 
+1. Run
 
         $ heroku config:set WEB='node server.js'
-        $ heroku config:set WNU_HOST=sharp-rain-871.herokuapp.com 
+        $ heroku config:set WNU_HOST=sharp-rain-871.herokuapp.com
         $ heroku config:set WNU_DB_URL=mysql://<user>:<password>@<dbhost>/<dbname>?reconnect=true
         $ heroku config:set NODE_ENV=prod
         $ git push heroku master
 
 1. Visit your app at http://YOURAPPNAME
-
-
-
