@@ -55,6 +55,8 @@ Many have helped us. We will name them in time.
         export WNU_HOST=localhost:5000
         export NODE_ENV=dev
         export WNU_NEW_RELIC_ENABLED=false
+        export PUSHER_API_KEY=xxxxxxxxxx
+        export PUSHER_CLUSTER=xxx
 
 1. Type:
 
