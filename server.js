@@ -11,6 +11,7 @@ var express = require('express'),
     sound = require('./routes/sound');
 var compression = require('compression');
 
+var morgan = require('morgan');
 var app = express();
 app.use(compression());
 
@@ -22,7 +23,7 @@ app.use('/', express.static(__dirname +'/'+webRoot));
 
 app.use('/audio', express.static(__dirname +'/public/audio'));
 
-app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));     /* 'default', 'short', 'tiny', 'dev' */
 //bodyParser is deprecated
 //See http://stackoverflow.com/questions/20390513/heroku-foreman-exits-on-express-js-bodyparser-call
 //app.use(express.bodyParser());

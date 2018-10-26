@@ -20,6 +20,7 @@
     "grunt-targethtml": "^0.2.6",
     "jasmine-node": "^2.0.1",
     "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
     "mysql": "^2.16.0",
     "nconf": "^0.10.0",
     "newrelic": "^4.9.0",
