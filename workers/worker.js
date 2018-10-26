@@ -12,34 +12,35 @@ var nconf = require('nconf');
 
 
 // if testing then want to make sure we are using testing db
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV === 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
 }
 
-// config files take precedence over command-line arguments and environment variables 
-
+// config files take precedence over command-line arguments and environment variables
 nconf.file({ file:
     'config/' + process.env.NODE_ENV + '.json'
 })
     .argv()
     .env();
 
-
 // provide sensible defaults in case the above don't
 nconf.defaults({
 	timeout: 20000,
 
     projects_list: '../data/projects.json',
+    projects_ids: '../data/project_ids.json',
 	projects_table_name: 'projects',
 	classifications_table_name: 'classifications',
     timeseries_table_name: 'timeseries',
     cls_expire_after_x_days: 40,
-    default_project_updated_time:1402704000000,
+    default_project_updated_time:1402704000000,  // 1402704000
     classifications_per_page:5000
 });
 
 
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
+var PUSHER_API_KEY = nconf.get('PUSHER_API_KEY');
+var PUSHER_CLUSTER = nconf.get('PUSHER_CLUSTER');
 
 /*---------------------------------------------------------------------------*/
 
@@ -53,29 +54,41 @@ var MIN_SECS = 60,
     WEEK_SECS = 604800,
     MONTH_SECS = 2592000; // month 30 days
 
-var seriesLength={};
-seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60, seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
+var seriesLength = {};
+    seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60,
+    seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
 
 console.log("seriesLength is ", seriesLength);
 console.log("timeout is", nconf.get("timeout"));
 
-var gProjectList = [], gProjectQueue = [], gSeriesQueue = [];
+var gProjectList = [], gProjectQueue = [], gSeriesQueue = [], gProjectListById = [], gProjectIds = [];
 
 gProjectList = require(nconf.get("projects_list"));
-
 console.log('gProjectList is ', gProjectList);
+gProjectIds = require(nconf.get("projects_ids"));
+
+console.log('gProjectIds is ', gProjectIds);
+for (var i = 0; i < gProjectIds.length; i++) {
+    const project = gProjectIds[i];
+    gProjectListById["id_"+project['id']] = project;
+}
+//gProjectListById = gProjectIds.map(entry => entry["ids"].map(x => entry["name"]));
+
+console.log('gProjectListById is ', gProjectListById);
+console.log('gProjectListById.keys() is ', gProjectListById.keys());
+
 
 var gIntervals = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
 var gTimer = 0;
 
 var gEventEmitter = new events.EventEmitter();
 
-var gClsArchiveTime = DAY_SECS*nconf.get("cls_expire_after_x_days");
+var gClsArchiveTime = DAY_SECS * nconf.get("cls_expire_after_x_days");
 var gLatency = 120000;//60000; // query up to N ms behind current time
 
 /*---------------------------------------------------------------------------*/
 
-// MySQL connection
+// // MySQL connection
 
 var connection = null;
 var gProjectTable = nconf.get("projects_table_name");
@@ -141,19 +154,40 @@ process.on('SIGTERM', function () {
 var gUpdateCount = 0;
 var gTimoutObj = null;
 
+
+
 var fetchDataTimeout = function(){
     console.log("Fetch Data:", new Date(),"updateCount",gUpdateCount);
     gUpdateCount +=1;
     var timeout = nconf.get("timeout");
-    gTimoutObj = setTimeout(startFetch,timeout);
-}
+    // gTimoutObj = setTimeout(startFetch,timeout);
+    gTimoutObj = setTimeout(connectDB,timeout);
+};
 
 function startScheduler(){
+    /* no longer used */
+    // gEventEmitter.on('endFetchData', startUpdateTimeSeries);
 
-    gEventEmitter.on('endFetchData', startUpdateTimeSeries);
+    // timeseries calculation is used
     gEventEmitter.on('endUpdateTimeSeries', fetchDataTimeout);
+    connectDB();
     fetchDataTimeout();
 
+}
+
+function connectDB(){
+    connect();
+    connection.connect(function(err) {
+        if(err) {
+            onError('Worker: error when connecting to db', err);
+
+            throw err;
+        }
+        else{
+            console.log("Database connected");
+//            fetchNext();
+        }
+    });
 }
 
 function onError(str,err){
@@ -169,18 +203,121 @@ process.on('uncaughtException', function(err) {
     onError('uncaughtException',err);
 });
 
+/*---------------------------------------------------------------------------*/
 
+// Pusher
+var Pusher = require('pusher-client');
+
+var socket = new Pusher(PUSHER_API_KEY, { cluster: PUSHER_CLUSTER });
+var channel = socket.subscribe('panoptes');
+channel.bind('classification',
+    function(record) {
+
+        console.log("classification event: " + JSON.stringify(record));
+
+        // {
+        //      "classification_id":"122370232",
+        //      "project_id":"5074",
+        //      "workflow_id":"5062",
+        //      "user_id":"1791986",
+        //      "subject_ids":["16229013"],
+        //      "subject_urls":[{
+        //          "image/jpeg":"https://panoptes-uploads.zooniverse.org/production/subject_location/d8f2af5d-a9ce-40f8-917a-be564f33eaf9.jpeg"
+        //      }],
+        //      "geo":{
+        //          "country_name":"Netherlands",
+        //          "country_code":"NL",
+        //          "city_name":"Lelystad",
+        //          "coordinates":[5.475,52.5083],
+        //          "latitude":52.5083,
+        //          "longitude":5.475
+        //      }
+        //  }
+        var projectId = record['project_id'];
+        var projectData = gProjectListById["id_" + projectId];
+        var projectName = projectId;
+        var projectZoonName = projectId;
+        if (projectData !== undefined) {
+            projectName = gProjectListById["id_" + projectId]['wnu_name'];
+            projectZoonName = gProjectListById["id_" + projectId]['name'];
+        }
+        // once we have data from a project we want, add to classifications table, and remove old data:
+        //if ("id_" + projectId in gProjectListById.keys()) {
+            var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude', 'zoon_project', 'zoon_userid'];
+            var inserts = [];
+            var values = [];
+            _.each(fields, function (field, index) {
+                var value = 'NULL';
+                if (field === 'project') {
+                    value = "'" + projectName + "'"; // get project name
+                }
+                else if (field === 'created_at') {
+                    var date = new Date();//record[field]);
+                    value = "FROM_UNIXTIME('" + parseInt(date.valueOf() / 1000) + "')";
+                    //console.log('record[field]',record[field],'value',value,'date',date);
+                }
+                else if (field === 'user_id') {
+                    value = parseInt(record[field]);
+                    if (isNaN(value)) value = 0;
+                    //console.log('record[field]',record[field],'value',value,'date',date);
+                }
+                else if (field === 'id') {
+                    value = parseInt(record['classification_id']);
+                }
+                else if (field === 'region') {
+                    value = 'NULL';
+                }
+                else if (record['geo'][field]) {
+                    console.log('region, field = ' + field);
+                    if (connection !== undefined && connection !== null) {
+                        value = connection.escape(record['geo'][field]);
+                    }
+                }
+                else if (field === 'zoon_project') {
+                    value = "'" + projectZoonName + "'"; // get project name
+                }
+                else if (field === 'zoon_userid') {
+                    value = "'" + record['user_id'] + "'"; // get user id
+                }
+                values.push(value);
+            });
+
+            // get event date from system
+            var createdDate = new Date();
+            maxDataDateMs = createdDate.valueOf();
+
+            var valuesStr = values.join(",");
+            inserts.push("(" + valuesStr + ")");
+
+            var insertStr = inserts.join(',');
+            console.log(insertStr);
+
+            connection.query("REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`,`zoon_project`, `zoon_userid`) VALUES" + insertStr,
+                function (err, rows) {
+
+                    if (err) {
+                        onError('fetchRequest, insert failed', err);
+                        throw err;
+                    }
+
+                    removeClassifications(projectId, projectName, maxDataDateMs);
+                });
+        //}
+    }
+);
+
+// TODO, listen for socket disconnects, and do timed reconnects
 
 
 /*---------------------------------------------------------------------------*/
 
 // Fetch classification data from zoon API, insert into classification table
 
-
+/*
 function startFetch(){
 
     gTimer = new Date().valueOf();
-    gProjectQueue = _.clone(gProjectList);
+//    gProjectQueue = _.clone(gProjectList);
 
     connect();
     connection.connect(function(err) {
@@ -190,10 +327,9 @@ function startFetch(){
             throw err;
         }
         else{
-            fetchNext();
+//            fetchNext();
         }
     });
-
 }
 
 function fetchNext(){
@@ -260,7 +396,8 @@ function fetchProjectData(projectId){
 
 
         // request
-        fetchRequest(projectId,fromMs,toMs);
+        // request replaced by socket based binding with Pusher
+        // fetchRequest(projectId,fromMs,toMs);
 
     });
 
@@ -343,16 +480,10 @@ function fetchRequest(projectId,fromMs,toMs){
                         }
 
                         removeClassifications(projectId, maxDateMs);
-
-
                     });
-            }
-            else{
-
-
+            } else {
                 removeClassifications(projectId, maxDateMs);
             }
-
         }
         else{ // end if (!error && response.statusCode == 200) {
             console.log('fetchProjectData request error',error);//,response.statusCode);
@@ -363,16 +494,20 @@ function fetchRequest(projectId,fromMs,toMs){
     }); // close request
 }
 
-function removeClassifications(projectId,updateMs){
+*/
 
-    //console.log('removeClassifications: ',projectId, updateMs, new Date(updateMs));
-    var lastClsTime = parseInt(updateMs/1000)-gClsArchiveTime;
+
+function removeClassifications(project_id, project_name, updateMs){
+
+    console.log('removeClassifications: ', project_id, updateMs, new Date(updateMs));
+
+    var lastClsTime = parseInt(updateMs/1000) - gClsArchiveTime;
     //console.log('removeClassifications from: ',projectId, lastClsTime, new Date(lastClsTime*1000));
 
     // delete classifications past max interval
-    var query = "DELETE FROM "+gClsTable+" WHERE `created_at` < FROM_UNIXTIME('"+lastClsTime+"') AND `project`='"+projectId+"'";
+    var query = "DELETE FROM " + gClsTable + " WHERE `created_at` < FROM_UNIXTIME('" + lastClsTime + "') AND `id`="+project_id;
 
-    //console.log(query);
+    console.log(query);
     connection.query(query, function(err, rows) {
 
         if(err) {
@@ -380,26 +515,43 @@ function removeClassifications(projectId,updateMs){
             throw err;
         }
 
-        setProjectsUpdateTime(projectId,updateMs)
+        setProjectsUpdateTime(project_id, project_name, updateMs)
 
     });
 
 }
 
-function setProjectsUpdateTime(projectId,updateMs){
+function setProjectsUpdateTime(project_id, project_name, updateMs){
 
-    var unixTime = parseInt(updateMs/1000);
-    //console.log('update date',projectId,new Date(unixTime*1000));
-    var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'";
-    //console.log(query);
-    connection.query(query,function (err, rows) {
+
+    var project_query = "SELECT `id` FROM `" + gProjectTable + "` WHERE `id` = " + project_id;// + " AND `name`='" + project_name + "'";
+    console.log("setProjectsUpdateTime project_query = " + project_query);
+    var new_record = false;
+
+    connection.query(project_query,function (err, rows) {
         if (err) {
             onError('setProjectsUpdateTime error',err);
             throw err;
         }
 
-        fetchNext();
+        if (rows.length === 0) {
+            new_record = true;
+        }
+        console.log("new_record = " + new_record);
+        var unixTime = parseInt(updateMs/1000);
 
+        var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `id`="+project_id;
+        if (new_record) {
+            query = "INSERT INTO `"+gProjectTable+"` (`id`, `name`, `display_name`, `updated`) VALUES (" + project_id + ", '" + project_name + "', '" + project_name + "',  FROM_UNIXTIME('" + unixTime + "'))";
+        }
+
+        console.log("setProjectsUpdateTime query = " + query);
+        connection.query(query,function (err, rows) {
+            if (err) {
+                onError('setProjectsUpdateTime error',err);
+                throw err;
+            }
+        });
     });
 }
 
@@ -790,7 +942,7 @@ function updateTimeSeriesFromArchive(){
             // copy initial series table
 
             connection.query("INSERT "+gSeriesTable+" SELECT * FROM "+seriesInitTable,function(err2, rows2) {
-                console.log('Copy timerseries');
+                console.log('Copy time-series');
                 updateTimeSeriesLoop();
             });
         })
@@ -894,9 +1046,10 @@ function getZooonAPIProjects(){
 
 module.exports.gProjectList = gProjectList;
 module.exports.nconf = nconf;
-module.exports.fetchRequest = fetchRequest;
+//module.exports.fetchRequest = fetchRequest;
 
 module.exports.startScheduler = startScheduler;
+//module.exports.startFetch = startFetch;
 module.exports.updateTimeSeriesFromArchive = updateTimeSeriesFromArchive;
 module.exports.singleTimeSeriesFromArchive = singleTimeSeriesFromArchive;
 module.exports.testMySQLError = testMySQLError;

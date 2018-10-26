@@ -1,3 +1,6 @@
 {
- "timeout": 20000
+  "timeout": 20000,
+  "projects_table_name": "projects_pusher",
+  "classifications_table_name": "classifications_pusher",
+  "timeseries_table_name": "timeseries_pusher"
 }

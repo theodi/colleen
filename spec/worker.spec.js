@@ -6,8 +6,8 @@ var dbConfig = parseDbURL(worker.nconf.get('WNU_DB_URL'));
 
 describe("function fetchRequest", function() {
 
-    var fromMs = Date.UTC(2014,06,14,0,0,0);
-    var toMs = Date.UTC(2014,06,15,0,0,0);
+    var fromMs = Date.UTC(2014,6,14,0,0,0);
+    var toMs = Date.UTC(2014,6,15,0,0,0);
 
 
     var connection = worker.connect();
