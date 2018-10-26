@@ -564,7 +564,7 @@ function fetchProjectDataTest(){
 
     var options = {
         //url: 'http://event.zooniverse.org/classifications/galaxy_zoo?from=1399982400000&to=1399983000000&per_page=10&page=0',
-        url: 'http://event.zooniverse.org/classifications/galaxy_zoo',
+        url: 'https://event.zooniverse.org/classifications/galaxy_zoo',
         qs:{'from':from, 'to':to,'per_page':1000,'page':0},
         headers: {
             'Accept': 'application/vnd.zooevents.v1+json'
