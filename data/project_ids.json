@@ -1,21 +1,9 @@
 [
   {
-    "id": "121",
-    "name": "serengeti-wildebeest-count",
-    "display_name": "Serengeti Wildebeest Count",
-    "wnu_name": "serengeti"
-  },
-  {
-    "id": "1478",
-    "name": "the-milky-way-project-blink",
-    "display_name": "The Milky Way Project (Blink)",
-    "wnu_name": "milky_way"
-  },
-  {
-    "id": "1558",
-    "name": "notes-from-nature",
-    "display_name": "Notes from Nature",
-    "wnu_name": "notes_from_nature"
+    "id": "5733",
+    "name": "galaxy-zoo",
+    "display_name": "Galaxy Zoo",
+    "wnu_name": "galaxy_zoo"
   },
   {
     "id": "2025",
@@ -24,22 +12,34 @@
     "wnu_name": "milky_way"
   },
   {
-    "id": "2125",
-    "name": "decoding-the-civil-war",
-    "display_name": "Decoding the Civil War",
-    "wnu_name": "war_diary"
+    "id": "4996",
+    "name": "snapshot-serengeti",
+    "display_name": "Snapshot Serengeti",
+    "wnu_name": "serengeti"
   },
   {
-    "id": "27",
-    "name": "milky-way-project",
-    "display_name": "Milky Way Project",
-    "wnu_name": "milky_way"
+    "id": "4558",
+    "name": "solar-stormwatch-ii",
+    "display_name": "Solar Stormwatch II",
+    "wnu_name": "sunspot"
   },
   {
-    "id": "3110",
-    "name": "plankton-portal-relaunch",
-    "display_name": "Plankton Portal Relaunch",
-    "wnu_name": "plankton"
+    "id": "2864",
+    "name": "floating-forests",
+    "display_name": "Floating Forests",
+    "wnu_name": "floating-forests"
+  },
+  {
+    "id": "1558",
+    "name": "notes-from-nature",
+    "display_name": "Notes from Nature",
+    "wnu_name": "notes_from_nature"
+  },
+  {
+    "id": "5240",
+    "name": "invader-id",
+    "display_name": "Invader ID",
+    "wnu_name": "invader-id"
   },
   {
     "id": "3219",
@@ -48,99 +48,45 @@
     "wnu_name": "planet_four"
   },
   {
-    "id": "35",
-    "name": "seafloor-explorer",
-    "display_name": "Seafloor Explorer",
-    "wnu_name": "sea_floor"
-  },
-  {
-    "id": "36",
-    "name": "cyclone-center",
-    "display_name": "Cyclone Center",
-    "wnu_name": "cyclone_center"
-  },
-  {
-    "id": "40",
-    "name": "snapshot-serengeti-ouroboros",
-    "display_name": "Snapshot Serengeti Ouroboros",
-    "wnu_name": "serengeti"
-  },
-  {
-    "id": "41",
-    "name": "planet-four",
-    "display_name": "Planet Four",
-    "wnu_name": "planet_four"
-  },
-  {
-    "id": "42",
-    "name": "notes-from-nature-i",
-    "display_name": "Notes from Nature I",
-    "wnu_name": "notes_from_nature"
-  },
-  {
-    "id": "45",
-    "name": "worm-watch-lab",
-    "display_name": "Worm Watch Lab",
-    "wnu_name": "worms"
-  },
-  {
-    "id": "46",
-    "name": "plankton-portal",
-    "display_name": "Plankton Portal",
-    "wnu_name": "plankton"
-  },
-  {
-    "id": "47",
-    "name": "radio-galaxy-zoo",
-    "display_name": "Radio Galaxy Zoo",
-    "wnu_name": "galaxy_zoo"
-  },
-  {
-    "id": "48",
-    "name": "operation-war-diary",
-    "display_name": "Operation War Diary",
+    "id": "3414",
+    "name": "african-american-civil-war-soldiers",
+    "display_name": "African American Civil War Soldiers",
     "wnu_name": "war_diary"
   },
   {
-    "id": "4996",
-    "name": "snapshot-serengeti",
-    "display_name": "Snapshot Serengeti",
-    "wnu_name": "serengeti"
+    "id": "6250",
+    "name": "monkey-health-explorer",
+    "display_name": "Monkey Health Explorer",
+    "wnu_name": "cancer_cells"
   },
   {
-    "id": "51",
-    "name": "sunspotter",
-    "display_name": "Sunspotter",
-    "wnu_name": "sunspot"
+    "id": "5059",
+    "name": "variable-star-zoo",
+    "display_name": "Variable Star Zoo",
+    "wnu_name": "wise"
   },
   {
-    "id": "52",
-    "name": "condor-watch",
-    "display_name": "Condor Watch",
-    "wnu_name": "condor"
+    "id": "3606",
+    "name": "beluga-bits",
+    "display_name": "Beluga Bits",
+    "wnu_name": "plankton"
   },
   {
-    "id": "53",
-    "name": "asteroid-zoo",
-    "display_name": "Asteroid Zoo",
-    "wnu_name": "asteroid"
-  },
-  {
-    "id": "73",
-    "name": "galaxy-zoo-3d",
-    "display_name": "Galaxy Zoo: 3D",
-    "wnu_name": "galaxy_zoo"
-  },
-  {
-    "id": "914",
-    "name": "cyclone_center",
-    "display_name": "Cyclone Center",
+    "id": "6262",
+    "name": "the-hunt-for-galaxy-clusters",
+    "display_name": "The Hunt for Galaxy Clusters",
     "wnu_name": "cyclone_center"
   },
   {
-    "id": "988",
-    "name": "serengeti",
-    "display_name": "Computer Vision Serengeti",
-    "wnu_name": "serengeti"
+    "id": "1104",
+    "name": "gravity-spy",
+    "display_name": "Gravity Spy",
+    "wnu_name": "bat_detective"
+  },
+  {
+    "id": "3757",
+    "name": "exoplanet-explorers",
+    "display_name": "Exoplanet Explorers",
+    "wnu_name": "asteroid"
   }
 ]

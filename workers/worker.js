@@ -61,21 +61,24 @@ var seriesLength = {};
 console.log("seriesLength is ", seriesLength);
 console.log("timeout is", nconf.get("timeout"));
 
-var gProjectList = [], gProjectQueue = [], gSeriesQueue = [], gProjectListById = [], gProjectIds = [];
+var gProjectList = [], gProjectQueue = [], gSeriesQueue = [], gProjectListById = [], gProjectIds = [], gProjectIdList = [];
 
 gProjectList = require(nconf.get("projects_list"));
 console.log('gProjectList is ', gProjectList);
 gProjectIds = require(nconf.get("projects_ids"));
 
+
 console.log('gProjectIds is ', gProjectIds);
 for (var i = 0; i < gProjectIds.length; i++) {
     const project = gProjectIds[i];
     gProjectListById["id_"+project['id']] = project;
+    gProjectIdList.push(parseInt(project['id']));
 }
 //gProjectListById = gProjectIds.map(entry => entry["ids"].map(x => entry["name"]));
 
 console.log('gProjectListById is ', gProjectListById);
 console.log('gProjectListById.keys() is ', gProjectListById.keys());
+console.log('gProjectIdList is ', gProjectIdList);
 
 
 var gIntervals = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
@@ -210,10 +213,11 @@ var Pusher = require('pusher-client');
 
 var socket = new Pusher(PUSHER_API_KEY, { cluster: PUSHER_CLUSTER });
 var channel = socket.subscribe('panoptes');
+console.log(gProjectListById.keys());
 channel.bind('classification',
     function(record) {
 
-        console.log("classification event: " + JSON.stringify(record));
+        //console.log("classification event: " + JSON.stringify(record));
 
         // {
         //      "classification_id":"122370232",
@@ -241,8 +245,10 @@ channel.bind('classification',
             projectName = gProjectListById["id_" + projectId]['wnu_name'];
             projectZoonName = gProjectListById["id_" + projectId]['name'];
         }
+
+        console.log(projectId, gProjectIdList.includes(parseInt(projectId)));
         // once we have data from a project we want, add to classifications table, and remove old data:
-        //if ("id_" + projectId in gProjectListById.keys()) {
+        if (gProjectIdList.includes(parseInt(projectId))) {
             var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude', 'zoon_project', 'zoon_userid'];
             var inserts = [];
             var values = [];
@@ -302,7 +308,7 @@ channel.bind('classification',
 
                     removeClassifications(projectId, projectName, maxDataDateMs);
                 });
-        //}
+        }
     }
 );
 
