@@ -2,5 +2,6 @@
   "projects_list": "../data/test_projects.json",
   "WNU_DB_URL": "mysql://test:test@localhost/zoon_test",
   "timeout": 5000,
+  "timeseries_timeout": 60000,
   "classifications_per_page": 10
 }

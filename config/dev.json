@@ -1,6 +1,6 @@
 {
   "timeout": 20000,
-  "timeseries_timeout": 1000,
+  "timeseries_timeout": 60000,
   "projects_table_name": "projects",
   "classifications_table_name": "classifications",
   "timeseries_table_name": "timeseries"

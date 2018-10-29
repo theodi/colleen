@@ -26,7 +26,7 @@ nconf.file({ file:
 // provide sensible defaults in case the above don't
 nconf.defaults({
 	timeout: 20000,
-    timeseries_timeout: 1000,
+    timeseries_timeout: 60000,
     projects_list: '../data/projects.json',
     projects_ids: '../data/project_ids.json',
 	projects_table_name: 'projects',
