@@ -211,6 +211,7 @@ process.on('uncaughtException', function(err) {
 // Pusher
 var Pusher = require('pusher-client');
 
+var maxDataDateMs;
 var socket = new Pusher(PUSHER_API_KEY, { cluster: PUSHER_CLUSTER });
 var channel = socket.subscribe('panoptes');
 console.log(gProjectListById.keys());
@@ -258,8 +259,7 @@ channel.bind('classification',
                     value = "'" + projectName + "'"; // get project name
                 }
                 else if (field === 'created_at') {
-                    var date = new Date();//record[field]);
-                    value = "FROM_UNIXTIME('" + parseInt(date.valueOf() / 1000) + "')";
+                    value = "FROM_UNIXTIME('" + parseInt(new Date().valueOf() / 1000) + "')";
                     //console.log('record[field]',record[field],'value',value,'date',date);
                 }
                 else if (field === 'user_id') {
@@ -289,8 +289,7 @@ channel.bind('classification',
             });
 
             // get event date from system
-            var createdDate = new Date();
-            maxDataDateMs = createdDate.valueOf();
+            maxDataDateMs = new Date().valueOf();
 
             var valuesStr = values.join(",");
             inserts.push("(" + valuesStr + ")");
