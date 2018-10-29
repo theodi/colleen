@@ -470,7 +470,7 @@ function updateTimeSeries(series){
 
     var projectUpdatedUnix = 0,seriesMax = 0;
 
-    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
+    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `wnu_name`='"+projectId+"'",function (err, rows) {
         if (err) {
             onError('updateTimeSeriesInterval error',err);
             throw err;
