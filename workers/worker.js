@@ -305,8 +305,8 @@ channel.bind('classification',
                 }
                 else if (record['geo'][field]) {
                     // console.log('region, field = ' + field);
-                    if (connection !== undefined && connection !== null) {
-                        value = connection.escape(record['geo'][field]);
+                    if (pusherConnection !== undefined && pusherConnection !== null) {
+                        value = pusherConnection.escape(record['geo'][field]);
                     }
                 }
                 else if (field === 'zoon_project') {
@@ -531,8 +531,8 @@ function updateTimeSeries(series){
                 updateTimeSeriesInterval(series,from,to);
 
             } // close if(to-from<interval){
-        }); // close connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+"
-    }); // close connection.query("SELECT UNIX_TIMESTAMP(`updated`)
+        }); // close pusherConnection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+"
+    }); // close pusherConnection.query("SELECT UNIX_TIMESTAMP(`updated`)
 
 }
 
