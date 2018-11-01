@@ -1,12 +1,11 @@
 {
     "name":"floating-forests",
     "title":"Floating Forests",
-    "sx":0.5,
-    "sy":0.5,
+    "sx":0.4,
+    "sy":0.4,
     "x":0,
     "y":0,
     "rotation":0,
-    "_fills":["#951114","#951114"],
 
     "_comment":"Project level animations",
     "_animation":[
@@ -15,7 +14,7 @@
 
 
     "shape_animation":[{"shape_ids":["1","2","3"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"],"duration":[30.0,120.0], "time_fn":"index", "time":0}]
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0],"fills":["#4a6b10","#293a04"],"duration":[80.0,170.0], "time_fn":"index", "time":0}]
     }],
 
     "shapes":[
@@ -38,7 +37,7 @@
 
         { "_comment":"Colour",
             "id":"5","rotation":0,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","#ff0"] ,"duration":[30.0,120.0], "time":0}]},
+            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#002fa7","#0d49ce"],"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
@@ -48,12 +47,16 @@
             "id":"7","rotation":0,"opacity":0.8,
             "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
 
-        { "_comment":"Rotation",
-            "id":"8","rotation":0,"opacity":0.9,
-            "animation":[{"type":"rotate","data":"hour","tween":"linear","fn":"sqrt","rotation":[0,180],"duration":[120.0,222.0], "time":0}]},
+        { "_comment":"Scale X only",
+            "id":"8","rotation":0,"opacity":0.78,
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.85,1.55],"sy":[1.0,1.0] ,"duration":[16.0,30.0], "duration_data":"min","time":0}]},
 
         { "_comment":"Circle",
             "id":"9","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]}
+            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+
+        { "_comment":"Translate",
+            "id":"10","rotation":0,"opacity":0.7,
+            "animation":[{"type":"translate","data":"min15","tween":"id","fn":"id","dir":"x","range":[-40,40] ,"duration":[10.0,22.0], "time":0}]}
     ]
 }
