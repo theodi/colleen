@@ -10,6 +10,7 @@ web/*
 .grunt/
 _SpecRunner.html
 *.hprof
+*.idea
 
 *.wav
 
