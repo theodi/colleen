@@ -1,7 +1,8 @@
 {
-    "name":"planet_four",
-    "title":"Planet Four",
-    "sx":0.3,"sy":0.3,
+    "name":"planet-four-ridges",
+    "title":"Planet Four: Ridges",
+    "sx":0.3,
+    "sy":0.3,
     "x":0,
     "y":0,
     "rotation":0,

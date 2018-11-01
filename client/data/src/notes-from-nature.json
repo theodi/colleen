@@ -1,6 +1,8 @@
 {
-    "name":"notes_from_nature",
+    "name":"notes-from-nature",
     "title":"Notes From Nature",
+    "sx":0.5,
+    "sy":0.5,
     "x":400,
     "y":0,
 

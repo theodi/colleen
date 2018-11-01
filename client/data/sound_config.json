@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "http://s3.amazonaws.com/weneedus/audio/wnu",
+		"baseUrl": "audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -18,8 +18,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_rumble_bass_version2_short.mp3",
-				"2_rumble_base_hf_short.mp3"
+				"2_rumble_base_hf_short.mp3",
+				"1_rumble_bass_version2_short.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": []
@@ -111,8 +111,8 @@
 				"cnr_braids5.mp3"
 			],
 			"smplr_b": [
-				"cnr_braids6.mp3",
 				"cnr_braids10.mp3",
+				"cnr_braids6.mp3",
 				"cnr_braids7.mp3",
 				"cnr_braids8.mp3",
 				"cnr_braids9.mp3"
@@ -172,9 +172,36 @@
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
-				"cln_crash3.mp3",
 				"cln_crash2.mp3",
+				"cln_crash3.mp3",
 				"cln_crash4.mp3"
+			]
+		},
+		{
+			"id": "floating-forests",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"ff-layer1.mp3",
+				"ff-layer2.mp3"
+			],
+			"smplr_a": [
+				"ff01.mp3",
+				"ff02.mp3",
+				"ff03.mp3",
+				"ff04.mp3"
+			],
+			"smplr_b": [
+				"ff05.mp3",
+				"ff06.mp3",
+				"ff07.mp3",
+				"ff08.mp3"
 			]
 		},
 		{
@@ -211,6 +238,33 @@
 			]
 		},
 		{
+			"id": "invader-id",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"invader-layer1.mp3",
+				"invader-layer2.mp3"
+			],
+			"smplr_a": [
+				"invader01.mp3",
+				"invader02.mp3",
+				"invader03.mp3",
+				"invader04.mp3"
+			],
+			"smplr_b": [
+				"invader05.mp3",
+				"invader06.mp3",
+				"invader07.mp3",
+				"invader08.mp3"
+			]
+		},
+		{
 			"id": "milky_way",
 			"volumes": {
 				"layers": [
@@ -233,13 +287,13 @@
 			],
 			"smplr_b": [
 				"mky_tingle6.mp3",
-				"mky_tingle8.mp3",
 				"mky_tingle7.mp3",
+				"mky_tingle8.mp3",
 				"mky_tingle9.mp3"
 			]
 		},
 		{
-			"id": "notes_from_nature",
+			"id": "notes-from-nature",
 			"volumes": {
 				"layers": [
 					0,
@@ -249,24 +303,24 @@
 				"master": 0
 			},
 			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
+				"nfn-layer1.mp3",
+				"nfn-layer2.mp3"
 			],
 			"smplr_a": [
-				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
-				"wse_sigp3.mp3",
-				"wse_sigp4.mp3"
+				"nfn01.mp3",
+				"nfn02.mp3",
+				"nfn03.mp3",
+				"nfn04.mp3"
 			],
 			"smplr_b": [
-				"wse_sigp5.mp3",
-				"wse_sigp6.mp3",
-				"wse_sigp7.mp3",
-				"wse_sigp8.mp3"
+				"nfn05.mp3",
+				"nfn06.mp3",
+				"nfn07.mp3",
+				"nfn08.mp3"
 			]
 		},
 		{
-			"id": "planet_four",
+			"id": "planet-four-ridges",
 			"volumes": {
 				"layers": [
 					0,
@@ -276,20 +330,20 @@
 				"master": 0
 			},
 			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
+				"p4r-layer1.mp3",
+				"p4r-layer2.mp3"
 			],
 			"smplr_a": [
-				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
-				"wse_sigp3.mp3",
-				"wse_sigp4.mp3"
+				"p4r01.mp3",
+				"p4r02.mp3",
+				"p4r03.mp3",
+				"p4r04.mp3"
 			],
 			"smplr_b": [
-				"wse_sigp5.mp3",
-				"wse_sigp6.mp3",
-				"wse_sigp7.mp3",
-				"wse_sigp8.mp3"
+				"p4r05.mp3",
+				"p4r06.mp3",
+				"p4r07.mp3",
+				"p4r08.mp3"
 			]
 		},
 		{
@@ -349,33 +403,6 @@
 			]
 		},
 		{
-			"id": "sea_floor",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
-			],
-			"smplr_a": [
-				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
-				"wse_sigp3.mp3",
-				"wse_sigp4.mp3"
-			],
-			"smplr_b": [
-				"wse_sigp5.mp3",
-				"wse_sigp6.mp3",
-				"wse_sigp7.mp3",
-				"wse_sigp8.mp3"
-			]
-		},
-		{
 			"id": "serengeti",
 			"volumes": {
 				"layers": [
@@ -405,7 +432,7 @@
 			]
 		},
 		{
-			"id": "sunspot",
+			"id": "solar-stormwatch-ii",
 			"volumes": {
 				"layers": [
 					0,
@@ -415,20 +442,20 @@
 				"master": 0
 			},
 			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
+				"slr_storm_layer1.mp3",
+				"slr_storm_layer2.mp3"
 			],
 			"smplr_a": [
-				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
-				"wse_sigp3.mp3",
-				"wse_sigp4.mp3"
+				"slr_storm1.mp3",
+				"slr_storm2.mp3",
+				"slr_storm3.mp3",
+				"slr_storm4.mp3"
 			],
 			"smplr_b": [
-				"wse_sigp5.mp3",
-				"wse_sigp6.mp3",
-				"wse_sigp7.mp3",
-				"wse_sigp8.mp3"
+				"slr_storm5.mp3",
+				"slr_storm6.mp3",
+				"slr_storm7.mp3",
+				"slr_storm8.mp3"
 			]
 		},
 		{
