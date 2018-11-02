@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "https://s3.amazonaws.com/weneedus/audio/wnu",
+		"baseUrl": "https://s3.eu-west-2.amazonaws.com/wnu2/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -129,13 +129,13 @@
 				"master": 0
 			},
 			"layers": [
-				"glitch_loop.mp3",
-				"1_wse_radionoise.mp3"
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
 			],
 			"smplr_a": [
 				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
 				"wse_sigp3.mp3",
+				"wse_sigp2.mp3",
 				"wse_sigp4.mp3"
 			],
 			"smplr_b": [
@@ -265,6 +265,34 @@
 			]
 		},
 		{
+			"id": "milky_way",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_mky_cosmic_amp.mp3",
+				"2_mky_modnosie.mp3"
+			],
+			"smplr_a": [
+				"mky_tingle1.mp3",
+				"mky_tingle2.mp3",
+				"mky_tingle3.mp3",
+				"mky_tingle4.mp3",
+				"mky_tingle5.mp3"
+			],
+			"smplr_b": [
+				"mky_tingle6.mp3",
+				"mky_tingle7.mp3",
+				"mky_tingle8.mp3",
+				"mky_tingle9.mp3"
+			]
+		},
+		{
 			"id": "notes-from-nature",
 			"volumes": {
 				"layers": [
@@ -292,34 +320,6 @@
 			]
 		},
 		{
-			"id": "milky_way",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"2_mky_modnosie.mp3",
-				"1_mky_cosmic_amp.mp3"
-			],
-			"smplr_a": [
-				"mky_tingle1.mp3",
-				"mky_tingle2.mp3",
-				"mky_tingle3.mp3",
-				"mky_tingle4.mp3",
-				"mky_tingle5.mp3"
-			],
-			"smplr_b": [
-				"mky_tingle6.mp3",
-				"mky_tingle7.mp3",
-				"mky_tingle8.mp3",
-				"mky_tingle9.mp3"
-			]
-		},
-		{
 			"id": "planet-four-ridges",
 			"volumes": {
 				"layers": [
@@ -330,8 +330,8 @@
 				"master": 0
 			},
 			"layers": [
-				"p4r-layer2.mp3",
-				"p4r-layer1.mp3"
+				"p4r-layer1.mp3",
+				"p4r-layer2.mp3"
 			],
 			"smplr_a": [
 				"p4r01.mp3",
@@ -370,8 +370,8 @@
 				"sea_shells1.mp3",
 				"sea_shells2.mp3",
 				"sea_shells3.mp3",
-				"sea_shells5.mp3",
 				"sea_shells4.mp3",
+				"sea_shells5.mp3",
 				"sea_shells6.mp3"
 			]
 		},
@@ -432,33 +432,6 @@
 			]
 		},
 		{
-			"id": "solar-stormwatch-ii",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"slr_storm_layer1.mp3",
-				"slr_storm_layer2.mp3"
-			],
-			"smplr_a": [
-				"slr_storm1.mp3",
-				"slr_storm2.mp3",
-				"slr_storm3.mp3",
-				"slr_storm4.mp3"
-			],
-			"smplr_b": [
-				"slr_storm5.mp3",
-				"slr_storm6.mp3",
-				"slr_storm7.mp3",
-				"slr_storm8.mp3"
-			]
-		},
-		{
 			"id": "war_diary",
 			"volumes": {
 				"layers": [
@@ -500,7 +473,34 @@
 			]
 		},
 		{
-			"id": "worms",
+			"id": "solar-stormwatch-ii",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"slr_storm_layer1.mp3",
+				"slr_storm_layer2.mp3"
+			],
+			"smplr_a": [
+				"slr_storm1.mp3",
+				"slr_storm2.mp3",
+				"slr_storm3.mp3",
+				"slr_storm4.mp3"
+			],
+			"smplr_b": [
+				"slr_storm5.mp3",
+				"slr_storm6.mp3",
+				"slr_storm7.mp3",
+				"slr_storm8.mp3"
+			]
+		},
+		{
+			"id": "wise",
 			"volumes": {
 				"layers": [
 					0,
@@ -527,7 +527,7 @@
 			]
 		},
 		{
-			"id": "wise",
+			"id": "worms",
 			"volumes": {
 				"layers": [
 					0,
@@ -537,8 +537,8 @@
 				"master": 0
 			},
 			"layers": [
-				"glitch_loop.mp3",
-				"1_wse_radionoise.mp3"
+				"1_wse_radionoise.mp3",
+				"glitch_loop.mp3"
 			],
 			"smplr_a": [
 				"wse_sigp1.mp3",
