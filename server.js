@@ -28,7 +28,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 //See http://stackoverflow.com/questions/20390513/heroku-foreman-exits-on-express-js-bodyparser-call
 //app.use(express.bodyParser());
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 // redirect www to non-www
 /*
