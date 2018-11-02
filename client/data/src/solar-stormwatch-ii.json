@@ -1,6 +1,6 @@
 {
-    "name":"sunspot",
-    "title":"Sunspotter",
+    "name":"solar-stormwatch-ii",
+    "title":"Solar Stormwatch II",
     "sx":0.2,
     "sy":0.2,
     "x":0,
@@ -40,7 +40,7 @@
             {"type":"trail","trail_type":"path","fade":0.98,"opacity":0.3,"duration":[1.0,2.0],"time":0}]},
 
         {"_comment":"sun","id":"2","rotation":-2,"animation":[
-            {"type":"scale","data":"min","dataType":"u","tween":"linear","fn":"sqrt","sx":[3.7,0.37],"sy":[3.7,0.37],"duration":[40.0,0.0], "time":0},
+            {"type":"scale","data":"min","dataType":"u","tween":"linear","fn":"sqrt","sx":[2.7,0.37],"sy":[2.7,0.37],"duration":[40.0,0.0], "time":0},
             {"type":"point_translate","data":"min15","dataType":"u","tween":"linear","fn":"sqrt","duration":[40.0,60.0],"rangeX":[-10.0,10.0],"rangeY":[-10.0,10.0],"time":0},
             {"type":"opacity","dataType":"u","data":"min","tween":"linear","fn":"sqrt","range":[0.3,0.8],"duration":[40.0,240.0],"time":0}]},
 

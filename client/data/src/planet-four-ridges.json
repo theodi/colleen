@@ -1,7 +1,8 @@
 {
-    "name":"planet_four",
-    "title":"Planet Four",
-    "sx":0.3,"sy":0.3,
+    "name":"planet-four-ridges",
+    "title":"Planet Four: Ridges",
+    "sx":0.3,
+    "sy":0.3,
     "x":0,
     "y":0,
     "rotation":0,
@@ -13,10 +14,18 @@
         {"type":"sound_intensity","dataType":"c","data":"day","tween":"linear","range":[0.2,1.0],"duration":[60.0,60.0], "time":0}
     ],
 
-    "shape_animation":[{"shape_ids":["3","4"],"rotation":-53,"animation":
-            [{"type":"scale","data":"hour","fn":"id","sx":[0.75,3.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "time":0},
-            {"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[2.0,3.0], "time":0}]
-    }],
+    "shape_animation":[
+
+            {"shape_ids":["3","4"],"rotation":-53,"animation":
+            [{"type":"scale","data":"hour","fn":"id","sx":[0.75,2.25],"sy":[1.0,1.0],"duration":[60.0,200.0],"duration_data":"min15", "time":0},
+            {"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0],"duration":[2.0,3.0],"time":0}]},
+
+            {"shape_ids":["1"],"animation":
+            [{"type":"_radio","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"duration":[10.0,30.0],"duration_data":"min", "time_fn":"random"}]},
+
+            {"shape_ids":["9","10","11"],"animation":
+            [{"type":"colour","data":"min15","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#b61119", "#000"] ,"duration":[30.0,120.0], "duration_data":"min", "time_fn":"index", "time":0}]}
+    ],
 
     "shapes":[
 
@@ -29,14 +38,14 @@
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "time":0}]},
 
         { "_comment":"Rotation only",
-            "id":"3","rotation":-53,"opacity":0.7},
+            "id":"3","rotation":-53,"opacity":0.7,
+             "animation":[{"type":"scale","data":"day","fn":"id","sx":[1.0,1.0],"sy":[1.0,1.3] ,"duration":[30.0,70.0], "duration_data":"hour","time":0}]},
 
         { "_comment":"Rotation only",
             "id":"4","rotation":-53,"opacity":0.7},                 
 
-        { "_comment":"Colour",
-            "id":"5","rotation":-53,"opacity":0.75,
-            "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","#ff0"] ,"duration":[30.0,120.0], "time":0}]},
+        { "_comment":"Rotation only",
+            "id":"5","rotation":-53,"opacity":0.75},
 
         { "_comment":"Opacity",
             "id":"6","rotation":40,"opacity":0.8,
@@ -44,7 +53,7 @@
 
         { "_comment":"Translate",
             "id":"7","rotation":-53,"opacity":0.8,
-            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-200,200] ,"duration":[30.0,12.0], "time":0}]},
+            "animation":[{"type":"translate","data":"min","tween":"id","fn":"id","dir":"y","range":[-20,20] ,"duration":[30.0,12.0], "time":0}]},
 
         { "_comment":"Scale X only",
             "id":"8","rotation":-53,"opacity":0.7,
@@ -52,15 +61,15 @@
 
         { "_comment":"Scale X only",
             "id":"9","rotation":-54,"opacity":0.7,
-            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[30.0,20.0], "duration_data":"hour","time":0}]},
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,2.25],"sy":[1.0,1.0] ,"duration":[30.0,20.0], "duration_data":"hour","time":0}]},
 
         { "_comment":"Scale X only",
             "id":"10","rotation":-53,"opacity":0.7,
-            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[46.0,20.0], "duration_data":"hour","time":0}]},
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.5,2.5],"sy":[1.0,1.0] ,"duration":[46.0,20.0], "duration_data":"hour","time":0}]},
 
         { "_comment":"Scale X only",
             "id":"11","rotation":-54,"opacity":0.7,
-            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "duration_data":"hour","time":0}]}
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,3],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "duration_data":"hour","time":0}]}
 
     ]
 }

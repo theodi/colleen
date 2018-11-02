@@ -7,13 +7,9 @@ This work is currently in active development. The most visible aspect will be a 
 
 It is fed by an API built using Node.js and MySQL.
 
-##License
+##License & Acknowledgements
 
-We intend for this work to be open source but have not yet chosen the license.
-
-##Acknowledgements
-
-Many have helped us. We will name them in time.
+See weneedus.org
 
 ##Requirements
 

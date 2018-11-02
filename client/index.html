@@ -33,8 +33,8 @@
     <script src="js/project_graph.js"></script>
 	<!-- website scripts (more code in footer) -->
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/scripts.js"></script>
-
+	<script src="js/scripts.js"></script>	
+	
     <!--<!(endif)-->
     <!--(if target dist)>
       <script src="js/wnu.min.js"></script>
@@ -76,28 +76,28 @@
             <a id="mute-button" class="btn popoverData windowTop" data-content="Sound" href="#" style="font-size: 16px" rel="popover" data-placement="bottom" data-trigger="hover"><i class="fa fa-volume-up fa-lg"></i></a>
             <div id="sound-progress">Loading sounds...</div>
     </div>
-
-
+        
+		
 		 <ul class="nav top-left">
     	  <li>
         <a id="AboutB" class="btn popoverData leftButton" href="webpages/about.htm" target="mainContent" data-content="About" rel="popover" data-placement="right" data-trigger="hover" >
         <i class="fa fa-info fa-lg"></i></a></li>
-    	  <li>
+    	  <li>    
         <a id="ArtistB" class="btn popoverData leftButton" href="webpages/artist.htm" target="mainContent" data-content="Artist" rel="popover" data-placement="right" data-trigger="hover" >
         <i class="fa fa-lightbulb-o fa-lg"></i></a></li>
-    <li>
+    <li>     
     	<a id="DataB" class="btn popoverData leftButton" href="webpages/data.htm" target="mainContent" data-content="Data" rel="popover" data-placement="right" data-trigger="hover" >
     	<i class="fa fa-bar-chart fa-lg"></i></a></li>
-    <li>
+    <li> 	
     	<a id="LicenceB"class="btn popoverData leftButton" href="webpages/licence.htm" target="mainContent" data-content="License" rel="popover" data-placement="right" data-trigger="hover" >
     	<i class="fa fa-code-fork fa-lg"></i></a></li>
-    <li>
+    <li> 	
     	<a id="FaqB" class="btn popoverData leftButton" href="webpages/faqs.htm" target="mainContent" data-content="FAQs" rel="popover" data-placement="right" data-trigger="hover">
     	<i class="fa fa-newspaper-o fa-lg"></i></a></li>
-    <li>
-    	<a id="CreditsB" class="btn popoverData leftButton" href="webpages/credits.htm" target="mainContent" data-content="Credits" rel="popover" data-placement="right" data-trigger="hover" >
+    <li> 	
+    	<a id="CreditsB" class="btn popoverData leftButton" href="webpages/credits.htm" target="mainContent" data-content="Credits" rel="popover" data-placement="right" data-trigger="hover" >							
     	<i class="fa fa-star-o fa-lg"></i></a></li>
-    <li>
+    <li> 	
     	<a id="ContactB" class="btn popoverData leftButton" href="webpages/contact.htm" target="mainContent" data-content="Contact" rel="popover" data-placement="right" data-trigger="hover" >
     	<i class="fa fa-comments-o fa-lg"></i></a></li>
   </ul>
@@ -141,11 +141,11 @@
                           </div>
                         </div>
                       </div> <!-- /tabbable -->
-
+                    
                   </div><!--/panel-body-->
                </div> <!--/panel-->
             </div><!--/col-6-->
-</div><!-- /.about-weneedus -->
+</div><!-- /.about-weneedus -->            
 
 
 <!-- /website -->
@@ -161,17 +161,23 @@
 
         // If you add or delete projects, add/change their name and site to open up here (case sensitive!):
         var dataSources = {
-            "Cyclone Center":"https://www.cyclonecenter.org/",
-            "Cell Slider":"https://www.cellslider.net/",
-            "Snapshot Serengeti":"https://www.snapshotserengeti.org/",
-            "Asteroid Zoo":"https://www.asteroidzoo.org/",
-            "Bat Detective":"https://www.batdetective.org/",
-            "Milky Way":"https://www.milkywayproject.org/",
-            "Galaxy Zoo":"https://www.galaxyzoo.org/",
-            "Disk Detective":"https://www.diskdetective.org/",
-            "War Diaries":"https://www.operationwardiary.org/",
-            "Plankton Portal":"https://www.planktonportal.org/",
-            "We Need Us":"https://www.thespace.org/weneedus/"  //really this should do nothing. how please?
+            "Hunt for Galaxy Clusters":"https://www.zooniverse.org/projects/matej-dot-kosiba/the-hunt-for-galaxy-clusters",
+            "Monkey Health Explorer":"https://www.zooniverse.org/projects/mbarrierz/monkey-health-explorer",
+            "Snapshot Serengeti":"https://www.zooniverse.org/projects/zooniverse/snapshot-serengeti",
+            "Exoplanet Explorers":"https://www.zooniverse.org/projects/ianc2/exoplanet-explorers",
+            "Gravity Spy":"https://www.zooniverse.org/projects/zooniverse/gravity-spy",
+            "Milky Way":"https://www.zooniverse.org/projects/povich/milky-way-project",
+            "Galaxy Zoo":"https://www.zooniverse.org/projects/zookeeper/galaxy-zoo",
+            "Variable Star Zoo":"https://www.zooniverse.org/projects/ilacerna/variable-star-zoo",
+            "African American Civil War":"https://www.zooniverse.org/projects/usct/african-american-civil-war-soldiers",
+            "Beluga Bits":"https://www.zooniverse.org/projects/stephenresearch/beluga-bits",
+            "Sunspotter":"http://www.sunspotter.org/",
+            "Solar Stormwatch II":"https://www.zooniverse.org/projects/shannon-/solar-stormwatch-ii",
+            "Floating Forests":"https://www.zooniverse.org/projects/zooniverse/floating-forests",
+            "Planet Four: Ridges":"https://www.zooniverse.org/projects/mschwamb/planet-four-ridges",
+            "Invader ID":"https://www.zooniverse.org/projects/serc/invader-id",
+            "Notes from Nature":"https://www.notesfromnature.org/",
+            "We Need Us":""
         };
 
         function browserTest(){
@@ -219,7 +225,7 @@
             window.open(dataSources[link]);
             return false;
 		}
-
+		
 		$(document).ready(function () {
 
             if(isCompatible){
@@ -234,19 +240,19 @@
                 $("#about_weneedus_div").css('display','block');
 
             }
-
+			
 			$('.popoverData').popover();
 			$('.popoverOption').popover({ trigger: "hover" });
-
+			
 			$( ".leftButton" ).click(function() {
 	  		$( "#about_weneedus_div" ).fadeIn( "slow", "linear" );
-
+			
 			});
-
+			
 			$( "#closeBtton" ).click(function() {
 	  		$( "#about_weneedus_div" ).fadeOut( "slow", "linear" );
 			});
-
+			
 
 
 			$(function () {
@@ -265,8 +271,8 @@
 				            $('body').css({
 				                cursor: ''
 				            });
-
-
+				            
+				            
 				        } else {
 				            fadeInBuffer = false;
 				        }
@@ -293,12 +299,12 @@
 			{
 				$("#full-screen-button").hide();
 			}
-
-
-
+			
+			
+		
 		</script>
 		<!-- /website scripts -->
-
+		
 
 	<!-- Google tracker -->
 	<script>
@@ -311,7 +317,7 @@
 	ga('send', 'pageview');
 	ga('create', 'UA-49181439-1', 'auto', { 'allowLinker': true, 'name' : 'the_space' });
 	ga('the_space.send', 'pageview');
-
+	
 	</script>
 	<!-- end google tracker -->
 
