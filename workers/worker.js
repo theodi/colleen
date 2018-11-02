@@ -271,16 +271,16 @@ channel.bind('classification',
         var projectId = record['project_id'];
         var projectData = gProjectListById["id_" + projectId];
         var projectName = projectId;
-        var projectZoonName = projectId;
+//        var projectZoonName = projectId;
         if (projectData !== undefined) {
-            projectName = gProjectListById["id_" + projectId]['wnu_name'];
-            projectZoonName = gProjectListById["id_" + projectId]['name'];
+            projectName = gProjectListById["id_" + projectId]['name'];
+//            projectZoonName = gProjectListById["id_" + projectId]['name'];
         }
 
 //        console.log(projectId, gProjectIdList.includes(parseInt(projectId)));
         // once we have data from a project we want, add to classifications table, and remove old data:
         if (gProjectIdList.includes(parseInt(projectId))) {
-            var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude', 'zoon_project', 'zoon_userid'];
+            var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude'];//, 'zoon_project', 'zoon_userid'];
             var inserts = [];
             var values = [];
             _.each(fields, function (field, index) {
@@ -309,12 +309,12 @@ channel.bind('classification',
                         value = pusherConnection.escape(record['geo'][field]);
                     }
                 }
-                else if (field === 'zoon_project') {
-                    value = "'" + projectZoonName + "'"; // get project name
-                }
-                else if (field === 'zoon_userid') {
-                    value = "'" + record['user_id'] + "'"; // get user id
-                }
+//                else if (field === 'zoon_project') {
+//                    value = "'" + projectZoonName + "'"; // get project name
+//                }
+//                else if (field === 'zoon_userid') {
+//                    value = "'" + record['user_id'] + "'"; // get user id
+//                }
                 values.push(value);
             });
 
@@ -326,8 +326,8 @@ channel.bind('classification',
 
             var insertStr = inserts.join(',');
 //            console.log(insertStr);
-            var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`,`zoon_project`, `zoon_userid`) VALUES" + insertStr;
-
+            var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" + insertStr;
+            // ,`zoon_project`, `zoon_userid`
             if (pusherConnection != null) {
                 pusherConnection.query(pusherInsertQuery,
                     function (err, rows) {
@@ -402,6 +402,8 @@ function setProjectsUpdateTime(project_id, project_name, updateMs){
             var unixTime = parseInt(updateMs / 1000);
 
             var query = "UPDATE `" + gProjectTable + "` SET `updated`= FROM_UNIXTIME('" + unixTime + "') WHERE `id`=" + project_id;
+
+            // NB this probably never called after initial project phase
             if (new_record) {
                 query = "INSERT INTO `" + gProjectTable + "` (`id`, `name`, `display_name`, `updated`) VALUES (" + project_id + ", '" + project_name + "', '" + project_name + "',  FROM_UNIXTIME('" + unixTime + "'))";
             }
@@ -486,7 +488,7 @@ function updateTimeSeries(series){
 
     var projectUpdatedUnix = 0,seriesMax = 0;
 
-    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `wnu_name`='"+projectId+"'",function (err, rows) {
+    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
             onError('updateTimeSeriesInterval error',err);
             throw err;

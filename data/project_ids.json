@@ -1,92 +1,77 @@
 [
   {
+    "id": "3757",
+    "name": "asteroid",
+    "display_name": "Asteroid Zoo"
+  },
+  {
+    "id": "1104",
+    "name": "bat_detective",
+    "display_name": "Bat Detective"
+  },
+  {
+    "id": "6250",
+    "name": "cancer_cells",
+    "display_name": "Cell Slider"
+  },
+  {
+    "id": "6262",
+    "name": "cyclone_center",
+    "display_name": "Cyclone Center"
+  },
+  {
+    "id": "5059",
+    "name": "wise",
+    "display_name": "Disk Detective"
+  },
+  {
     "id": "5733",
-    "name": "galaxy-zoo",
-    "display_name": "Galaxy Zoo",
-    "wnu_name": "galaxy_zoo"
+    "name": "galaxy_zoo",
+    "display_name": "Galaxy Zoo"
   },
   {
     "id": "2025",
-    "name": "milky-way-project",
-    "display_name": "Milky Way Project",
-    "wnu_name": "milky_way"
+    "name": "milky_way",
+    "display_name": "The Milky Way Project"
+  },
+  {
+    "id": "3606",
+    "name": "plankton",
+    "display_name": "Plankton Portal"
+  },
+  {
+    "id": "3414",
+    "name": "war_diary",
+    "display_name": "War Diaries"
   },
   {
     "id": "4996",
-    "name": "snapshot-serengeti",
-    "display_name": "Snapshot Serengeti",
-    "wnu_name": "serengeti"
-  },
-  {
-    "id": "4558",
-    "name": "solar-stormwatch-ii",
-    "display_name": "Solar Stormwatch II",
-    "wnu_name": "sunspot"
+    "name": "serengeti",
+    "display_name": "Snapshot Serengeti"
   },
   {
     "id": "2864",
     "name": "floating-forests",
-    "display_name": "Floating Forests",
-    "wnu_name": "floating-forests"
+    "display_name": "Floating Forests"
   },
   {
-    "id": "1558",
-    "name": "notes-from-nature",
-    "display_name": "Notes from Nature",
-    "wnu_name": "notes_from_nature"
+    "id": "4558",
+    "name": "solar-stormwatch-ii",
+    "display_name": "Solar Stormwatch II"
   },
   {
     "id": "5240",
     "name": "invader-id",
-    "display_name": "Invader ID",
-    "wnu_name": "invader-id"
+    "display_name": "Invader ID"
+  },
+  {
+    "id": "1558",
+    "name": "notes-from-nature",
+    "display_name": "Notes from Nature"
   },
   {
     "id": "3219",
     "name": "planet-four-ridges",
-    "display_name": "Planet Four: Ridges",
-    "wnu_name": "planet_four"
-  },
-  {
-    "id": "3414",
-    "name": "african-american-civil-war-soldiers",
-    "display_name": "African American Civil War Soldiers",
-    "wnu_name": "war_diary"
-  },
-  {
-    "id": "6250",
-    "name": "monkey-health-explorer",
-    "display_name": "Monkey Health Explorer",
-    "wnu_name": "cancer_cells"
-  },
-  {
-    "id": "5059",
-    "name": "variable-star-zoo",
-    "display_name": "Variable Star Zoo",
-    "wnu_name": "wise"
-  },
-  {
-    "id": "3606",
-    "name": "beluga-bits",
-    "display_name": "Beluga Bits",
-    "wnu_name": "plankton"
-  },
-  {
-    "id": "6262",
-    "name": "the-hunt-for-galaxy-clusters",
-    "display_name": "The Hunt for Galaxy Clusters",
-    "wnu_name": "cyclone_center"
-  },
-  {
-    "id": "1104",
-    "name": "gravity-spy",
-    "display_name": "Gravity Spy",
-    "wnu_name": "bat_detective"
-  },
-  {
-    "id": "3757",
-    "name": "exoplanet-explorers",
-    "display_name": "Exoplanet Explorers",
-    "wnu_name": "asteroid"
+    "display_name": "Planet Four: Ridges"
   }
 ]
