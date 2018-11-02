@@ -325,18 +325,25 @@ channel.bind('classification',
             inserts.push("(" + valuesStr + ")");
 
             var insertStr = inserts.join(',');
-            console.log(insertStr);
+//            console.log(insertStr);
+            var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`,`zoon_project`, `zoon_userid`) VALUES" + insertStr;
 
-            pusherConnection.query("REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`,`zoon_project`, `zoon_userid`) VALUES" + insertStr,
-                function (err, rows) {
+            if (pusherConnection != null) {
+                pusherConnection.query(pusherInsertQuery,
+                    function (err, rows) {
 
-                    if (err) {
-                        onError('fetchRequest, insert failed', err);
-                        throw err;
-                    }
+                        if (err) {
+                            console.log(pusherInsertQuery);
+                            onError('Pusher classification, insert failed', err);
+                            throw err;
+                        }
 
-                    removeClassifications(projectId, projectName, maxDataDateMs);
-                });
+                        removeClassifications(projectId, projectName, maxDataDateMs);
+                    });
+            } else {
+                console.log('Pusher classification, no connection, ', pusherInsertQuery);
+            }
+
         }
     }
 );
@@ -350,21 +357,25 @@ function removeClassifications(project_id, project_name, updateMs){
 
     var lastClsTime = parseInt(updateMs/1000) - gClsArchiveTime;
     //console.log('removeClassifications from: ',projectId, lastClsTime, new Date(lastClsTime*1000));
+    if (pusherConnection != null) {
+        // delete classifications past max interval
+        var query = "DELETE FROM " + gClsTable + " WHERE `created_at` < FROM_UNIXTIME('" + lastClsTime + "') AND `id`="+project_id;
 
-    // delete classifications past max interval
-    var query = "DELETE FROM " + gClsTable + " WHERE `created_at` < FROM_UNIXTIME('" + lastClsTime + "') AND `id`="+project_id;
+        console.log(query);
+        pusherConnection.query(query, function(err, rows) {
 
-    console.log(query);
-    pusherConnection.query(query, function(err, rows) {
+            if(err) {
+                onError("removeClassifications error",err);
+                throw err;
+            }
 
-        if(err) {
-            onError("removeClassifications error",err);
-            throw err;
-        }
+            setProjectsUpdateTime(project_id, project_name, updateMs)
 
-        setProjectsUpdateTime(project_id, project_name, updateMs)
+        });
+    } else {
+        console.log("removeClassifications: pusher connection null");
+    }
 
-    });
 
 }
 
@@ -417,7 +428,7 @@ function startUpdateTimeSeries(){
     if(timeSeriesConnection!=null) {
         timeSeriesConnection.connect(function (err) {
             if (err) {
-                onError('Worker: error when connecting to db', err);
+                onError('Worker: error when connecting to timeseries db', err);
                 throw err;
             }
 
