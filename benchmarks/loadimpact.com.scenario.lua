@@ -1,4 +1,4 @@
-local rooturl = "http://quiet-cove-8120.herokuapp.com"
+local rooturl = "https://quiet-cove-8120.herokuapp.com"
 local minwait = 2
 local maxwait = 50
 
