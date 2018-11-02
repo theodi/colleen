@@ -8,55 +8,71 @@
     "rotation":0,
 
     "_comment":"Project level animations",
-    "_animation":[
+
+    "animation":
+    [
         {"type":"rotation","dataType":"c","data":"hour","tween":"linear","fn":"id","rotation":[0,10],"duration":[360.0,700.0], "time":0},
-        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}],
+        {"type":"scale","data":"hour","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[1200.0,1260.0], "time":0}
+    ],
 
 
-    "shape_animation":[{"shape_ids":["1","2","3"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0],"fills":["#4a6b10","#293a04"],"duration":[80.0,170.0], "time_fn":"index", "time":0}]
-    }],
+    "shape_animation":
+    [
+
+    {"_comment":"ALL green kelpshapes-colour","shape_ids":["1","2","3"],"animation":
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.5],"fills":["#4a6b10","#293a04"],"duration":[800.0,1700.0], "time_fn":"index", "time":0}, 
+            {"type":"trail","trail_type":"path","fade":0.99,"opacity":1,"duration":[1.0,10.0],"duration_data":"min15","time_fn":"random"}]
+        },
+
+    { "_comment":"ALL blue seashapes","shape_ids":["4","5","6","7","8","9","10"],"animation":
+            [{"type":"scale","dataType":"u","data":"min","series_len":60,"fn":"id","sx":[1.0,1.005],"sy":[1.0,1.005],"duration":[60.0,420.0],"duration_data":"day","time":0,"loop_sound":1}]
+        },
+
+    { "_comment":"Most blue shapes -circle","shape_ids":["4","5","6","7","8","9","10"],"rotation":0,"opacity":0.9, "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,20], "radius":80,"duration":[10.0,100.0],"duration_data":"min15", "time":0, "angle":0}]},
+
+    { "_comment":"Three large blue shapes -circle","shape_ids":["5","8","9"],"rotation":0,"opacity":0.8, "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"sqrt","deg_per_sec":[0,-10], "radius":60,"duration":[20.0,100.0],"duration_data":"hour", "time":0, "angle":0}]}
+
+    ],
 
     "shapes":[
 
         { "_comment":"Scale X and Y",
-            "id":"1","rotation":0,"opacity":0.8,
-            "animation":[{"type":"scale","dataType":"c","data":"min15","series_len":5,"fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[4.0,8.0], "time":0}]},
+            "id":"1","rotation":20,"opacity":0.8,
+            "animation":[{"type":"scale","dataType":"c","data":"min15","series_len":5,"fn":"id","sx":[0.8,1.5],"sy":[0.8,1.5] ,"duration":[40.0,50.0], "time":0}]},
 
         { "_comment":"Scale X only",
-            "id":"2","rotation":0,"opacity":0.7,
-            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[6.0,20.0], "duration_data":"hour","time":0}]},
+            "id":"2","rotation":22,"opacity":0.7,
+            "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.75,1.25],"sy":[1.0,1.0] ,"duration":[60.0,70.0], "duration_data":"hour","time":0}]},
 
         {  "_comment":"Scale min data",
-            "id":"3","rotation":0,"opacity":0.8,
-            "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[2.0,20.0], "time":0}]},
+            "id":"3","rotation":20,"opacity":0.8,
+            "animation":[{"type":"scale","data":"min","fn":"id","sx":[0.95,1.1],"sy":[0.95,1.1] ,"duration":[20.0,30.0], "time":0}]},
 
         { "_comment":"Scale long duration",
-            "id":"4","rotation":0,"opacity":0.85,
+            "id":"4","rotation":-10,"opacity":0.85,
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
 
         { "_comment":"Colour",
-            "id":"5","rotation":0,"opacity":0.75,
+            "id":"5","rotation":16,"opacity":0.75,
             "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#002fa7","#0d49ce"],"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
             "id":"6","rotation":0,"opacity":0.8,
             "animation":[{"type":"opacity","data":"hour","tween":"linear","fn":"id","range":[0.5,1.0] ,"duration":[8.0,12.0], "time":0}]},
 
-        { "_comment":"Translate",
-            "id":"7","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"hour","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
+        { "_comment":"small centre blue -Circle",
+            "id":"7","rotation":3,"opacity":0.8,
+            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,40], "radius":0,"duration":[2.0,10.0], "time":0, "angle":0}]},
 
         { "_comment":"Scale X only",
-            "id":"8","rotation":0,"opacity":0.78,
+            "id":"8","rotation":4,"opacity":0.78,
             "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.85,1.55],"sy":[1.0,1.0] ,"duration":[16.0,30.0], "duration_data":"min","time":0}]},
 
-        { "_comment":"Circle",
-            "id":"9","rotation":0,"opacity":0.9,
-            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,50], "radius":100,"duration":[8.0,22.0], "time":0, "angle":0}]},
+        { "_comment":"Scale X only",
+            "id":"9","rotation":10,"opacity":0.78},
 
-        { "_comment":"Translate",
-            "id":"10","rotation":0,"opacity":0.7,
-            "animation":[{"type":"translate","data":"min15","tween":"id","fn":"id","dir":"x","range":[-40,40] ,"duration":[10.0,22.0], "time":0}]}
+        { "_comment":"bottom small blue -Circle",
+            "id":"10","rotation":-20,"opacity":0.9,
+            "animation":[{"type":"circle","data":"hour","tween":"linear","fn":"id","deg_per_sec":[0,30], "radius":0,"duration":[8.0,12.0], "time":0, "angle":0}]}
     ]
 }
