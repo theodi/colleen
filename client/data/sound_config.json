@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "audio/wnu",
+		"baseUrl": "https://s3.amazonaws.com/weneedus/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -18,8 +18,8 @@
 				"master": 0
 			},
 			"layers": [
-				"2_rumble_base_hf_short.mp3",
-				"1_rumble_bass_version2_short.mp3"
+				"1_rumble_bass_version2_short.mp3",
+				"2_rumble_base_hf_short.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": []
@@ -53,6 +53,43 @@
 			]
 		},
 		{
+			"id": "bat_detective",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_bat_rmbl.mp3",
+				"1_bat_rumble.mp3"
+			],
+			"smplr_a": [
+				"bat_pls1.mp3",
+				"bat_pls10.mp3",
+				"bat_pls11.mp3",
+				"bat_pls12.mp3",
+				"bat_pls13.mp3",
+				"bat_pls14.mp3",
+				"bat_pls15.mp3",
+				"bat_pls2.mp3",
+				"bat_pls3.mp3",
+				"bat_pls4.mp3",
+				"bat_pls5.mp3",
+				"bat_pls6.mp3",
+				"bat_pls7.mp3",
+				"bat_pls8.mp3",
+				"bat_pls9.mp3"
+			],
+			"smplr_b": [
+				"bat_chrp1.mp3",
+				"bat_chrp2.mp3",
+				"bat_chrp3.mp3"
+			]
+		},
+		{
 			"id": "cancer_cells",
 			"volumes": {
 				"layers": [
@@ -82,43 +119,6 @@
 			]
 		},
 		{
-			"id": "bat_detective",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_bat_rmbl.mp3",
-				"1_bat_rumble.mp3"
-			],
-			"smplr_a": [
-				"bat_pls1.mp3",
-				"bat_pls10.mp3",
-				"bat_pls11.mp3",
-				"bat_pls12.mp3",
-				"bat_pls13.mp3",
-				"bat_pls15.mp3",
-				"bat_pls2.mp3",
-				"bat_pls14.mp3",
-				"bat_pls3.mp3",
-				"bat_pls4.mp3",
-				"bat_pls5.mp3",
-				"bat_pls6.mp3",
-				"bat_pls7.mp3",
-				"bat_pls8.mp3",
-				"bat_pls9.mp3"
-			],
-			"smplr_b": [
-				"bat_chrp1.mp3",
-				"bat_chrp2.mp3",
-				"bat_chrp3.mp3"
-			]
-		},
-		{
 			"id": "condor",
 			"volumes": {
 				"layers": [
@@ -129,8 +129,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
+				"glitch_loop.mp3",
+				"1_wse_radionoise.mp3"
 			],
 			"smplr_a": [
 				"wse_sigp1.mp3",
@@ -167,8 +167,8 @@
 				"cln_stone3.mp3",
 				"cln_stone4.mp3",
 				"cln_stone5.mp3",
-				"cln_stone7.mp3",
-				"cln_stone6.mp3"
+				"cln_stone6.mp3",
+				"cln_stone7.mp3"
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
@@ -188,8 +188,8 @@
 				"master": 0
 			},
 			"layers": [
-				"ff-layer2.mp3",
-				"ff-layer1.mp3"
+				"ff-layer1.mp3",
+				"ff-layer2.mp3"
 			],
 			"smplr_a": [
 				"ff01.mp3",
@@ -220,8 +220,8 @@
 				"3_gal_drone.mp3"
 			],
 			"smplr_a": [
-				"gal_pulse2.mp3",
 				"gal_pulse1.mp3",
+				"gal_pulse2.mp3",
 				"gal_pulse3.mp3",
 				"gal_pulse4.mp3",
 				"gal_pulse5.mp3",
@@ -265,34 +265,6 @@
 			]
 		},
 		{
-			"id": "milky_way",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_mky_cosmic_amp.mp3",
-				"2_mky_modnosie.mp3"
-			],
-			"smplr_a": [
-				"mky_tingle1.mp3",
-				"mky_tingle2.mp3",
-				"mky_tingle3.mp3",
-				"mky_tingle4.mp3",
-				"mky_tingle5.mp3"
-			],
-			"smplr_b": [
-				"mky_tingle6.mp3",
-				"mky_tingle7.mp3",
-				"mky_tingle8.mp3",
-				"mky_tingle9.mp3"
-			]
-		},
-		{
 			"id": "notes-from-nature",
 			"volumes": {
 				"layers": [
@@ -320,6 +292,34 @@
 			]
 		},
 		{
+			"id": "milky_way",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"2_mky_modnosie.mp3",
+				"1_mky_cosmic_amp.mp3"
+			],
+			"smplr_a": [
+				"mky_tingle1.mp3",
+				"mky_tingle2.mp3",
+				"mky_tingle3.mp3",
+				"mky_tingle4.mp3",
+				"mky_tingle5.mp3"
+			],
+			"smplr_b": [
+				"mky_tingle6.mp3",
+				"mky_tingle7.mp3",
+				"mky_tingle8.mp3",
+				"mky_tingle9.mp3"
+			]
+		},
+		{
 			"id": "planet-four-ridges",
 			"volumes": {
 				"layers": [
@@ -330,8 +330,8 @@
 				"master": 0
 			},
 			"layers": [
-				"p4r-layer1.mp3",
-				"p4r-layer2.mp3"
+				"p4r-layer2.mp3",
+				"p4r-layer1.mp3"
 			],
 			"smplr_a": [
 				"p4r01.mp3",
@@ -370,8 +370,8 @@
 				"sea_shells1.mp3",
 				"sea_shells2.mp3",
 				"sea_shells3.mp3",
-				"sea_shells4.mp3",
 				"sea_shells5.mp3",
+				"sea_shells4.mp3",
 				"sea_shells6.mp3"
 			]
 		},
@@ -537,8 +537,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_wse_radionoise.mp3",
-				"glitch_loop.mp3"
+				"glitch_loop.mp3",
+				"1_wse_radionoise.mp3"
 			],
 			"smplr_a": [
 				"wse_sigp1.mp3",
