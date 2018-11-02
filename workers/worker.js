@@ -388,31 +388,36 @@ function setProjectsUpdateTime(project_id, project_name, updateMs){
     console.log("setProjectsUpdateTime project_query = " + project_query);
     var new_record = false;
 
-    pusherConnection.query(project_query,function (err, rows) {
-        if (err) {
-            onError('setProjectsUpdateTime error',err);
-            throw err;
-        }
-
-        if (rows.length === 0) {
-            new_record = true;
-        }
-        console.log("new_record = " + new_record);
-        var unixTime = parseInt(updateMs/1000);
-
-        var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `id`="+project_id;
-        if (new_record) {
-            query = "INSERT INTO `"+gProjectTable+"` (`id`, `name`, `display_name`, `updated`) VALUES (" + project_id + ", '" + project_name + "', '" + project_name + "',  FROM_UNIXTIME('" + unixTime + "'))";
-        }
-
-        console.log("setProjectsUpdateTime query = " + query);
-        pusherConnection.query(query,function (err, rows) {
+    if (pusherConnection != null) {
+        pusherConnection.query(project_query, function (err, rows) {
             if (err) {
-                onError('setProjectsUpdateTime error',err);
+                onError('setProjectsUpdateTime error', err);
                 throw err;
             }
+
+            if (rows.length === 0) {
+                new_record = true;
+            }
+            console.log("new_record = " + new_record);
+            var unixTime = parseInt(updateMs / 1000);
+
+            var query = "UPDATE `" + gProjectTable + "` SET `updated`= FROM_UNIXTIME('" + unixTime + "') WHERE `id`=" + project_id;
+            if (new_record) {
+                query = "INSERT INTO `" + gProjectTable + "` (`id`, `name`, `display_name`, `updated`) VALUES (" + project_id + ", '" + project_name + "', '" + project_name + "',  FROM_UNIXTIME('" + unixTime + "'))";
+            }
+
+            console.log("setProjectsUpdateTime query = " + query);
+            pusherConnection.query(query, function (err, rows) {
+                if (err) {
+                    onError('setProjectsUpdateTime error', err);
+                    throw err;
+                }
+            });
         });
-    });
+    } else {
+        console.log("setProjectsUpdateTime: pusher connection null");
+    }
+
 }
 
 
