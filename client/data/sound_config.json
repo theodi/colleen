@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "https://s3.eu-west-2.amazonaws.com/wnu2/audio/wnu",
+		"baseUrl": "audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -18,8 +18,8 @@
 				"master": 0
 			},
 			"layers": [
-				"1_rumble_bass_version2_short.mp3",
-				"2_rumble_base_hf_short.mp3"
+				"2_rumble_base_hf_short.mp3",
+				"1_rumble_bass_version2_short.mp3"
 			],
 			"smplr_a": [],
 			"smplr_b": []
@@ -53,43 +53,6 @@
 			]
 		},
 		{
-			"id": "bat_detective",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_bat_rmbl.mp3",
-				"1_bat_rumble.mp3"
-			],
-			"smplr_a": [
-				"bat_pls1.mp3",
-				"bat_pls10.mp3",
-				"bat_pls11.mp3",
-				"bat_pls12.mp3",
-				"bat_pls13.mp3",
-				"bat_pls14.mp3",
-				"bat_pls15.mp3",
-				"bat_pls2.mp3",
-				"bat_pls3.mp3",
-				"bat_pls4.mp3",
-				"bat_pls5.mp3",
-				"bat_pls6.mp3",
-				"bat_pls7.mp3",
-				"bat_pls8.mp3",
-				"bat_pls9.mp3"
-			],
-			"smplr_b": [
-				"bat_chrp1.mp3",
-				"bat_chrp2.mp3",
-				"bat_chrp3.mp3"
-			]
-		},
-		{
 			"id": "cancer_cells",
 			"volumes": {
 				"layers": [
@@ -116,6 +79,43 @@
 				"cnr_braids7.mp3",
 				"cnr_braids8.mp3",
 				"cnr_braids9.mp3"
+			]
+		},
+		{
+			"id": "bat_detective",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_bat_rmbl.mp3",
+				"1_bat_rumble.mp3"
+			],
+			"smplr_a": [
+				"bat_pls1.mp3",
+				"bat_pls10.mp3",
+				"bat_pls11.mp3",
+				"bat_pls12.mp3",
+				"bat_pls13.mp3",
+				"bat_pls15.mp3",
+				"bat_pls2.mp3",
+				"bat_pls14.mp3",
+				"bat_pls3.mp3",
+				"bat_pls4.mp3",
+				"bat_pls5.mp3",
+				"bat_pls6.mp3",
+				"bat_pls7.mp3",
+				"bat_pls8.mp3",
+				"bat_pls9.mp3"
+			],
+			"smplr_b": [
+				"bat_chrp1.mp3",
+				"bat_chrp2.mp3",
+				"bat_chrp3.mp3"
 			]
 		},
 		{
@@ -167,8 +167,8 @@
 				"cln_stone3.mp3",
 				"cln_stone4.mp3",
 				"cln_stone5.mp3",
-				"cln_stone6.mp3",
-				"cln_stone7.mp3"
+				"cln_stone7.mp3",
+				"cln_stone6.mp3"
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
@@ -188,8 +188,8 @@
 				"master": 0
 			},
 			"layers": [
-				"ff-layer1.mp3",
-				"ff-layer2.mp3"
+				"ff-layer2.mp3",
+				"ff-layer1.mp3"
 			],
 			"smplr_a": [
 				"ff01.mp3",
@@ -220,8 +220,8 @@
 				"3_gal_drone.mp3"
 			],
 			"smplr_a": [
-				"gal_pulse1.mp3",
 				"gal_pulse2.mp3",
+				"gal_pulse1.mp3",
 				"gal_pulse3.mp3",
 				"gal_pulse4.mp3",
 				"gal_pulse5.mp3",
@@ -500,7 +500,7 @@
 			]
 		},
 		{
-			"id": "wise",
+			"id": "worms",
 			"volumes": {
 				"layers": [
 					0,
@@ -527,7 +527,7 @@
 			]
 		},
 		{
-			"id": "worms",
+			"id": "wise",
 			"volumes": {
 				"layers": [
 					0,
