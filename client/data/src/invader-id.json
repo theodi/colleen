@@ -48,7 +48,7 @@
 
         { "_comment":"Translate",
             "id":"7","rotation":0,"opacity":0.8,
-            "animation":[{"type":"translate","data":"day","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0}]},
+            "animation":[{"type":"translate","data":"day","tween":"id","fn":"id","dir":"x","range":[-100,100] ,"duration":[8.0,12.0], "time":0, "loop_sound":1}]},
 
         { "_comment":"Rotation",
             "id":"8","rotation":0,"opacity":0.9,
