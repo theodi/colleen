@@ -17,7 +17,7 @@
     "shape_animation":
     [
         {"shape_ids":["1","1.1","1.2"],"animation":
-            [{"type":"colour","data":"min15","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time_fn":"index", "time":0}]
+            [{"type":"colour","data":"min15","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#f00","ff0"] ,"duration":[30.0,120.0], "time_fn":"index", "time":0, "loop_sound":1}]
         },
 
         {"shape_ids":["4","4.1","4.2"],"animation":
