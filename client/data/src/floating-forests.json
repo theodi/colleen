@@ -21,7 +21,7 @@
 
     {"_comment":"ALL green kelpshapes-colour","shape_ids":["1","2","3"],"animation":
             [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.5],"fills":["#4a6b10","#293a04"],"duration":[800.0,1700.0], "time_fn":"index", "time":0}, 
-            {"type":"trail","trail_type":"path","fade":0.99,"opacity":1,"duration":[1.0,10.0],"duration_data":"min15","time_fn":"random"}]
+            {"type":"trail","trail_type":"path","fade":0.99,"opacity":0.9,"duration":[1.0,10.0],"duration_data":"min15","time_fn":"random"}]
         },
 
     { "_comment":"ALL blue seashapes","shape_ids":["4","5","6","7","8","9","10"],"animation":
@@ -53,7 +53,7 @@
             "animation":[{"type":"scale","data":"hour","fn":"id","sx":[0.5,1.5],"sy":[0.5,1.5] ,"duration":[120.0,220.0], "time":0}]},
 
         { "_comment":"Colour",
-            "id":"5","rotation":16,"opacity":0.75,
+            "id":"5","rotation":16,"opacity":0.95,
             "animation":[{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"fills":["#002fa7","#0d49ce"],"duration":[30.0,120.0], "time":0}]},
 
         { "_comment":"Opacity",
@@ -69,7 +69,7 @@
             "animation":[{"type":"scale","data":"day","fn":"id","sx":[0.85,1.55],"sy":[1.0,1.0] ,"duration":[16.0,30.0], "duration_data":"min","time":0}]},
 
         { "_comment":"Scale X only",
-            "id":"9","rotation":10,"opacity":0.78},
+            "id":"9","rotation":10,"opacity":0.82},
 
         { "_comment":"bottom small blue -Circle",
             "id":"10","rotation":-20,"opacity":0.9,
