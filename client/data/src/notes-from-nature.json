@@ -19,7 +19,7 @@
 
     	{"_comment":"vertical stack","shape_ids":["2","3","4","5","6","7","8","9","10","11","17","18","19","20"],"animation":
             [{"type":"scale","data":"hour","tween":"linear","fn":"id","range":[0.0,1.0],"sx":[0.8,1.9],"sy":[0.8,1.9],"duration":[3.0,10.0], "time_fn":"index"},
-            {"type":"point_translate","data":"day","tween":"linear","fn":"sqrt","duration":[3.0,10.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"time":0, "loop_sound":1}]},
+            {"type":"point_translate","data":"day","tween":"linear","fn":"sqrt","duration":[3.0,10.0],"rangeX":[-1.0,1.0],"rangeY":[-1.0,1.0],"time":0, "loop_sound":0}]},
             
         {"_comment":"two medium blocks","shape_ids":["12","14"],"animation":
             [{"type":"colour","dataType":"u","data":"min","tween":"linear","fn":"sqrt","range":[0.0,1.0],"fills":["#0C380C","#0CA52C"] ,"duration":[30.0,30.0], "time":0},
@@ -41,7 +41,7 @@
 
         { "_comment":"small top block",
             "id":"12","rotation":0,
-            "animation":[{"type":"rotate","dataType":"c","data":"min","tween":"linear","fn":"sqrt","rotation":[0,360],"duration":[230.0,400.0], "time":0, "loop_sound":1}]},
+            "animation":[{"type":"rotate","dataType":"c","data":"min","tween":"linear","fn":"sqrt","rotation":[0,360],"duration":[230.0,400.0], "time":0, "loop_sound":0}]},
 
         { "_comment":"large horiz stick",
             "id":"15","rotation":0,"opacity":0.8,

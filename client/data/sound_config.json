@@ -167,8 +167,8 @@
 				"cln_stone3.mp3",
 				"cln_stone4.mp3",
 				"cln_stone5.mp3",
-				"cln_stone7.mp3",
-				"cln_stone6.mp3"
+				"cln_stone6.mp3",
+				"cln_stone7.mp3"
 			],
 			"smplr_b": [
 				"cln_crash1.mp3",
@@ -201,7 +201,9 @@
 				"ff05.mp3",
 				"ff06.mp3",
 				"ff07.mp3",
-				"ff08.mp3"
+				"ff08.mp3",
+				"ff09.mp3",
+				"ff10.mp3"
 			]
 		},
 		{
@@ -261,7 +263,8 @@
 				"invader05.mp3",
 				"invader06.mp3",
 				"invader07.mp3",
-				"invader08.mp3"
+				"invader08.mp3",
+				"invader09.mp3"
 			]
 		},
 		{
@@ -310,13 +313,15 @@
 				"nfn01.mp3",
 				"nfn02.mp3",
 				"nfn03.mp3",
-				"nfn04.mp3"
+				"nfn04.mp3",
+				"nfn04b.mp3"
 			],
 			"smplr_b": [
 				"nfn05.mp3",
 				"nfn06.mp3",
 				"nfn07.mp3",
-				"nfn08.mp3"
+				"nfn08.mp3",
+				"nfn09.mp3"
 			]
 		},
 		{
@@ -336,14 +341,42 @@
 			"smplr_a": [
 				"p4r01.mp3",
 				"p4r02.mp3",
-				"p4r03.mp3",
-				"p4r04.mp3"
+				"p4r03.mp3"
 			],
 			"smplr_b": [
+				"p4r04.mp3",
 				"p4r05.mp3",
 				"p4r06.mp3",
-				"p4r07.mp3",
-				"p4r08.mp3"
+				"p4r07.mp3"
+			]
+		},
+		{
+			"id": "plankton",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"1_sea_water.mp3",
+				"1_sea_water_jf.mp3"
+			],
+			"smplr_a": [
+				"insect-chirrup.mp3",
+				"insect-chirruplong.mp3",
+				"insect-chirrup2.mp3",
+				"insect-chirruplong2.mp3"
+			],
+			"smplr_b": [
+				"sea_shells1.mp3",
+				"sea_shells2.mp3",
+				"sea_shells3.mp3",
+				"sea_shells4.mp3",
+				"sea_shells5.mp3",
+				"sea_shells6.mp3"
 			]
 		},
 		{
@@ -371,35 +404,6 @@
 				"wse_sigp6.mp3",
 				"wse_sigp7.mp3",
 				"wse_sigp8.mp3"
-			]
-		},
-		{
-			"id": "plankton",
-			"volumes": {
-				"layers": [
-					0,
-					0
-				],
-				"smplr_a": 0,
-				"master": 0
-			},
-			"layers": [
-				"1_sea_water.mp3",
-				"1_sea_water_jf.mp3"
-			],
-			"smplr_a": [
-				"insect-chirrup.mp3",
-				"insect-chirrup2.mp3",
-				"insect-chirruplong.mp3",
-				"insect-chirruplong2.mp3"
-			],
-			"smplr_b": [
-				"sea_shells1.mp3",
-				"sea_shells2.mp3",
-				"sea_shells3.mp3",
-				"sea_shells4.mp3",
-				"sea_shells5.mp3",
-				"sea_shells6.mp3"
 			]
 		},
 		{
