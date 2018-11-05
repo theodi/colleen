@@ -490,7 +490,7 @@ function updateTimeSeries(series){
 
     timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
-            onError('updateTimeSeriesInterval error',err);
+            onError('updateTimeSeries error',err);
             throw err;
 
         }
@@ -509,7 +509,7 @@ function updateTimeSeries(series){
         timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE project='"+projectId+
             "' AND `type_id`='"+dataType+"'  AND `interval`="+interval+" ORDER BY time DESC LIMIT 1",function(err, rows) {
             if (err) {
-                onError('updateTimeSeriesInterval error',err);
+                onError('updateTimeSeries error',err);
                 throw err;
             }
             // if series entries in database, set from time to last item plus interval
@@ -687,13 +687,12 @@ function removeTimeSeriesItems(series){
 }
 
 function updateTimeSeriesFromArchive(){
-
     console.log("Start testUpdateTimeSeries");
     gProjectTable = "projects";
     gClsTable = "classifications_archive";
     gSeriesTable = "timeseries";
     var seriesInitTable = "timeseries_archive";
-    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,0,0,0))/1000);
+    var classificationTime = parseInt(new Date(Date.UTC(2018,10,1,18,0,0))/1000);
     var classificationInterval = 60; // secs
     var timeout = classificationInterval*1000;
 
@@ -707,7 +706,7 @@ function updateTimeSeriesFromArchive(){
         console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
         var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
-        connect();
+        timeSeriesConnect();
         timeSeriesConnection.connect(function(err) {
             console.log("UPDATE query",query);
             timeSeriesConnection.query(query,function(err, rows) {
@@ -758,7 +757,11 @@ function singleTimeSeriesFromArchive(){
     gClsTable = "classifications_archive";
     gSeriesTable = "timeseries";
 
-    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,18,0,0))/1000);
+    // Month, 0 = January (grr)
+    // Hour (0-23)
+    const classificationDate = new Date(Date.UTC(2018,10,1,18,0,0));
+    const classificationTime = parseInt(classificationDate/1000);
+    console.log(classificationDate, classificationTime);
 
     timeSeriesConnect();
     timeSeriesConnection.connect(function (err) {
