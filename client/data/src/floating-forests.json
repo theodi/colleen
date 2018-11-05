@@ -22,7 +22,7 @@
     [
 
     {"_comment":"ALL green kelpshapes-colour","shape_ids":["1","2","3"],"animation":
-            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.5],"fills":["#4a6b10","#293a04"],"duration":[800.0,1700.0], "time_fn":"index", "time":0}, 
+            [{"type":"colour","data":"hour","tween":"linear","fn":"id","range":[0.5,1.5],"fills":["#4a6b10","#293a04"],"duration":[800.0,1700.0], "time_fn":"index", "time":0},
             {"type":"trail","trail_type":"path","fade":0.99,"opacity":0.9,"duration":[1.0,10.0],"duration_data":"min15","time_fn":"random", "loop_sound":1}]
         },
 

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "3757",
+    "name": "asteroid",
+    "display_name": "Asteroid Zoo"
+  },
+  {
+    "id": "1104",
+    "name": "bat_detective",
+    "display_name": "Bat Detective"
+  },
+  {
+    "id": "6250",
+    "name": "cancer_cells",
+    "display_name": "Cell Slider"
+  },
+  {
+    "id": "6262",
+    "name": "cyclone_center",
+    "display_name": "Cyclone Center"
+  },
+  {
+    "id": "5059",
+    "name": "wise",
+    "display_name": "Disk Detective"
+  },
+  {
+    "id": "5733",
+    "name": "galaxy_zoo",
+    "display_name": "Galaxy Zoo"
+  },
+  {
+    "id": "2025",
+    "name": "milky_way",
+    "display_name": "The Milky Way Project"
+  },
+  {
+    "id": "3606",
+    "name": "plankton",
+    "display_name": "Plankton Portal"
+  },
+  {
+    "id": "3414",
+    "name": "war_diary",
+    "display_name": "War Diaries"
+  },
+  {
+    "id": "4996",
+    "name": "serengeti",
+    "display_name": "Snapshot Serengeti"
+  },
+  {
+    "id": "2864",
+    "name": "floating-forests",
+    "display_name": "Floating Forests"
+  },
+  {
+    "id": "4558",
+    "name": "solar-stormwatch-ii",
+    "display_name": "Solar Stormwatch II"
+  },
+  {
+    "id": "5240",
+    "name": "invader-id",
+    "display_name": "Invader ID"
+  },
+  {
+    "id": "1558",
+    "name": "notes-from-nature",
+    "display_name": "Notes from Nature"
+  },
+  {
+    "id": "3219",
+    "name": "planet-four-ridges",
+    "display_name": "Planet Four: Ridges"
+  }
+]

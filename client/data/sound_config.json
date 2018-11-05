@@ -1,6 +1,6 @@
 {
 	"options": {
-		"baseUrl": "audio/wnu",
+		"baseUrl": "https://s3.eu-west-2.amazonaws.com/wnu2/audio/wnu",
 		"pathToSoundset": "client/audio/wnu",
 		"extension": "mp3",
 		"sceneLayersMixMode": 1,
@@ -134,8 +134,8 @@
 			],
 			"smplr_a": [
 				"wse_sigp1.mp3",
-				"wse_sigp2.mp3",
 				"wse_sigp3.mp3",
+				"wse_sigp2.mp3",
 				"wse_sigp4.mp3"
 			],
 			"smplr_b": [
@@ -501,6 +501,33 @@
 				"war_write5.mp3",
 				"war_write6.mp3",
 				"war_write7.mp3"
+			]
+		},
+		{
+			"id": "solar-stormwatch-ii",
+			"volumes": {
+				"layers": [
+					0,
+					0
+				],
+				"smplr_a": 0,
+				"master": 0
+			},
+			"layers": [
+				"slr_storm_layer1.mp3",
+				"slr_storm_layer2.mp3"
+			],
+			"smplr_a": [
+				"slr_storm1.mp3",
+				"slr_storm2.mp3",
+				"slr_storm3.mp3",
+				"slr_storm4.mp3"
+			],
+			"smplr_b": [
+				"slr_storm5.mp3",
+				"slr_storm6.mp3",
+				"slr_storm7.mp3",
+				"slr_storm8.mp3"
 			]
 		},
 		{

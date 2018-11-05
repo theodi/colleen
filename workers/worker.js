@@ -12,34 +12,35 @@ var nconf = require('nconf');
 
 
 // if testing then want to make sure we are using testing db
-if (process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV === 'test') {
     nconf.overrides({'WNU_DB_URL': process.env.WNU_TEST_DB_URL});
 }
 
-// config files take precedence over command-line arguments and environment variables 
-
+// config files take precedence over command-line arguments and environment variables
 nconf.file({ file:
     'config/' + process.env.NODE_ENV + '.json'
 })
     .argv()
     .env();
 
-
 // provide sensible defaults in case the above don't
 nconf.defaults({
 	timeout: 20000,
-
+    timeseries_timeout: 60000,
     projects_list: '../data/projects.json',
+    projects_ids: '../data/project_ids.json',
 	projects_table_name: 'projects',
 	classifications_table_name: 'classifications',
     timeseries_table_name: 'timeseries',
     cls_expire_after_x_days: 40,
-    default_project_updated_time:1402704000000,
+    default_project_updated_time:1402704000000,  // 1402704000
     classifications_per_page:5000
 });
 
 
 var WNU_DB_URL = nconf.get('WNU_DB_URL');
+var PUSHER_API_KEY = nconf.get('PUSHER_API_KEY');
+var PUSHER_CLUSTER = nconf.get('PUSHER_CLUSTER');
 
 /*---------------------------------------------------------------------------*/
 
@@ -53,58 +54,90 @@ var MIN_SECS = 60,
     WEEK_SECS = 604800,
     MONTH_SECS = 2592000; // month 30 days
 
-var seriesLength={};
-seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60, seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
+var seriesLength = {};
+    seriesLength[MIN_SECS] = 60, seriesLength[MIN_5_SECS] = 60, seriesLength[MIN_15_SECS] = 60,
+    seriesLength[HOUR_SECS] = 24, seriesLength[DAY_SECS] = 30;
 
-console.log("seriesLength is ", seriesLength);
-console.log("timeout is", nconf.get("timeout"));
+//console.log("seriesLength is ", seriesLength);
+//console.log("timeout is", nconf.get("timeout"));
 
-var gProjectList = [], gProjectQueue = [], gSeriesQueue = [];
+var gProjectList = [], gProjectQueue = [], gSeriesQueue = [], gProjectListById = [], gProjectIds = [], gProjectIdList = [];
 
 gProjectList = require(nconf.get("projects_list"));
+//console.log('gProjectList is ', gProjectList);
+gProjectIds = require(nconf.get("projects_ids"));
 
-console.log('gProjectList is ', gProjectList);
+
+//console.log('gProjectIds is ', gProjectIds);
+for (var i = 0; i < gProjectIds.length; i++) {
+    const project = gProjectIds[i];
+    gProjectListById["id_"+project['id']] = project;
+    gProjectIdList.push(parseInt(project['id']));
+}
+//gProjectListById = gProjectIds.map(entry => entry["ids"].map(x => entry["name"]));
+
+//console.log('gProjectListById is ', gProjectListById);
+//console.log('gProjectListById.keys() is ', gProjectListById.keys());
+//console.log('gProjectIdList is ', gProjectIdList);
+
 
 var gIntervals = [MIN_SECS,MIN_15_SECS,HOUR_SECS,DAY_SECS];
 var gTimer = 0;
 
 var gEventEmitter = new events.EventEmitter();
 
-var gClsArchiveTime = DAY_SECS*nconf.get("cls_expire_after_x_days");
-var gLatency = 120000;//60000; // query up to N ms behind current time
+var gClsArchiveTime = DAY_SECS * nconf.get("cls_expire_after_x_days");
 
 /*---------------------------------------------------------------------------*/
 
-// MySQL connection
+// // MySQL connection
 
-var connection = null;
+var pusherConnection = null;
+var timeSeriesConnection = null;
 var gProjectTable = nconf.get("projects_table_name");
 var gClsTable = nconf.get("classifications_table_name");
 var gSeriesTable = nconf.get("timeseries_table_name");
 var gDefaultProjectUpdatedTime = nconf.get("default_project_updated_time");
 var gClassificationsPerPage = nconf.get("classifications_per_page");
 
-console.log('NODE_ENV is',nconf.get('NODE_ENV'));
-console.log('projects_list is',nconf.get('projects_list'));
-console.log('WNU_DB_URL',WNU_DB_URL);
-console.log('gClsArchiveTime',gClsArchiveTime);
+//console.log('NODE_ENV is',nconf.get('NODE_ENV'));
+//console.log('projects_list is',nconf.get('projects_list'));
+//console.log('WNU_DB_URL',WNU_DB_URL);
+//console.log('gClsArchiveTime',gClsArchiveTime);
 
 function connect(){
-    if(connection!=null){
+    if(pusherConnection!=null){
         disconnect();
     }
-    connection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000');
-    return connection;
+    pusherConnection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000');
+    return pusherConnection;
+}
 
+function timeSeriesConnect() {
+
+    if(timeSeriesConnection!=null){
+        timeSeriesDisconnect();
+    }
+    timeSeriesConnection = mysql.createConnection(WNU_DB_URL+'?timezone=+0000');
+    return timeSeriesConnection;
 }
 
 
 function disconnect(){
-    //console.log('Worker: Checking for open DB connections');
-    if (connection != null){
-        //console.log('Worker: Closing DB connection');
-        connection.end();
-        connection = null;
+    //console.log('Worker: Checking for open DB pusherConnection');
+    if (pusherConnection != null){
+        //console.log('Worker: Closing DB pusherConnection');
+        pusherConnection.end();
+        pusherConnection = null;
+    }
+}
+
+function timeSeriesDisconnect() {
+    //console.log('Worker: Checking for open DB timeSeriesConnection');
+    if (timeSeriesConnection != null){
+        //console.log('Worker: Closing DB timeSeriesConnection');
+        timeSeriesConnection.end();
+        timeSeriesConnection = null;
     }
 }
 
@@ -113,6 +146,7 @@ function disconnect(){
 process.on('exit', function () {
     console.log('Worker: Exiting...');
     disconnect();
+    timeSeriesDisconnect();
     console.log('Worker: Exited.');
 });
 
@@ -139,337 +173,252 @@ process.on('SIGTERM', function () {
 // Scheduling
 
 var gUpdateCount = 0;
-var gTimoutObj = null;
+var gDBTimeoutObj = null;
+var gTimeseriesTimeoutObj = null;
 
-var fetchDataTimeout = function(){
-    console.log("Fetch Data:", new Date(),"updateCount",gUpdateCount);
-    gUpdateCount +=1;
+
+
+var connectDBTimeout = function(){
+    console.log("Connect Database:", new Date());
     var timeout = nconf.get("timeout");
-    gTimoutObj = setTimeout(startFetch,timeout);
-}
+
+    gDBTimeoutObj = setTimeout(connectDB,timeout);
+};
+
+var connectTimeseriesTimeout = function() {
+    console.log("Connect Timeseries timeout:", new Date(),"updateCount",gUpdateCount);
+    gUpdateCount +=1;
+    var timeseries_timeout = nconf.get("timeseries_timeout");
+    gTimeseriesTimeoutObj = setTimeout(startUpdateTimeSeries, timeseries_timeout);
+};
 
 function startScheduler(){
-
-    gEventEmitter.on('endFetchData', startUpdateTimeSeries);
-    gEventEmitter.on('endUpdateTimeSeries', fetchDataTimeout);
-    fetchDataTimeout();
-
+    connectDB();
+    connectDBTimeout();
 }
 
-function onError(str,err){
-    console.log(str+": " + err);
-    if(gTimoutObj){
-        clearTimeout(gTimoutObj);
-    }
-    fetchDataTimeout();
+function startTimeseriesScheduler(){
+    // timeseries calculation is used
+    gEventEmitter.on('endUpdateTimeSeries', connectTimeseriesTimeout);
+    startUpdateTimeSeries();
+    connectTimeseriesTimeout();
 }
 
-process.on('uncaughtException', function(err) {
-    //console.log('uncaughtException' + err);
-    onError('uncaughtException',err);
-});
 
-
-
-
-/*---------------------------------------------------------------------------*/
-
-// Fetch classification data from zoon API, insert into classification table
-
-
-function startFetch(){
-
-    gTimer = new Date().valueOf();
-    gProjectQueue = _.clone(gProjectList);
-
+function connectDB(){
     connect();
-    connection.connect(function(err) {
+    pusherConnection.connect(function(err) {
         if(err) {
             onError('Worker: error when connecting to db', err);
 
             throw err;
         }
         else{
-            fetchNext();
+            console.log("Database connected");
         }
     });
-
 }
 
-function fetchNext(){
-    if(gProjectQueue.length>0){
-        var projectId = gProjectQueue.shift();
-        fetchProjectData(projectId);
-
+function onError(str,err){
+    console.log(str+": " + err);
+    if(gDBTimeoutObj){
+        clearTimeout(gDBTimeoutObj);
     }
-    else{
-        endFetch();
+    if(gTimeseriesTimeoutObj){
+        clearTimeout(gTimeseriesTimeoutObj);
     }
+    connectDBTimeout();
+    connectTimeseriesTimeout();
 }
 
-function endFetch(){
 
-    var dt = (new Date().valueOf() - gTimer)/1000;
-    //console.log('endFetchData. Time taken (s):',dt);
-    gEventEmitter.emit('endFetchData');
+process.on('uncaughtException', function(err) {
+    onError('uncaughtException',err);
+});
 
-}
+/*---------------------------------------------------------------------------*/
 
-function fetchProjectData(projectId){
+// Pusher
+var Pusher = require('pusher-client');
 
-    //console.log("fetchProjectData",projectId);
+var maxDataDateMs;
+var socket = new Pusher(PUSHER_API_KEY, { cluster: PUSHER_CLUSTER });
+var channel = socket.subscribe('panoptes');
+//console.log(gProjectListById.keys());
+channel.bind('classification',
+    function(record) {
 
-    //connection.query("SELECT UNIX_TIMESTAMP(created_at) AS time FROM "+gClsTable+" WHERE project='"+projectId+"' ORDER BY time DESC LIMIT 1",function(err, rows) {
-    connection.query("SELECT UNIX_TIMESTAMP(updated) as time FROM "+gProjectTable+" WHERE name='"+projectId+"'",function(err, rows) {
+        //console.log("classification event: " + JSON.stringify(record));
 
-        if(err) {
-            onError('fetchProjectData, query error',err);
-            throw err;
-
+        // {
+        //      "classification_id":"122370232",
+        //      "project_id":"5074",
+        //      "workflow_id":"5062",
+        //      "user_id":"1791986",
+        //      "subject_ids":["16229013"],
+        //      "subject_urls":[{
+        //          "image/jpeg":"https://panoptes-uploads.zooniverse.org/production/subject_location/d8f2af5d-a9ce-40f8-917a-be564f33eaf9.jpeg"
+        //      }],
+        //      "geo":{
+        //          "country_name":"Netherlands",
+        //          "country_code":"NL",
+        //          "city_name":"Lelystad",
+        //          "coordinates":[5.475,52.5083],
+        //          "latitude":52.5083,
+        //          "longitude":5.475
+        //      }
+        //  }
+        var projectId = record['project_id'];
+        var projectData = gProjectListById["id_" + projectId];
+        var projectName = projectId;
+//        var projectZoonName = projectId;
+        if (projectData !== undefined) {
+            projectName = gProjectListById["id_" + projectId]['name'];
+//            projectZoonName = gProjectListById["id_" + projectId]['name'];
         }
 
-        if(rows[0]==null){
-            console.log('fetchProjectData, not in database:',projectId);
-            fetchNext();
-            return;
-        }
-
-
-        var fromMs, toMs;
-        var curMs = (new Date()).valueOf() -gLatency;
-
-        var intervalMs = 15*60*1000; // 15 mins in ms
-        var projectUpdated = rows[0].time;
-        if(projectUpdated==null){
-
-
-            fromMs = gDefaultProjectUpdatedTime;
-            // 2014/06/14 // 1401580800000; //2014/06/01 // 1398902400000;// 2014/05/01 // 1399939200000; // midnight 13 May 2014//1404543600000;// 2014/07/05 7am // 1399982400000; // 12pm 13 May 2014 //
-            // var monthMs = MONTH_SECS * 1000;// a month in ms
-            //fromMs = (new Date()).valueOf() - monthMs;
-            console.log("projectUpdated is NULL",projectUpdated);
-        }
-        else{
-            fromMs = projectUpdated*1000;
-            //console.log("projectUpdated",projectUpdated);
-
-        }
-        toMs = fromMs + intervalMs;
-        toMs = Math.min(curMs,toMs);
-
-
-
-        // request
-        fetchRequest(projectId,fromMs,toMs);
-
-    });
-
-}
-
-function fetchRequest(projectId,fromMs,toMs){
-
-    //console.log('fetchRequest',projectId,"fromMs",fromMs,"toMs",toMs, "from",new Date(fromMs), "to",new Date(toMs),"perPage",gClassificationsPerPage);
-
-    var maxDateMs = toMs, maxDataDateMs = 0;
-
-    var perPage = gClassificationsPerPage; // 5000
-    var options = {
-        url: 'http://event.zooniverse.org/classifications/'+projectId,
-        qs:{'from':fromMs, 'to':toMs,'per_page':perPage,'page':0},
-        timeout:20*1000,
-        headers: {
-            'Accept': 'application/vnd.zooevents.v1+json'
-        }
-    };
-
-    request(options, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var data = JSON.parse(body);
-            //console.log('Classifications, data.length:',data.length);
-
-            if(data.length>0){
-                var fields = ['id','created_at','user_id','project','country_code','region','city_name','latitude','longitude'];
-                var inserts = [];
-                _.each(data,function(record){
-                    var values=[];
-                    _.each(fields, function(field,index){
-                        var value = 'NULL';
-                        if(field=='project'){
-                            value = "'"+projectId+"'";
-                        }
-                        else if(field=='created_at'){
-                            var date = new Date(record[field]);
-                            value = "FROM_UNIXTIME('"+parseInt(date.valueOf()/1000)+"')";
-                            //console.log('record[field]',record[field],'value',value,'date',date);
-                        }
-                        else if(field=='user_id'){
-                            value = parseInt(record[field]);
-                            if(isNaN(value)) value = 0;
-                            //console.log('record[field]',record[field],'value',value,'date',date);
-                        }
-                        else if(record[field]){
-                            value = connection.escape(record[field]);
-                        }
-                        values.push(value);
-                    });
-                    // get last date from data
-                    var createdDate = new Date(record['created_at']);
-                    //console.log('createdMs',createdDate);
-                    var createdMs = createdDate.valueOf();
-                    if(createdMs>maxDataDateMs){
-                        maxDataDateMs = createdMs;
-                    }
-
-                    var valuesStr = values.join(",");
-                    inserts.push("("+valuesStr+")");
-
-                });
-
-                if(data.length==perPage){
-                    maxDateMs = maxDataDateMs;
-                    //console.log('maxDataDateMs',maxDataDateMs);
+//        console.log(projectId, gProjectIdList.includes(parseInt(projectId)));
+        // once we have data from a project we want, add to classifications table, and remove old data:
+        if (gProjectIdList.includes(parseInt(projectId))) {
+            var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude'];//, 'zoon_project', 'zoon_userid'];
+            var inserts = [];
+            var values = [];
+            _.each(fields, function (field, index) {
+                var value = 'NULL';
+                if (field === 'project') {
+                    value = "'" + projectName + "'"; // get project name
                 }
+                else if (field === 'created_at') {
+                    value = "FROM_UNIXTIME('" + parseInt(new Date().valueOf() / 1000) + "')";
+                    //console.log('record[field]',record[field],'value',value,'date',date);
+                }
+                else if (field === 'user_id') {
+                    value = parseInt(record[field]);
+                    if (isNaN(value)) value = 0;
+                    //console.log('record[field]',record[field],'value',value,'date',date);
+                }
+                else if (field === 'id') {
+                    value = parseInt(record['classification_id']);
+                }
+                else if (field === 'region') {
+                    value = 'NULL';
+                }
+                else if (record['geo'][field]) {
+                    // console.log('region, field = ' + field);
+                    if (pusherConnection !== undefined && pusherConnection !== null) {
+                        value = pusherConnection.escape(record['geo'][field]);
+                    }
+                }
+//                else if (field === 'zoon_project') {
+//                    value = "'" + projectZoonName + "'"; // get project name
+//                }
+//                else if (field === 'zoon_userid') {
+//                    value = "'" + record['user_id'] + "'"; // get user id
+//                }
+                values.push(value);
+            });
 
-                var insertStr = inserts.join(',');
-                //console.log(insertStr);
+            // get event date from system
+            maxDataDateMs = new Date().valueOf();
 
+            var valuesStr = values.join(",");
+            inserts.push("(" + valuesStr + ")");
 
-                connection.query("REPLACE INTO "+gClsTable+" (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" +insertStr,
+            var insertStr = inserts.join(',');
+//            console.log(insertStr);
+            var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" + insertStr;
+            // ,`zoon_project`, `zoon_userid`
+            if (pusherConnection != null) {
+                pusherConnection.query(pusherInsertQuery,
                     function (err, rows) {
 
                         if (err) {
-                            onError('fetchRequest, insert failed',err);
+                            console.log(pusherInsertQuery);
+                            onError('Pusher classification, insert failed', err);
                             throw err;
                         }
 
-                        removeClassifications(projectId, maxDateMs);
-
-
+                        removeClassifications(projectId, projectName, maxDataDateMs);
                     });
-            }
-            else{
-
-
-                removeClassifications(projectId, maxDateMs);
+            } else {
+                console.log('Pusher classification, no connection, ', pusherInsertQuery);
             }
 
         }
-        else{ // end if (!error && response.statusCode == 200) {
-            console.log('fetchProjectData request error',error);//,response.statusCode);
+    }
+);
 
-            removeClassifications(projectId, fromMs);
-        }
+// TODO, listen for socket disconnects, and do timed reconnects
 
-    }); // close request
-}
 
-function removeClassifications(projectId,updateMs){
+function removeClassifications(project_id, project_name, updateMs){
 
-    //console.log('removeClassifications: ',projectId, updateMs, new Date(updateMs));
-    var lastClsTime = parseInt(updateMs/1000)-gClsArchiveTime;
+    console.log('removeClassifications: ', project_id, updateMs, new Date(updateMs));
+
+    var lastClsTime = parseInt(updateMs/1000) - gClsArchiveTime;
     //console.log('removeClassifications from: ',projectId, lastClsTime, new Date(lastClsTime*1000));
+    if (pusherConnection != null) {
+        // delete classifications past max interval
+        var query = "DELETE FROM " + gClsTable + " WHERE `created_at` < FROM_UNIXTIME('" + lastClsTime + "') AND `id`="+project_id;
 
-    // delete classifications past max interval
-    var query = "DELETE FROM "+gClsTable+" WHERE `created_at` < FROM_UNIXTIME('"+lastClsTime+"') AND `project`='"+projectId+"'";
+        console.log(query);
+        pusherConnection.query(query, function(err, rows) {
 
-    //console.log(query);
-    connection.query(query, function(err, rows) {
-
-        if(err) {
-            onError("removeClassifications error",err);
-            throw err;
-        }
-
-        setProjectsUpdateTime(projectId,updateMs)
-
-    });
-
-}
-
-function setProjectsUpdateTime(projectId,updateMs){
-
-    var unixTime = parseInt(updateMs/1000);
-    //console.log('update date',projectId,new Date(unixTime*1000));
-    var query = "UPDATE `"+gProjectTable+"` SET `updated`= FROM_UNIXTIME('"+unixTime+"') WHERE `name`='"+projectId+"'";
-    //console.log(query);
-    connection.query(query,function (err, rows) {
-        if (err) {
-            onError('setProjectsUpdateTime error',err);
-            throw err;
-        }
-
-        fetchNext();
-
-    });
-}
-
-function fetchProjectDataTest(){
-
-    //curl -H "Accept: application/vnd.zooevents.v1+json"
-    //"http://event.zooniverse.org/classifications/galaxy_zoo?from=1399939200000&to=1400025600000&per_page=200&page=1"
-
-    var from = 1401235200000, to = 1401321600000; // 2014/05/28 00:00 to 2014/05/29 00:00
-
-    var options = {
-        //url: 'http://event.zooniverse.org/classifications/galaxy_zoo?from=1399982400000&to=1399983000000&per_page=10&page=0',
-        url: 'http://event.zooniverse.org/classifications/galaxy_zoo',
-        qs:{'from':from, 'to':to,'per_page':1000,'page':0},
-        headers: {
-            'Accept': 'application/vnd.zooevents.v1+json'
-        }
-    };
-
-    request(options, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log("body.length",body.length);
-
-            var data = JSON.parse(body);
-            //console.log(data);
-            //console.log('data[0]',data[0]);
-            console.log('data.length',data.length,'from',new Date(from), 'to',new Date(to));
-        }
-    });
-
-}
-
-
-function testMySQLError(){
-
-    setInterval(function(){
-        console.log(new Date());
-    },1000);
-    connect();
-    connection.connect(function(err) {
-        if(err) {
-            console.log('Error',err);
-        }
-        connection.query("SELECT * FROM invalid",function(err2, rows, fields) {
-            if(err2) {
-                console.log('Error',err2);
+            if(err) {
+                onError("removeClassifications error",err);
+                throw err;
             }
-        });
 
-    });
+            setProjectsUpdateTime(project_id, project_name, updateMs)
+
+        });
+    } else {
+        console.log("removeClassifications: pusher connection null");
+    }
+
 
 }
 
-function testFetchData(){
+/*---------------------------------------------------------------------------*/
 
-    console.log("Start testFetchData");
+function setProjectsUpdateTime(project_id, project_name, updateMs){
 
-    var updateCount = 0;
 
-    // projects: ["andromeda","bat_detective","cyclone_center","galaxy_zoo","milky_way","planet_four","sea_floor","serengeti"]
+    var project_query = "SELECT `id` FROM `" + gProjectTable + "` WHERE `id` = " + project_id;
+    console.log("setProjectsUpdateTime project_query = " + project_query);
+    var new_record = false;
 
-    var testFetchDataLoop = function(){
-        console.log("testFetchData:", new Date(),"updateCount",updateCount);
-        updateCount +=1;
-        setTimeout(startFetch,5*1000);
-    };
+    if (pusherConnection != null) {
+        pusherConnection.query(project_query, function (err, rows) {
+            if (err) {
+                onError('setProjectsUpdateTime error', err);
+                throw err;
+            }
 
-    gEventEmitter.on('endFetchData', testFetchDataLoop);
+            if (rows.length === 0) {
+                new_record = true;
+            }
+            console.log("new_record = " + new_record);
+            var unixTime = parseInt(updateMs / 1000);
 
-    testFetchDataLoop();
+            var query = "UPDATE `" + gProjectTable + "` SET `updated`= FROM_UNIXTIME('" + unixTime + "') WHERE `id`=" + project_id;
+
+            // NB this probably never called after initial project phase
+            if (new_record) {
+                query = "INSERT INTO `" + gProjectTable + "` (`id`, `name`, `display_name`, `updated`) VALUES (" + project_id + ", '" + project_name + "', '" + project_name + "',  FROM_UNIXTIME('" + unixTime + "'))";
+            }
+
+            console.log("setProjectsUpdateTime query = " + query);
+            pusherConnection.query(query, function (err, rows) {
+                if (err) {
+                    onError('setProjectsUpdateTime error', err);
+                    throw err;
+                }
+            });
+        });
+    } else {
+        console.log("setProjectsUpdateTime: pusher connection null");
+    }
 
 }
 
@@ -480,30 +429,33 @@ function testFetchData(){
 
 function startUpdateTimeSeries(){
 
-    connect();
+    timeSeriesConnect();
 
     gTimer = new Date().valueOf();
-    connection.connect(function(err) {
-        if(err) {
-            onError('Worker: error when connecting to db', err);
-            throw err;
-        }
-        else{
+    if(timeSeriesConnection!=null) {
+        timeSeriesConnection.connect(function (err) {
+            if (err) {
+                onError('Worker: error when connecting to timeseries db', err);
+                throw err;
+            }
 
-            gSeriesQueue = [];
-            _.each(gProjectList,function(project){
-                _.each(gIntervals,function(interval){
-                    gSeriesQueue.push(
-                        {type:'c',interval:interval, project:project},
-                        {type:'u',interval:interval, project:project}
-                    );
+            else {
 
+                gSeriesQueue = [];
+                _.each(gProjectList, function (project) {
+                    _.each(gIntervals, function (interval) {
+                        gSeriesQueue.push(
+                            {type: 'c', interval: interval, project: project},
+                            {type: 'u', interval: interval, project: project}
+                        );
+
+                    });
                 });
-            });
-            updateNextTimeSeries();
+                updateNextTimeSeries();
 
-        }
-    });
+            }
+        });
+    }
 
 }
 
@@ -519,8 +471,8 @@ function updateNextTimeSeries(){
 }
 
 function endUpdateTimeSeries() {
-    disconnect();
-    var dt = (new Date().valueOf() - gTimer)/1000;
+    timeSeriesDisconnect();
+    //var dt = (new Date().valueOf() - gTimer)/1000;
     //console.log('endUpdateTimeSeries. Time taken (s):',dt);
     gEventEmitter.emit('endUpdateTimeSeries');
 }
@@ -536,9 +488,9 @@ function updateTimeSeries(series){
 
     var projectUpdatedUnix = 0,seriesMax = 0;
 
-    connection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
+    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`updated`) AS time FROM `"+gProjectTable+"` WHERE `name`='"+projectId+"'",function (err, rows) {
         if (err) {
-            onError('updateTimeSeriesInterval error',err);
+            onError('updateTimeSeries error',err);
             throw err;
 
         }
@@ -554,10 +506,10 @@ function updateTimeSeries(series){
 
 
         // find last timeseries date
-        connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE project='"+projectId+
+        timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE project='"+projectId+
             "' AND `type_id`='"+dataType+"'  AND `interval`="+interval+" ORDER BY time DESC LIMIT 1",function(err, rows) {
             if (err) {
-                onError('updateTimeSeriesInterval error',err);
+                onError('updateTimeSeries error',err);
                 throw err;
             }
             // if series entries in database, set from time to last item plus interval
@@ -597,8 +549,8 @@ function updateTimeSeries(series){
                 updateTimeSeriesInterval(series,from,to);
 
             } // close if(to-from<interval){
-        }); // close connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+"
-    }); // close connection.query("SELECT UNIX_TIMESTAMP(`updated`)
+        }); // close pusherConnection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+"
+    }); // close pusherConnection.query("SELECT UNIX_TIMESTAMP(`updated`)
 
 }
 
@@ -625,7 +577,7 @@ function updateTimeSeriesInterval(series, from, to){
         "FROM "+gClsTable+" WHERE project='"+projectId+"' AND created_at BETWEEN FROM_UNIXTIME("+from+") AND FROM_UNIXTIME("+to+") "+
         "GROUP BY time";
 
-    connection.query(query, function(err, rows, fields) {
+    timeSeriesConnection.query(query, function(err, rows, fields) {
         if(err) {
             onError("updateTimeSeriesInterval Error",err);
             throw err;
@@ -677,7 +629,7 @@ function updateTimeSeriesInterval(series, from, to){
         var insertStr = inserts.join(',');
         // console.log(insertStr);
 
-        connection.query("INSERT INTO "+gSeriesTable+" (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`,`from`,`to`) VALUES" +insertStr,
+        timeSeriesConnection.query("INSERT INTO "+gSeriesTable+" (`type_id`,`project`,`interval`,`datetime`,`count`,`updated`,`from`,`to`) VALUES" +insertStr,
             function (err, rows) {
 
                 if(err){
@@ -692,7 +644,6 @@ function updateTimeSeriesInterval(series, from, to){
     });
 }
 
-
 function removeTimeSeriesItems(series){
 
     var interval = series.interval; // seconds
@@ -705,7 +656,7 @@ function removeTimeSeriesItems(series){
     var lastItemTime = 0;
     var offset = seriesLength[interval] -1;
 
-    connection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`="+interval+" ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
+    timeSeriesConnection.query("SELECT UNIX_TIMESTAMP(`datetime`) AS time FROM "+gSeriesTable+" WHERE `project`='"+projectId+"' AND type_id='"+dataType+"' AND `interval`="+interval+" ORDER BY `datetime` DESC LIMIT 1 OFFSET "+offset,function(err, rows, fields) {
 
         if(err) throw err;
         // if rows to delete
@@ -717,7 +668,7 @@ function removeTimeSeriesItems(series){
             var query = "DELETE FROM "+gSeriesTable+" WHERE `datetime` < FROM_UNIXTIME('"+lastItemTime+"') AND `project` = '"+projectId+"' AND `type_id` = '"+dataType+"' AND `interval` = "+interval;
 
 
-            connection.query(query, function(err, rows) {
+            timeSeriesConnection.query(query, function(err, rows) {
 
                 if(err) {
                     onError("removeTimeSeriesItems error",err);
@@ -736,13 +687,12 @@ function removeTimeSeriesItems(series){
 }
 
 function updateTimeSeriesFromArchive(){
-
     console.log("Start testUpdateTimeSeries");
     gProjectTable = "projects";
     gClsTable = "classifications_archive";
     gSeriesTable = "timeseries";
     var seriesInitTable = "timeseries_archive";
-    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,0,0,0))/1000);
+    var classificationTime = parseInt(new Date(Date.UTC(2018,10,1,18,0,0))/1000);
     var classificationInterval = 60; // secs
     var timeout = classificationInterval*1000;
 
@@ -756,10 +706,10 @@ function updateTimeSeriesFromArchive(){
         console.log("testUpdateTimeSeries:", new Date(), "classificationTime",classificationTime,"updateCount",updateCount);
         var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
-        connect();
-        connection.connect(function(err) {
+        timeSeriesConnect();
+        timeSeriesConnection.connect(function(err) {
             console.log("UPDATE query",query);
-            connection.query(query,function(err, rows) {
+            timeSeriesConnection.query(query,function(err, rows) {
 
                 classificationTime += classificationInterval;
                 updateCount +=1;
@@ -781,16 +731,16 @@ function updateTimeSeriesFromArchive(){
     //updateTimeSeriesLoop();
 
     // truncate timeseries
-    connect();
-    connection.connect(function(err) {
+    timeSeriesConnect();
+    timeSeriesConnection.connect(function(err) {
         var query = "TRUNCATE "+ gSeriesTable;
         console.log(query);
-        connection.query(query,function(err, rows) {
+        timeSeriesConnection.query(query,function(err, rows) {
 
             // copy initial series table
 
-            connection.query("INSERT "+gSeriesTable+" SELECT * FROM "+seriesInitTable,function(err2, rows2) {
-                console.log('Copy timerseries');
+            timeSeriesConnection.query("INSERT "+gSeriesTable+" SELECT * FROM "+seriesInitTable,function(err2, rows2) {
+                console.log('Copy time-series');
                 updateTimeSeriesLoop();
             });
         })
@@ -807,19 +757,23 @@ function singleTimeSeriesFromArchive(){
     gClsTable = "classifications_archive";
     gSeriesTable = "timeseries";
 
-    var classificationTime = parseInt(new Date(Date.UTC(2014,6,10,18,0,0))/1000);
+    // Month, 0 = January (grr)
+    // Hour (0-23)
+    const classificationDate = new Date(Date.UTC(2018,10,1,18,0,0));
+    const classificationTime = parseInt(classificationDate/1000);
+    console.log(classificationDate, classificationTime);
 
-    connect();
-    connection.connect(function (err) {
+    timeSeriesConnect();
+    timeSeriesConnection.connect(function (err) {
         // truncate timeseries
         var query = "TRUNCATE " + gSeriesTable;
         console.log(query);
-        connection.query(query, function (err, rows) {
+        timeSeriesConnection.query(query, function (err, rows) {
 
             var query = "UPDATE `"+gProjectTable+"` SET `updated`=FROM_UNIXTIME('"+classificationTime+"')";
 
             console.log("UPDATE query",query);
-            connection.query(query,function(err, rows) {
+            timeSeriesConnection.query(query,function(err, rows) {
 
                 startUpdateTimeSeries();
 
@@ -836,70 +790,16 @@ function singleTimeSeriesFromArchive(){
 
 // Insert zoon API projects into projects table
 
-function getZooonAPIProjects(){
-
-    connect();
-    connection.connect(function(err) {
-        if(err) {
-            console.log('Worker: error when connecting to db:', err);
-        }
-        else{
-            var options = {
-                url: 'https://api.zooniverse.org/projects/list'
-            };
-
-            request(options, function(error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    var data = JSON.parse(body);
-                    console.log(data);
-
-                    if(data.length>0){
-                        var fields = ['id','name','display_name'];
-                        var inserts = [];
-                        _.each(data,function(record){
-                            var values=[];
-                            _.each(fields, function(field,index){
-                                var value = 'NULL';
-                                if(record[field]){
-                                    value = "'"+record[field]+"'";
-                                }
-                                values.push(value);
-                            });
-
-                            var valuesStr = values.join(",");
-                            inserts.push("("+valuesStr+")");
-
-                        });
-
-                        var insertStr = inserts.join(',');
-                        console.log(insertStr);
-
-                        connection.query("INSERT IGNORE INTO "+gProjectTable+" (`id`,`name`,`display_name`) VALUES" +insertStr,
-                            function (err, rows) {
-                                if (err) {
-                                    throw err;
-                                }
-                                disconnect();
-
-                        });
-                    }
-
-
-
-                }
-            });
-        }
-    });
-}
-
 module.exports.gProjectList = gProjectList;
 module.exports.nconf = nconf;
-module.exports.fetchRequest = fetchRequest;
 
 module.exports.startScheduler = startScheduler;
+module.exports.startTimeseriesScheduler = startTimeseriesScheduler;
+
 module.exports.updateTimeSeriesFromArchive = updateTimeSeriesFromArchive;
 module.exports.singleTimeSeriesFromArchive = singleTimeSeriesFromArchive;
-module.exports.testMySQLError = testMySQLError;
 
-module.exports.connection = connection;
-module.exports.connect = connect;
+
+//module.exports.pusherConnection = pusherConnection;
+
+//module.exports.connect = connect;
