@@ -31,8 +31,8 @@ ZN.App = function () {
 
     // timeseries
     this.timeSeriesRequestInterval = 60*1000; // in ms
-    this.timeSeriesLatency = 3*60*1000 // in ms
-    this.dataSource = "archive"; // "live"
+    this.timeSeriesLatency = 3*60*1000; // in ms
+    this.dataSource = "live";
 
     // rendering
     this.canvasContainerId = "canvas-container";
