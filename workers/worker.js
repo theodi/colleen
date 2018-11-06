@@ -195,6 +195,7 @@ var connectTimeseriesTimeout = function() {
 function startScheduler(){
     connectDB();
     connectDBTimeout();
+    startPusherListening();
 }
 
 function startTimeseriesScheduler(){
@@ -245,108 +246,109 @@ var maxDataDateMs;
 var socket = new Pusher(PUSHER_API_KEY, { cluster: PUSHER_CLUSTER });
 var channel = socket.subscribe('panoptes');
 //console.log(gProjectListById.keys());
-channel.bind('classification',
-    function(record) {
+function startPusherListening() {
+    channel.bind('classification',
+        function (record) {
 
-        //console.log("classification event: " + JSON.stringify(record));
+            //console.log("classification event: " + JSON.stringify(record));
 
-        // {
-        //      "classification_id":"122370232",
-        //      "project_id":"5074",
-        //      "workflow_id":"5062",
-        //      "user_id":"1791986",
-        //      "subject_ids":["16229013"],
-        //      "subject_urls":[{
-        //          "image/jpeg":"https://panoptes-uploads.zooniverse.org/production/subject_location/d8f2af5d-a9ce-40f8-917a-be564f33eaf9.jpeg"
-        //      }],
-        //      "geo":{
-        //          "country_name":"Netherlands",
-        //          "country_code":"NL",
-        //          "city_name":"Lelystad",
-        //          "coordinates":[5.475,52.5083],
-        //          "latitude":52.5083,
-        //          "longitude":5.475
-        //      }
-        //  }
-        var projectId = record['project_id'];
-        var projectData = gProjectListById["id_" + projectId];
-        var projectName = projectId;
-//        var projectZoonName = projectId;
-        if (projectData !== undefined) {
-            projectName = gProjectListById["id_" + projectId]['name'];
-//            projectZoonName = gProjectListById["id_" + projectId]['name'];
-        }
-
-//        console.log(projectId, gProjectIdList.includes(parseInt(projectId)));
-        // once we have data from a project we want, add to classifications table, and remove old data:
-        if (gProjectIdList.includes(parseInt(projectId))) {
-            var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude'];//, 'zoon_project', 'zoon_userid'];
-            var inserts = [];
-            var values = [];
-            _.each(fields, function (field, index) {
-                var value = 'NULL';
-                if (field === 'project') {
-                    value = "'" + projectName + "'"; // get project name
-                }
-                else if (field === 'created_at') {
-                    value = "FROM_UNIXTIME('" + parseInt(new Date().valueOf() / 1000) + "')";
-                    //console.log('record[field]',record[field],'value',value,'date',date);
-                }
-                else if (field === 'user_id') {
-                    value = parseInt(record[field]);
-                    if (isNaN(value)) value = 0;
-                    //console.log('record[field]',record[field],'value',value,'date',date);
-                }
-                else if (field === 'id') {
-                    value = parseInt(record['classification_id']);
-                }
-                else if (field === 'region') {
-                    value = 'NULL';
-                }
-                else if (record['geo'][field]) {
-                    // console.log('region, field = ' + field);
-                    if (pusherConnection !== undefined && pusherConnection !== null) {
-                        value = pusherConnection.escape(record['geo'][field]);
-                    }
-                }
-//                else if (field === 'zoon_project') {
-//                    value = "'" + projectZoonName + "'"; // get project name
-//                }
-//                else if (field === 'zoon_userid') {
-//                    value = "'" + record['user_id'] + "'"; // get user id
-//                }
-                values.push(value);
-            });
-
-            // get event date from system
-            maxDataDateMs = new Date().valueOf();
-
-            var valuesStr = values.join(",");
-            inserts.push("(" + valuesStr + ")");
-
-            var insertStr = inserts.join(',');
-//            console.log(insertStr);
-            var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" + insertStr;
-            // ,`zoon_project`, `zoon_userid`
-            if (pusherConnection != null) {
-                pusherConnection.query(pusherInsertQuery,
-                    function (err, rows) {
-
-                        if (err) {
-                            console.log(pusherInsertQuery);
-                            onError('Pusher classification, insert failed', err);
-                            throw err;
-                        }
-
-                        removeClassifications(projectId, projectName, maxDataDateMs);
-                    });
-            } else {
-                console.log('Pusher classification, no connection, ', pusherInsertQuery);
+            // {
+            //      "classification_id":"122370232",
+            //      "project_id":"5074",
+            //      "workflow_id":"5062",
+            //      "user_id":"1791986",
+            //      "subject_ids":["16229013"],
+            //      "subject_urls":[{
+            //          "image/jpeg":"https://panoptes-uploads.zooniverse.org/production/subject_location/d8f2af5d-a9ce-40f8-917a-be564f33eaf9.jpeg"
+            //      }],
+            //      "geo":{
+            //          "country_name":"Netherlands",
+            //          "country_code":"NL",
+            //          "city_name":"Lelystad",
+            //          "coordinates":[5.475,52.5083],
+            //          "latitude":52.5083,
+            //          "longitude":5.475
+            //      }
+            //  }
+            var projectId = record['project_id'];
+            var projectData = gProjectListById["id_" + projectId];
+            var projectName = projectId;
+            //        var projectZoonName = projectId;
+            if (projectData !== undefined) {
+                projectName = gProjectListById["id_" + projectId]['name'];
+                //            projectZoonName = gProjectListById["id_" + projectId]['name'];
             }
+            //        console.log(projectId, gProjectIdList.includes(parseInt(projectId)));
+            // once we have data from a project we want, add to classifications table, and remove old data:
+            if (gProjectIdList.includes(parseInt(projectId))) {
+                var fields = ['id', 'created_at', 'user_id', 'project', 'country_code', 'region', 'city_name', 'latitude', 'longitude'];//, 'zoon_project', 'zoon_userid'];
+                var inserts = [];
+                var values = [];
+                _.each(fields, function (field, index) {
+                    var value = 'NULL';
+                    if (field === 'project') {
+                        value = "'" + projectName + "'"; // get project name
+                    }
+                    else if (field === 'created_at') {
+                        value = "FROM_UNIXTIME('" + parseInt(new Date().valueOf() / 1000) + "')";
+                        //console.log('record[field]',record[field],'value',value,'date',date);
+                    }
+                    else if (field === 'user_id') {
+                        value = parseInt(record[field]);
+                        if (isNaN(value)) value = 0;
+                        //console.log('record[field]',record[field],'value',value,'date',date);
+                    }
+                    else if (field === 'id') {
+                        value = parseInt(record['classification_id']);
+                    }
+                    else if (field === 'region') {
+                        value = 'NULL';
+                    }
+                    else if (record['geo'][field]) {
+                        // console.log('region, field = ' + field);
+                        if (pusherConnection !== undefined && pusherConnection !== null) {
+                            value = pusherConnection.escape(record['geo'][field]);
+                        }
+                    }
+                    //                else if (field === 'zoon_project') {
+                    //                    value = "'" + projectZoonName + "'"; // get project name
+                    //                }
+                    //                else if (field === 'zoon_userid') {
+                    //                    value = "'" + record['user_id'] + "'"; // get user id
+                    //                }
+                    values.push(value);
+                });
 
+                // get event date from system
+                maxDataDateMs = new Date().valueOf();
+
+                var valuesStr = values.join(",");
+                inserts.push("(" + valuesStr + ")");
+
+                var insertStr = inserts.join(',');
+                //            console.log(insertStr);
+                var pusherInsertQuery = "REPLACE INTO " + gClsTable + " (`id`,`created_at`,`user_id`,`project`,`country`,`region`,`city`,`latitude`,`longitude`) VALUES" + insertStr;
+                // ,`zoon_project`, `zoon_userid`
+                if (pusherConnection != null) {
+                    pusherConnection.query(pusherInsertQuery,
+                        function (err, rows) {
+
+                            if (err) {
+                                console.log(pusherInsertQuery);
+                                onError('Pusher classification, insert failed', err);
+                                throw err;
+                            }
+
+                            removeClassifications(projectId, projectName, maxDataDateMs);
+                        });
+                } else {
+                    console.log('Pusher classification, no connection, ', pusherInsertQuery);
+                }
+
+            }
         }
-    }
-);
+    );
+}
 
 // TODO, listen for socket disconnects, and do timed reconnects
 
